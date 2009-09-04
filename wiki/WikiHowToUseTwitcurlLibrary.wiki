@@ -1,0 +1,14 @@
+#summary One-sentence summary of this page.
+#labels Featured,Phase-Implementation
+
+= How to use twitcurl library? =
+twitcurl is an open-source pure C++ library for twitter REST APIs. Currently, it has support for most of the twitter APIs and it will be updated to support all the APIs. twitcurl uses cURL library for handling HTTP requests and responses. Building applications using twitcurl is quite easy:
+  * Compile twitcurl source files (twitcurl.h and twitcurl.cpp) and link with cURL library (libcurl.lib) to build twitcurl.lib
+
+  * Include twitcurl.h and cURL headers (present in /include/curl/ directory in cURL source)in your twitter based application and link to twitcurl.lib and libcurl.lib/libcurl.dll.
+
+  * Instantiate an object of twitCurl class and use the twitter API wrappers that are exposed as public methods.
+
+  * twitcurl works on all OS (Windows, Linux, Mac etc.) as it is written completely in C++ and the only dependency is cURL (which works on all OSes mentioned earlier).
+
+Note: Currently Microsoft Visual C++ 6.0 workspace (dsw) file is provided with the twitcurl source. This workspace can be used to compile and build twitcurl on Windows using any of the Visual C++ applications (6.0 or later). A UNIX makefile is coming soon!
