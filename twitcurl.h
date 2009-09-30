@@ -15,6 +15,8 @@ namespace twitCurlDefaults
     /* Miscellaneous data used to build twitter URLs*/
     const std::string TWITCURL_STATUSSTRING = "status=";
     const std::string TWITCURL_TEXTSTRING = "text=";
+    const std::string TWITCURL_QUERYSTRING = "query=";  
+    const std::string TWITCURL_SEARCHQUERYSTRING = "?q=";      
     const std::string TWITCURL_SCREENNAME = "?screen_name=";
     const std::string TWITCURL_USERID = "?user_id=";
     const std::string TWITCURL_EXTENSIONFORMAT = ".xml";
@@ -25,6 +27,10 @@ namespace twitCurlDefaults
 /* Default twitter URLs */
 namespace twitterDefaults
 {
+
+    /* Search URLs */
+    const std::string TWITCURL_SEARCH_URL = "http://search.twitter.com/search.atom";
+
     /* Status URLs */
     const std::string TWITCURL_STATUSUPDATE_URL = "http://twitter.com/statuses/update.xml";
     const std::string TWITCURL_STATUSSHOW_URL = "http://twitter.com/statuses/show/";
@@ -68,6 +74,13 @@ namespace twitterDefaults
     /* Block URLs */
     const std::string TWITCURL_BLOCKSCREATE_URL = "http://twitter.com/blocks/create/";
     const std::string TWITCURL_BLOCKSDESTROY_URL = "http://twitter.com/blocks/destroy/";
+    
+    /* Saved Search URLs */
+    const std::string TWITCURL_SAVEDSEARCHGET_URL = "http://twitter.com/saved_searches.xml";
+    const std::string TWITCURL_SAVEDSEARCHSHOW_URL = "http://twitter.com/saved_searches/show/";
+    const std::string TWITCURL_SAVEDSEARCHCREATE_URL = "http://twitter.com/saved_searches/create.xml";
+    const std::string TWITCURL_SAVEDSEARCHDESTROY_URL = "http://twitter.com/saved_searches/destroy/";
+    
 };
 
 /* twitCurl class */
@@ -82,6 +95,9 @@ public:
     std::string& getTwitterPassword();
     void setTwitterUsername( std::string& userName );
     void setTwitterPassword( std::string& passWord );
+
+    /* Twitter search APIs */
+    bool search( std::string& query );
 
     /* Twitter status APIs */
     bool statusUpdate( std::string& newStatus  );
@@ -127,6 +143,12 @@ public:
     bool blockCreate( std::string& userInfo );
     bool blockDestroy( std::string& userInfo );
 
+    /* Twitter search APIs */
+    bool savedSearchGet();
+    bool savedSearchCreate( std::string& query );
+    bool savedSearchShow( std::string& searchId );
+    bool savedSearchDestroy( std::string& searchId );
+    
     /* cURL APIs */
     bool isCurlInit();
     void getLastWebResponse( std::string& outWebResp );
