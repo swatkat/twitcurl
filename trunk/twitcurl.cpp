@@ -291,6 +291,37 @@ void twitCurl::setProxyPassword( std::string& proxyPassword )
 }
 
 /*++
+* @method: twitCurl::search
+*
+* @description: method to return tweets that match a specified query.
+*
+* @input: query - search query in string format
+*
+* @output: true if GET is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::search( std::string& query )
+{
+    bool retVal = false;
+    if( isCurlInit() )
+    {
+        /* Prepare standard params */
+        prepareStandardParams();
+
+        /* Prepare URL */
+        std::string buildUrl( "" );
+        buildUrl = twitterDefaults::TWITCURL_SEARCH_URL;
+        buildUrl.append( twitCurlDefaults::TWITCURL_SEARCHQUERYSTRING.c_str() );        
+        buildUrl.append( query.c_str() );
+
+        /* Perform GET */
+        retVal = performGet( buildUrl );
+    }
+    return retVal;
+}
+
+/*++
 * @method: twitCurl::statusUpdate
 *
 * @description: method to update new status message in twitter profile
@@ -1070,6 +1101,131 @@ bool twitCurl::blockDestroy( std::string& userInfo )
     }
     return retVal;
 }
+
+/*++
+* @method: twitCurl::savedSearchGet
+*
+* @description: gets authenticated user's saved search queries.
+*
+* @input: none
+*
+* @output: true if GET is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::savedSearchGet( )
+{
+    bool retVal = false;
+    if( isCurlInit() )
+    {
+        /* Prepare standard params */
+        prepareStandardParams();
+
+        /* Perform GET */
+        retVal = performGet( twitterDefaults::TWITCURL_SAVEDSEARCHGET_URL );
+    }
+    return retVal;
+}
+
+/*++
+* @method: twitCurl::savedSearchShow
+*
+* @description: method to retrieve the data for a saved search owned by the authenticating user 
+*               specified by the given id.
+*
+* @input: searchId - id in string format of the search to be displayed
+*
+* @output: true if GET is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::savedSearchShow( std::string& searchId )
+{
+    bool retVal = false;
+    if( isCurlInit() )
+    {
+        /* Prepare standard params */
+        prepareStandardParams();
+
+        /* Prepare URL */
+        std::string buildUrl( "" );
+        buildUrl = twitterDefaults::TWITCURL_SAVEDSEARCHSHOW_URL;
+        buildUrl.append( searchId.c_str() );
+        buildUrl.append( twitCurlDefaults::TWITCURL_EXTENSIONFORMAT.c_str() );
+
+        /* Perform GET */
+        retVal = performGet( buildUrl );
+    }
+    return retVal;
+}
+
+/*++
+* @method: twitCurl::savedSearchCreate
+*
+* @description: creates a saved search for the authenticated user
+*
+* @input: query - the query of the search the user would like to save
+*
+* @output: true if POST is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::savedSearchCreate( std::string& query )
+{
+    bool retVal = false;
+    if( isCurlInit() )
+    {
+        /* Prepare standard params */
+        prepareStandardParams();
+
+        /* Prepare URL */
+        std::string buildUrl( "" );
+        buildUrl = twitterDefaults::TWITCURL_SAVEDSEARCHCREATE_URL;
+
+        /* Send some dummy data in POST */
+        std::string queryStr;
+        queryStr = twitCurlDefaults::TWITCURL_QUERYSTRING;
+        queryStr.append( query );
+
+        /* Perform POST */
+        retVal = performPost( buildUrl, queryStr );
+    }
+    return retVal;
+}
+
+
+/*++
+* @method: twitCurl::savedSearchDestroy
+*
+* @description: method to destroy a saved search for the authenticated user. The search specified 
+*               by id must be owned by the authenticating user.
+*
+* @input: searchId - search id of item to be deleted
+*
+* @output: true if DELETE is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::savedSearchDestroy( std::string& searchId )
+{
+    bool retVal = false;
+    if( isCurlInit() )
+    {
+        /* Prepare standard params */
+        prepareStandardParams();
+
+        /* Prepare URL */
+        std::string buildUrl( "" );
+        buildUrl = twitterDefaults::TWITCURL_SAVEDSEARCHDESTROY_URL;
+        buildUrl.append( searchId.c_str() );
+        buildUrl.append( twitCurlDefaults::TWITCURL_EXTENSIONFORMAT.c_str() );
+
+        /* Perform DELETE */
+        retVal = performDelete( buildUrl );
+    }
+    return retVal;
+}
+
 
 /*++
 * @method: twitCurl::getLastWebResponse
