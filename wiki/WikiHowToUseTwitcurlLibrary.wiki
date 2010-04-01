@@ -11,4 +11,13 @@ twitcurl is an open-source pure C++ library for twitter REST APIs. Currently, it
 
   * twitcurl works on all OS (Windows, Linux, Mac etc.) as it is written completely in C++ and the only dependency is cURL (which works on all OSes mentioned earlier).
 
-Note: Currently Microsoft Visual C++ 6.0 workspace (dsw) file is provided with the twitcurl source. This workspace can be used to compile and build twitcurl on Windows using any of the Visual C++ applications (6.0 or later). A UNIX makefile is coming soon!
+
+=UNIX/Linux:=
+A separate branch of twitCurl library exists for UNIX/Linux distributions. This branch contains Makefile and other changes to build the library in UNIX/Linux. The source is available here:
+http://code.google.com/p/twitcurl/source/browse/#svn/branches/libtwitcurl
+
+
+=Windows:=
+The twitCurl.lib library that is present in the "Download" section is built using Visual C++ 6.0. If you are using a newer version of Visual C++ to build your application, then you may encounter linker errors (as mentioned here: http://code.google.com/p/twitcurl/issues/detail?id=4 ) if you link twitCurl.lib built on older Visual C++ version. To overcome these link errors, please download the source of twitCurl and build the library using your (newer) Visual C++ IDE. Later, use this newly built library to link with your application.
+
+Note: Currently Microsoft Visual C++ 6.0 workspace (dsw) file is provided with the twitcurl source. This workspace can be used to compile and build twitcurl on Windows using any of the Visual C++ applications (6.0 or later). If you are using any other Windows based C++ IDE, then you can create new "workspace" and just add twitCurl source files to this new "workspace".
