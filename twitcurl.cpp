@@ -1351,22 +1351,25 @@ void twitCurl::clearCurlCallbackBuffers()
 *--*/
 void twitCurl::prepareCurlProxy()
 {
-    if( !m_curlProxyParamsSet && m_proxyUserName.length() && m_proxyPassword.length() )
+    if( !m_curlProxyParamsSet )
     {
         /* Reset existing proxy details in cURL */
         curl_easy_setopt( m_curlHandle, CURLOPT_PROXY, NULL );
         curl_easy_setopt( m_curlHandle, CURLOPT_PROXYUSERPWD, NULL );
-
-        /* Prepare username and password for proxy server */
-        std::string proxyIpPort( "" );
-        std::string proxyUserPass( "" );
-        utilMakeCurlParams( proxyUserPass, getProxyUserName(), getProxyPassword() );
-        utilMakeCurlParams( proxyIpPort, getProxyServerIp(), getProxyServerPort() );
+        curl_easy_setopt( m_curlHandle, CURLOPT_PROXYAUTH, (long)CURLAUTH_ANY );
 
         /* Set proxy details in cURL */
+        std::string proxyIpPort( "" );
+        utilMakeCurlParams( proxyIpPort, getProxyServerIp(), getProxyServerPort() );
         curl_easy_setopt( m_curlHandle, CURLOPT_PROXY, proxyIpPort.c_str() );
-        curl_easy_setopt( m_curlHandle, CURLOPT_PROXYUSERPWD, proxyUserPass.c_str() );
-        curl_easy_setopt( m_curlHandle, CURLOPT_PROXYAUTH, (long)CURLAUTH_ANY );
+
+        /* Prepare username and password for proxy server */
+        if( m_proxyUserName.length() && m_proxyPassword.length() )
+        {
+            std::string proxyUserPass( "" );
+            utilMakeCurlParams( proxyUserPass, getProxyUserName(), getProxyPassword() );
+            curl_easy_setopt( m_curlHandle, CURLOPT_PROXYUSERPWD, proxyUserPass.c_str() );
+        }
 
         /* Set the flag to true indicating that proxy info is set in cURL */
         m_curlProxyParamsSet = true;
