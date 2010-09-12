@@ -1,0 +1,20 @@
+#labels Featured,Phase-Implementation
+==Getting consumer key and secret==
+ * Register your app at http://dev.twitter.com/apps/new and get consumer key/secret from twitter
+
+
+==OAuth flow using twitCurl==
+Step 0: Set consumer key and secret in twitCurl object using _twitCurl::getOAuth()::setConsumerKey()_ and _twitCurl::getOAuth()::setConsumerSecret()_ methods.
+
+Step 1: Get request token and secret using _twitCurl::oAuthRequestToken()_ method.
+
+Step 2: The method _twitCurl::oAuthRequestToken()_ gives back a URL, which a user needs to visit and authorize your app. Redirect user to this link (for ex: via web browser) and get the PIN. Set this PIN into twitCurl object using _twitCurl::getOAuth()::setOAuthPin()_ method.
+
+Step 3: Exchange request token with access token by calling _twitCurl::oAuthAccessToken()_ method.
+
+Step 4: Get access token key and secret from twitCurl object using _twitCurl::getOAuth()::getOAuthTokenKey()_ and _twitCurl::getOAuth()::getOAuthTokenSecret()_ methods. Save access key and secret in a file or Registry (in case of Windows).
+
+Note:
+ * If you save the access token key and secret, then you can set these into twitCurl object in step 0, using _twitCurl::getOAuth()::setOAuthTokenKey()_ and _twitCurl::getOAuth()::setOAuthTokenKey()_ methods. In this case, steps 1 through 4 can skipped during subsequent runs.
+
+ * Check *twitterClient_SRC.zip* in "Downloads" section to see and example OAuth flow.
