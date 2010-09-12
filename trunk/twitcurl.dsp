@@ -63,8 +63,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "Debug"
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ  /c
-# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /I "./curl" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ  /c
+# ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
+# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /I "./curl" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -85,7 +85,27 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\base64.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HMAC_SHA1.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\oauthlib.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\SHA1.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\twitcurl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\urlencode.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -93,7 +113,27 @@ SOURCE=.\twitcurl.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\base64.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\HMAC_SHA1.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\oauthlib.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\SHA1.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\twitcurl.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\urlencode.h
 # End Source File
 # End Group
 # End Target
