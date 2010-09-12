@@ -2,6 +2,7 @@
 #define _TWITCURL_H_
 
 #include <string>
+#include "oauthlib.h"
 #include "curl/curl.h"
 
 /* Default values used in twitcurl */
@@ -90,69 +91,74 @@ public:
     twitCurl();
     ~twitCurl();
 
+    /* Twitter OAuth authorization methods */
+    oAuth& getOAuth();
+    bool oAuthRequestToken( std::string& authorizeUrl /* out */ );
+    bool oAuthAccessToken();
+
     /* Twitter login APIs, set once and forget */
     std::string& getTwitterUsername();
     std::string& getTwitterPassword();
-    void setTwitterUsername( std::string& userName );
-    void setTwitterPassword( std::string& passWord );
+    void setTwitterUsername( std::string& userName /* in */ );
+    void setTwitterPassword( std::string& passWord /* in */ );
 
     /* Twitter search APIs */
-    bool search( std::string& query );
+    bool search( std::string& query /* in */ );
 
     /* Twitter status APIs */
-    bool statusUpdate( std::string& newStatus  );
-    bool statusShowById( std::string& statusId );
-    bool statusDestroyById( std::string& statusId );
+    bool statusUpdate( std::string& newStatus /* in */ );
+    bool statusShowById( std::string& statusId /* in */ );
+    bool statusDestroyById( std::string& statusId /* in */ );
 
     /* Twitter timeline APIs */
     bool timelinePublicGet();
     bool timelineFriendsGet();
-    bool timelineUserGet( std::string userInfo = "", bool isUserId = false );
+    bool timelineUserGet( std::string userInfo = "" /* in */, bool isUserId = false /* in */ );
     bool featuredUsersGet();
     bool mentionsGet();
 
     /* Twitter user APIs */
-    bool userGet( std::string& userInfo, bool isUserId = false );
-    bool friendsGet( std::string userInfo = "", bool isUserId = false );
-    bool followersGet( std::string userInfo = "", bool isUserId = false );
+    bool userGet( std::string& userInfo /* in */, bool isUserId = false /* in */ );
+    bool friendsGet( std::string userInfo = "" /* in */, bool isUserId = false /* in */ );
+    bool followersGet( std::string userInfo = "" /* in */, bool isUserId = false /* in */ );
 
     /* Twitter direct message APIs */
     bool directMessageGet();
-    bool directMessageSend( std::string& userInfo, std::string& dMsg, bool isUserId = false );
+    bool directMessageSend( std::string& userInfo /* in */, std::string& dMsg /* in */, bool isUserId = false /* in */ );
     bool directMessageGetSent();
-    bool directMessageDestroyById( std::string& dMsgId );
+    bool directMessageDestroyById( std::string& dMsgId /* in */ );
 
     /* Twitter friendships APIs */
-    bool friendshipCreate( std::string& userInfo, bool isUserId = false );
-    bool friendshipDestroy( std::string& userInfo, bool isUserId = false );
-    bool friendshipShow( std::string& userInfo, bool isUserId = false );
+    bool friendshipCreate( std::string& userInfo /* in */, bool isUserId = false /* in */ );
+    bool friendshipDestroy( std::string& userInfo /* in */, bool isUserId = false /* in */ );
+    bool friendshipShow( std::string& userInfo /* in */, bool isUserId = false /* in */ );
 
     /* Twitter social graphs APIs */
-    bool friendsIdsGet( std::string& userInfo, bool isUserId = false );
-    bool followersIdsGet( std::string& userInfo, bool isUserId = false );
+    bool friendsIdsGet( std::string& userInfo /* in */, bool isUserId = false /* in */ );
+    bool followersIdsGet( std::string& userInfo /* in */, bool isUserId = false /* in */ );
 
     /* Twitter account APIs */
     bool accountRateLimitGet();
 
     /* Twitter favorites APIs */
     bool favoriteGet();
-    bool favoriteCreate( std::string& statusId );
-    bool favoriteDestroy( std::string& statusId );
+    bool favoriteCreate( std::string& statusId /* in */ );
+    bool favoriteDestroy( std::string& statusId /* in */ );
 
     /* Twitter block APIs */
-    bool blockCreate( std::string& userInfo );
-    bool blockDestroy( std::string& userInfo );
+    bool blockCreate( std::string& userInfo /* in */ );
+    bool blockDestroy( std::string& userInfo /* in */ );
 
     /* Twitter search APIs */
     bool savedSearchGet();
-    bool savedSearchCreate( std::string& query );
-    bool savedSearchShow( std::string& searchId );
-    bool savedSearchDestroy( std::string& searchId );
+    bool savedSearchCreate( std::string& query /* in */ );
+    bool savedSearchShow( std::string& searchId /* in */ );
+    bool savedSearchDestroy( std::string& searchId /* in */ );
     
     /* cURL APIs */
     bool isCurlInit();
-    void getLastWebResponse( std::string& outWebResp );
-    void getLastCurlError( std::string& outErrResp );
+    void getLastWebResponse( std::string& outWebResp /* out */ );
+    void getLastCurlError( std::string& outErrResp /* out */);
 
     /* Internal cURL related methods */
     int saveLastWebResponse( char*& data, size_t size );
@@ -163,10 +169,10 @@ public:
     std::string& getProxyServerPort();
     std::string& getProxyUserName();
     std::string& getProxyPassword();
-    void setProxyServerIp( std::string& proxyServerIp );
-    void setProxyServerPort( std::string& proxyServerPort );
-    void setProxyUserName( std::string& proxyUserName );
-    void setProxyPassword( std::string& proxyPassword );
+    void setProxyServerIp( std::string& proxyServerIp /* in */ );
+    void setProxyServerPort( std::string& proxyServerPort /* in */ );
+    void setProxyUserName( std::string& proxyUserName /* in */ );
+    void setProxyPassword( std::string& proxyPassword /* in */ );
 
 private:
     /* cURL data */
@@ -189,6 +195,9 @@ private:
     std::string m_twitterUsername;
     std::string m_twitterPassword;
 
+    /* OAuth data */
+    oAuth m_oAuth;
+
     /* Private methods */
     void clearCurlCallbackBuffers();
     void prepareCurlProxy();
@@ -196,6 +205,7 @@ private:
     void prepareCurlUserPass();
     void prepareStandardParams();
     bool performGet( const std::string& getUrl );
+    bool performGet( const std::string& getUrl, const std::string& oAuthHttpHeader );
     bool performDelete( const std::string& deleteUrl );
     bool performPost( const std::string& postUrl, std::string dataStr = "" );
 };
