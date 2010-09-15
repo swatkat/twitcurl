@@ -15,6 +15,6 @@ Step 3: Exchange request token with access token by calling _twitCurl::oAuthAcce
 Step 4: Get access token key and secret from twitCurl object using _twitCurl::getOAuth()::getOAuthTokenKey()_ and _twitCurl::getOAuth()::getOAuthTokenSecret()_ methods. Save access key and secret in a file or Registry (in case of Windows).
 
 Note:
- * If you save the access token key and secret, then you can set these into twitCurl object in step 0, using _twitCurl::getOAuth()::setOAuthTokenKey()_ and _twitCurl::getOAuth()::setOAuthTokenKey()_ methods. In this case, steps 1 through 4 can skipped during subsequent runs.
+ * If you save the access token key and secret, then you can set these into twitCurl object in step 0, using _twitCurl::getOAuth()::setOAuthTokenKey()_ and _twitCurl::getOAuth()::setOAuthTokenSecret()_ methods. In this case, steps 1 through 4 can skipped during subsequent runs.
 
  * Check *twitterClient_SRC.zip* in "Downloads" section to see and example OAuth flow.
