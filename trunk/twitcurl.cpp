@@ -1394,34 +1394,15 @@ void twitCurl::prepareStandardParams()
 *--*/
 bool twitCurl::performGet( const std::string& getUrl )
 {
-    std::string dataStr( "" );
+    std::string dataStrDummy( "" );
     std::string oAuthHttpHeader( "" );
     struct curl_slist* pOAuthHeaderList = NULL;
 
     /* Prepare standard params */
     prepareStandardParams();
 
-    /* urlencode data */
-    size_t nPos = getUrl.find_first_of( "?" );
-    if( std::string::npos != nPos )
-    {
-        std::string dataKey( "" );
-        std::string dataValue( "" );
-        dataStr = getUrl.substr( nPos + 1 );
-        nPos = dataStr.find_first_of( "=" );
-        if( std::string::npos != nPos )
-        {
-            dataKey = dataStr.substr( 0, nPos );
-            dataValue = dataStr.substr( nPos + 1 );
-            dataValue = urlencode( dataValue );
-            dataStr.assign( dataKey );
-            dataStr.append( "=" );
-            dataStr.append( dataValue );
-        }
-    }
-
     /* Set OAuth header */
-    m_oAuth.getOAuthHeader( eOAuthHttpGet, getUrl, dataStr, oAuthHttpHeader );
+    m_oAuth.getOAuthHeader( eOAuthHttpGet, getUrl, dataStrDummy, oAuthHttpHeader );
     if( oAuthHttpHeader.length() > 0 )
     {
         pOAuthHeaderList = curl_slist_append( pOAuthHeaderList, oAuthHttpHeader.c_str() );
@@ -1516,34 +1497,15 @@ bool twitCurl::performGet( const std::string& getUrl, const std::string& oAuthHt
 *--*/
 bool twitCurl::performDelete( const std::string& deleteUrl )
 {
-    std::string dataStr( "" );
+    std::string dataStrDummy( "" );
     std::string oAuthHttpHeader( "" );
     struct curl_slist* pOAuthHeaderList = NULL;
 
     /* Prepare standard params */
     prepareStandardParams();
 
-    /* urlencode data */
-    size_t nPos = deleteUrl.find_first_of( "?" );
-    if( std::string::npos != nPos )
-    {
-        std::string dataKey( "" );
-        std::string dataValue( "" );
-        dataStr = deleteUrl.substr( nPos + 1 );
-        nPos = dataStr.find_first_of( "=" );
-        if( std::string::npos != nPos )
-        {
-            dataKey = dataStr.substr( 0, nPos );
-            dataValue = dataStr.substr( nPos + 1 );
-            dataValue = urlencode( dataValue );
-            dataStr.assign( dataKey );
-            dataStr.append( "=" );
-            dataStr.append( dataValue );
-        }
-    }
-
     /* Set OAuth header */
-    m_oAuth.getOAuthHeader( eOAuthHttpDelete, deleteUrl, dataStr, oAuthHttpHeader );
+    m_oAuth.getOAuthHeader( eOAuthHttpDelete, deleteUrl, dataStrDummy, oAuthHttpHeader );
     if( oAuthHttpHeader.length() > 0 )
     {
         pOAuthHeaderList = curl_slist_append( pOAuthHeaderList, oAuthHttpHeader.c_str() );

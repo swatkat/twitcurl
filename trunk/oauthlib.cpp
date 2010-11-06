@@ -268,9 +268,6 @@ bool oAuth::buildOAuthTokenKeyValuePairs( const bool includeOAuthVerifierPin,
                                           const std::string& oauthSignature,
                                           oAuthKeyValuePairs& keyValueMap )
 {
-    /* Clear map */
-    keyValueMap.clear();
-
     /* Generate nonce and timestamp if required */
     generateNonceTimeStamp();
 
@@ -408,7 +405,7 @@ bool oAuth::getSignature( const eOAuthHttpRequestType eType,
                            strDigest ); 
 
     /* Do a base64 encode of signature */
-    std::string base64Str = base64_encode( strDigest, strlen( (char*)strDigest ) );
+    std::string base64Str = base64_encode( strDigest, 20 /* SHA 1 digest is 160 bits */ );
 
     /* Do an url encode */
     oAuthSignature = urlencode( base64Str );
@@ -440,19 +437,42 @@ bool oAuth::getOAuthHeader( const eOAuthHttpRequestType eType,
     std::string rawParams( "" );
     std::string oauthSignature( "" );
     std::string paramsSeperator( "" );
+    std::string pureUrl( rawUrl );
 
     /* Clear header string initially */
     oAuthHttpHeader.assign( "" );
     rawKeyValuePairs.clear();
 
+    /* If URL itself contains ?key=value, then extract and put them in map */
+    size_t nPos = rawUrl.find_first_of( "?" );
+    if( std::string::npos != nPos )
+    {
+        /* Get only URL */
+        pureUrl = rawUrl.substr( 0, nPos );
+
+        /* Get only key=value data part */
+        std::string dataPart = rawUrl.substr( nPos + 1 );
+        size_t nPos2 = dataPart.find_first_of( "=" );
+        if( std::string::npos != nPos2 )
+        {
+            std::string dataKey = dataPart.substr( 0, nPos2 );
+            std::string dataStr = dataPart.substr( nPos2 + 1 );
+
+            /* Put this key=value pair in map */
+            rawKeyValuePairs[dataKey] = urlencode( dataStr );
+        }
+    }
+
     /* Build key-value pairs needed for OAuth request token, without signature */
     buildOAuthTokenKeyValuePairs( includeOAuthVerifierPin, rawData, std::string( "" ), rawKeyValuePairs );
 
     /* Get url encoded base64 signature using request type, url and parameters */
-    getSignature( eType, rawUrl, rawKeyValuePairs, oauthSignature );
+    getSignature( eType, pureUrl, rawKeyValuePairs, oauthSignature );
 
     /* Now, again build key-value pairs with signature this time */
     buildOAuthTokenKeyValuePairs( includeOAuthVerifierPin, std::string( "" ), oauthSignature, rawKeyValuePairs );
+
+    /* Get OAuth header in string format */
     paramsSeperator = ",";
     getStringFromOAuthKeyValuePairs( rawKeyValuePairs, rawParams, paramsSeperator );
 
