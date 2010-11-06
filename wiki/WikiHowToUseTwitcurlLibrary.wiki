@@ -11,6 +11,10 @@ twitcurl is an open-source pure C++ library for twitter REST APIs. Currently, it
 
   * twitcurl works on all OS (Windows, Linux, Mac etc.) as it is written completely in C++ and the only dependency is cURL (which works on all OSes mentioned earlier).
 
+=OAuth Flow:=
+Refer this wiki page for OAuth flow:
+http://code.google.com/p/twitcurl/wiki/TwitcurlOAuthFlow
+
 
 =UNIX/Linux:=
 A separate branch of twitCurl library exists for UNIX/Linux distributions. This branch contains Makefile and other changes to build the library in UNIX/Linux. The source is available here:
