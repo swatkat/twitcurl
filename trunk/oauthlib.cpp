@@ -456,10 +456,10 @@ bool oAuth::getOAuthHeader( const eOAuthHttpRequestType eType,
         if( std::string::npos != nPos2 )
         {
             std::string dataKey = dataPart.substr( 0, nPos2 );
-            std::string dataStr = dataPart.substr( nPos2 + 1 );
+            std::string dataVal = dataPart.substr( nPos2 + 1 );
 
             /* Put this key=value pair in map */
-            rawKeyValuePairs[dataKey] = urlencode( dataStr );
+            rawKeyValuePairs[dataKey] = urlencode( dataVal );
         }
     }
 
