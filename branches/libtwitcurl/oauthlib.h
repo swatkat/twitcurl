@@ -2,7 +2,7 @@
 #define __OAUTHLIB_H__
 
 #include "time.h"
-#include <stdlib.h>
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <string>

@@ -1137,6 +1137,117 @@ bool twitCurl::savedSearchDestroy( std::string& searchId )
 
 
 /*++
+* @method: twitCurl::trendsGet()
+*
+* @description: gets trends.
+*
+* @input: none
+*
+* @output: true if GET is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::trendsGet()
+{
+    bool retVal = false;
+    if( isCurlInit() )
+    {
+        /* Perform GET */
+        retVal = performGet( twitterDefaults::TWITCURL_TRENDS_URL );
+    }
+    return retVal;
+}
+
+
+/*++
+* @method: twitCurl::trendsDailyGet()
+*
+* @description: gets daily trends.
+*
+* @input: none
+*
+* @output: true if GET is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::trendsDailyGet()
+{
+    bool retVal = false;
+    if( isCurlInit() )
+    {
+        /* Perform GET */
+        retVal = performGet( twitterDefaults::TWITCURL_TRENDSDAILY_URL );
+    }
+    return retVal;
+}
+
+/*++
+* @method: twitCurl::trendsWeeklyGet()
+*
+* @description: gets weekly trends.
+*
+* @input: none
+*
+* @output: true if GET is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::trendsWeeklyGet()
+{
+    bool retVal = false;
+    if( isCurlInit() )
+    {
+        /* Perform GET */
+        retVal = performGet( twitterDefaults::TWITCURL_TRENDSWEEKLY_URL );
+    }
+    return retVal;
+}
+
+/*++
+* @method: twitCurl::trendsCurrentGet()
+*
+* @description: gets current trends.
+*
+* @input: none
+*
+* @output: true if GET is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::trendsCurrentGet()
+{
+    bool retVal = false;
+    if( isCurlInit() )
+    {
+        /* Perform GET */
+        retVal = performGet( twitterDefaults::TWITCURL_TRENDSCURRENT_URL );
+    }
+    return retVal;
+}
+
+/*++
+* @method: twitCurl::trendsAvailableGet()
+*
+* @description: gets available trends.
+*
+* @input: none
+*
+* @output: true if GET is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::trendsAvailableGet()
+{
+    bool retVal = false;
+    if( isCurlInit() )
+    {
+        /* Perform GET */
+        retVal = performGet( twitterDefaults::TWITCURL_TRENDSAVAILABLE_URL );
+    }
+    return retVal;
+}
+
+/*++
 * @method: twitCurl::getLastWebResponse
 *
 * @description: method to get http response for the most recent request sent.
