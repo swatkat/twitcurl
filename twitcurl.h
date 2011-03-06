@@ -2,6 +2,7 @@
 #define _TWITCURL_H_
 
 #include <string>
+#include <cstring>
 #include "oauthlib.h"
 #include "curl/curl.h"
 
