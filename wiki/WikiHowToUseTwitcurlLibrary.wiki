@@ -17,11 +17,24 @@ http://code.google.com/p/twitcurl/wiki/TwitcurlOAuthFlow
 
 
 =UNIX/Linux:=
-A separate branch of twitCurl library exists for UNIX/Linux distributions. This branch contains Makefile and other changes to build the library in UNIX/Linux. The source is available here:
-http://code.google.com/p/twitcurl/source/browse/#svn/branches/libtwitcurl
+A separate branch (libtwitcurl) of twitCurl library exists for UNIX/Linux distributions. Follow these steps to build library:
+  * Make sure you have g++ and dependent packages. If you don't have g++, then install it using package manager. For example, in Ubuntu this is done as follows:
+{{{sudo apt-get install g++}}}
+  * Install libcurl development package using package manager. For example, in Ubuntu this is done as follows:
+{{{sudo apt-get install libcurl4-dev}}}
+  * Install SVN client. Again, in Ubuntu this is done as follows:
+{{{sudo apt-get install svn}}}
+  * Check-out libtwitcurl using this command:
+{{{svn co http://code.google.com/p/twitcurl/source/browse/svn/branches/libtwitcurl}}}
+  * Build the library using the command {{{make}}}.
 
 
 =Windows:=
-The twitCurl.lib library that is present in the "Download" section is built using Visual C++ 6.0. If you are using a newer version of Visual C++ to build your application, then you may encounter linker errors (as mentioned here: http://code.google.com/p/twitcurl/issues/detail?id=4 ) if you link twitCurl.lib built on older Visual C++ version. To overcome these link errors, please download the source of twitCurl and build the library using your (newer) Visual C++ IDE. Later, use this newly built library to link with your application.
+The {{{twitCurl.lib}}} library present in "Download" section is built using Visual C++ 6.0. If you are using a newer version of Visual C++, then you may encounter linker errors (as mentioned here: http://code.google.com/p/twitcurl/issues/detail?id=4 ) when you try to link your application with {{{twitCurl.lib}}} that is built using older version of Visual C++. Follow these steps to freshly build twitcurl library:
+  * Download twitCurl source from {{{http://twitcurl.googlecode.com/svn/trunk}}} using SVN clients like TortoiseSVN.
 
-Note: Currently Microsoft Visual C++ 6.0 workspace (dsw) file is provided with the twitcurl source. This workspace can be used to compile and build twitcurl on Windows using any of the Visual C++ applications (6.0 or later). If you are using any other Windows based C++ IDE, then you can create new "workspace" and just add twitCurl source files to this new "workspace".
+  * Open the workspace file {{{twitcurl.dsw}}} in your Visual C++ IDE and build the library. This dsw file is created using Visual C++ 6.0. If you are using a newer Visual C++, then it will prompt you to "migrate" the project to newer version.
+
+  * Once {{{twitcurl.lib}}} is built, you can link this library with your application. Do not forget to include twitcurl and curl headers in your application.
+
+Note: Currently Microsoft Visual C++ 6.0 workspace ({{{twitcurl.dsw}}}) file is provided with the twitcurl source. This workspace can be used to compile and build twitcurl on Windows using Visual C++ (6.0 or later). If you are using any other Windows based C++ IDE, then you can create new "workspace" or "project" in your IDE and just add twitCurl source files to this new "project".
