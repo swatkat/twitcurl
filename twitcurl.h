@@ -82,6 +82,13 @@ namespace twitterDefaults
     const std::string TWITCURL_SAVEDSEARCHSHOW_URL = "http://twitter.com/saved_searches/show/";
     const std::string TWITCURL_SAVEDSEARCHCREATE_URL = "http://twitter.com/saved_searches/create.xml";
     const std::string TWITCURL_SAVEDSEARCHDESTROY_URL = "http://twitter.com/saved_searches/destroy/";
+
+    /* Trends URLs */
+    const std::string TWITCURL_TRENDS_URL = "http://api.twitter.com/1/trends.json";
+    const std::string TWITCURL_TRENDSDAILY_URL = "http://api.twitter.com/1/trends/daily.json";
+    const std::string TWITCURL_TRENDSCURRENT_URL = "http://api.twitter.com/1/trends/current.json";
+    const std::string TWITCURL_TRENDSWEEKLY_URL = "http://api.twitter.com/1/trends/weekly.json";
+    const std::string TWITCURL_TRENDSAVAILABLE_URL = "http://api.twitter.com/1/trends/available.json";
     
 };
 
@@ -155,6 +162,13 @@ public:
     bool savedSearchCreate( std::string& query /* in */ );
     bool savedSearchShow( std::string& searchId /* in */ );
     bool savedSearchDestroy( std::string& searchId /* in */ );
+
+    /* Twitter trends APIs (JSON) */
+    bool trendsGet();
+    bool trendsDailyGet();
+    bool trendsWeeklyGet();
+    bool trendsCurrentGet();
+    bool trendsAvailableGet();
     
     /* cURL APIs */
     bool isCurlInit();
