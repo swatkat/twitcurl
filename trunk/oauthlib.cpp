@@ -452,11 +452,40 @@ bool oAuth::getOAuthHeader( const eOAuthHttpRequestType eType,
 
         /* Get only key=value data part */
         std::string dataPart = rawUrl.substr( nPos + 1 );
-        size_t nPos2 = dataPart.find_first_of( "=" );
+
+        /* This dataPart can contain many key value pairs: key1=value1&key2=value2&key3=value3 */
+        size_t nSep = std::string::npos;
+        size_t nPos2 = std::string::npos;
+        std::string dataKeyVal( "" );
+        std::string dataKey( "" );
+        std::string dataVal( "" );
+        while( std::string::npos != ( nSep = dataPart.find_first_of("&") ) )
+        {
+            /* Extract first key=value pair */
+            dataKeyVal = dataPart.substr( 0, nSep );
+
+            /* Split them */
+            nPos2 = dataKeyVal.find_first_of( "=" );
+            if( std::string::npos != nPos2 )
+            {
+                dataKey = dataKeyVal.substr( 0, nPos2 );
+                dataVal = dataKeyVal.substr( nPos2 + 1 );
+
+                /* Put this key=value pair in map */
+                rawKeyValuePairs[dataKey] = urlencode( dataVal );
+            }
+            dataPart = dataPart.substr( nSep + 1 );
+        }
+
+        /* For the last key=value */
+        dataKeyVal = dataPart.substr( 0, nSep );
+        
+        /* Split them */
+        nPos2 = dataKeyVal.find_first_of( "=" );
         if( std::string::npos != nPos2 )
         {
-            std::string dataKey = dataPart.substr( 0, nPos2 );
-            std::string dataVal = dataPart.substr( nPos2 + 1 );
+            dataKey = dataKeyVal.substr( 0, nPos2 );
+            dataVal = dataKeyVal.substr( nPos2 + 1 );
 
             /* Put this key=value pair in map */
             rawKeyValuePairs[dataKey] = urlencode( dataVal );
