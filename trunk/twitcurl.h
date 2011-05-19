@@ -24,6 +24,7 @@ namespace twitCurlDefaults
     const std::string TWITCURL_EXTENSIONFORMAT = ".xml";
     const std::string TWITCURL_TARGETSCREENNAME = "?target_screen_name=";
     const std::string TWITCURL_TARGETUSERID = "?target_id=";
+    const std::string TWITCURL_SINCEID = "?since_id=";
 };
 
 /* Default twitter URLs */
@@ -123,7 +124,7 @@ public:
     bool timelineFriendsGet();
     bool timelineUserGet( std::string userInfo = "" /* in */, bool isUserId = false /* in */ );
     bool featuredUsersGet();
-    bool mentionsGet();
+    bool mentionsGet( std::string sinceId = "" /* in */ );
 
     /* Twitter user APIs */
     bool userGet( std::string& userInfo /* in */, bool isUserId = false /* in */ );
