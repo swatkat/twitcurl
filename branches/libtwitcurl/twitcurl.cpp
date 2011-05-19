@@ -474,19 +474,26 @@ bool twitCurl::timelineFriendsGet()
 *
 * @description: method to get mentions
 *
-* @input: none
+* @input: sinceId - String specifying since id parameter
 *
 * @output: true if GET is success, otherwise false. This does not check http
 *          response by twitter. Use getLastWebResponse() for that.
 *
 *--*/
-bool twitCurl::mentionsGet()
+bool twitCurl::mentionsGet( std::string sinceId )
 {
     bool retVal = false;
     if( isCurlInit() )
     {
+        std::string buildUrl( "" );
+        buildUrl = twitterDefaults::TWITCURL_MENTIONS_URL;
+        if( sinceId.length() )
+        {
+            buildUrl.append( twitCurlDefaults::TWITCURL_SINCEID.c_str() );
+            buildUrl.append( sinceId.c_str() );
+        }
         /* Perform GET */
-        retVal = performGet( twitterDefaults::TWITCURL_MENTIONS_URL );
+        retVal = performGet( buildUrl );
     }
     return retVal;
 }
