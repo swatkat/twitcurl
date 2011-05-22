@@ -25,7 +25,7 @@ A separate branch (libtwitcurl) of twitCurl library exists for UNIX/Linux distri
   * Install SVN client. Again, in Ubuntu this is done as follows:
 {{{sudo apt-get install subversion}}}
   * Check-out libtwitcurl using this command:
-{{{svn co http://code.google.com/p/twitcurl/source/browse/svn/branches/libtwitcurl}}}
+{{{svn co http://twitcurl.googlecode.com/svn/branches/libtwitcurl}}}
   * Build the library using the command {{{make}}}.
 
 
