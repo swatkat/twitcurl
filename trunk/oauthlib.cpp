@@ -13,15 +13,7 @@
 * @output: none
 *
 *--*/
-oAuth::oAuth():
-m_consumerKey( "" ),
-m_consumerSecret( "" ),
-m_oAuthTokenKey( "" ),
-m_oAuthTokenSecret( "" ),
-m_oAuthPin( "" ),
-m_nonce( "" ),
-m_timeStamp( "" ),
-m_oAuthScreenName( "" )
+oAuth::oAuth()
 {
 }
 
@@ -308,8 +300,8 @@ bool oAuth::buildOAuthTokenKeyValuePairs( const bool includeOAuthVerifierPin,
     if( rawData.length() > 0 )
     {
         /* Data should already be urlencoded once */
-        std::string dummyStrKey( "" );
-        std::string dummyStrValue( "" );
+        std::string dummyStrKey;
+        std::string dummyStrValue;
         size_t nPos = rawData.find_first_of( "=" );
         if( std::string::npos != nPos )
         {
@@ -341,9 +333,9 @@ bool oAuth::getSignature( const eOAuthHttpRequestType eType,
                           const oAuthKeyValuePairs& rawKeyValuePairs,
                           std::string& oAuthSignature )
 {
-    std::string rawParams( "" );
-    std::string paramsSeperator( "" );
-    std::string sigBase( "" );
+    std::string rawParams;
+    std::string paramsSeperator;
+    std::string sigBase;
 
     /* Initially empty signature */
     oAuthSignature.assign( "" );
@@ -385,7 +377,7 @@ bool oAuth::getSignature( const eOAuthHttpRequestType eType,
 
     /* Now, hash the signature base string using HMAC_SHA1 class */
     CHMAC_SHA1 objHMACSHA1;
-    std::string secretSigningKey( "" );
+    std::string secretSigningKey;
     unsigned char strDigest[oAuthLibDefaults::OAUTHLIB_BUFFSIZE_LARGE];
 
     memset( strDigest, 0, oAuthLibDefaults::OAUTHLIB_BUFFSIZE_LARGE );
@@ -434,9 +426,9 @@ bool oAuth::getOAuthHeader( const eOAuthHttpRequestType eType,
                             const bool includeOAuthVerifierPin )
 {
     oAuthKeyValuePairs rawKeyValuePairs;
-    std::string rawParams( "" );
-    std::string oauthSignature( "" );
-    std::string paramsSeperator( "" );
+    std::string rawParams;
+    std::string oauthSignature;
+    std::string paramsSeperator;
     std::string pureUrl( rawUrl );
 
     /* Clear header string initially */
@@ -456,9 +448,9 @@ bool oAuth::getOAuthHeader( const eOAuthHttpRequestType eType,
         /* This dataPart can contain many key value pairs: key1=value1&key2=value2&key3=value3 */
         size_t nSep = std::string::npos;
         size_t nPos2 = std::string::npos;
-        std::string dataKeyVal( "" );
-        std::string dataKey( "" );
-        std::string dataVal( "" );
+        std::string dataKeyVal;
+        std::string dataKey;
+        std::string dataVal;
         while( std::string::npos != ( nSep = dataPart.find_first_of("&") ) )
         {
             /* Extract first key=value pair */
@@ -533,7 +525,7 @@ bool oAuth::getStringFromOAuthKeyValuePairs( const oAuthKeyValuePairs& rawParamM
     if( rawParamMap.size() )
     {
         oAuthKeyValueList keyValueList;
-        std::string dummyStr( "" );
+        std::string dummyStr;
 
         /* Push key-value pairs to a list of strings */
         keyValueList.clear();
@@ -589,7 +581,7 @@ bool oAuth::extractOAuthTokenKeySecret( const std::string& requestTokenResponse 
     if( requestTokenResponse.length() > 0 )
     {
         size_t nPos = std::string::npos;
-        std::string strDummy( "" );
+        std::string strDummy;
 
         /* Get oauth_token key */
         nPos = requestTokenResponse.find( oAuthLibDefaults::OAUTHLIB_TOKEN_KEY.c_str() );
