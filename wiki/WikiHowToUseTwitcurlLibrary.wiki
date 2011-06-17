@@ -44,11 +44,11 @@ A separate branch (libtwitcurl) of twitCurl library exists for UNIX/Linux distri
 
 
 =Windows:=
-The {{{twitCurl.lib}}} library present in "Download" section is built using Visual C++ 6.0. If you are using a newer version of Visual C++, then you may encounter linker errors (as mentioned here: http://code.google.com/p/twitcurl/issues/detail?id=4 ) when you try to link your application with {{{twitCurl.lib}}} that is built using older version of Visual C++. Follow these steps to freshly build twitcurl library:
+The {{{twitCurl.lib}}} library present in "Download" section is built using Visual C++ 2008 Express Edition. If you are using a different version of Visual C++, then you may encounter linker errors (as mentioned here: http://code.google.com/p/twitcurl/issues/detail?id=4 ) when you try to link your application with this specific {{{twitCurl.lib}}} file. Follow these steps to freshly build twitcurl library in your IDE:
   * Download twitCurl source from {{{http://twitcurl.googlecode.com/svn/trunk}}} using SVN clients like TortoiseSVN.
 
-  * Open the workspace file {{{twitcurl.dsw}}} in your Visual C++ IDE and build the library. This dsw file is created using Visual C++ 6.0. If you are using a newer Visual C++, then it will prompt you to "migrate" the project to newer version.
+  * Open the solution either by opening {{{twitcurl.dsw}}} (for Visual C++ 6.0) or {{{twitcurl.sln}}} (for Visual C++ 2008 and later versions). Build the library {{{twitcurl.lib}}}.
 
   * Once {{{twitcurl.lib}}} is built, you can link this library with your application. Do not forget to include twitCurl and cURL headers in your application, as mentioned in {{{How to use twitcurl library?}}} section above.
 
-Note: Currently Microsoft Visual C++ 6.0 workspace ({{{twitcurl.dsw}}}) file is provided with the twitcurl source. This workspace can be used to compile and build twitcurl on Windows using Visual C++ (6.0 or later). If you are using any other Windows based C++ IDE, then you can create new "workspace" or "project" in your IDE and just add twitCurl source files to this new "project".
+Note: Currently Microsoft Visual C++ 6.0 workspace ({{{twitcurl.dsw}}}) and Visual C++ 2008 solution ({{{twitcurl.sln}}}) files are provided with the twitcurl source. These workspace files can be used to compile and build twitcurl on Windows using Visual C++ (6.0 or later). If you are using any other Windows based C++ IDE, then you can create new "workspace" or "project" in your IDE and just add twitCurl source files to this new "project".
