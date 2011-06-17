@@ -27,15 +27,18 @@ A separate branch (libtwitcurl) of twitCurl library exists for UNIX/Linux distri
 {{{sudo apt-get install subversion}}}
   * Check-out libtwitcurl using this command:
 {{{svn co http://twitcurl.googlecode.com/svn/branches/libtwitcurl}}}
-  * Build the library using the command {{{make}}}.
+  * Build twitcurl library using the command {{{make}}}.
 
-  * Copy {{{twitcurl.h}}} and {{{oauthlib.h}}} to either your application's directory or to common directories like {{{/usr/local/include/}}} or {{{/usr/include/}}}.
+  * Copy {{{twitcurl.h}}} and {{{oauthlib.h}}} to either your application's directory or to a common directory like {{{/usr/local/include/}}} or {{{/usr/include/}}}.
 
-  * Copy {{{libtwitcurl.so.1.0}}} to a suitable directory that's present in {{{LD_LIBRARY_PATH}}} environment variable. Usually it would be {{{/usr/local/lib/}}} or {{{/usr/lib}}}. Also, create a symlink with name {{{libtwitcurl.so.1}}} and {{{libtwitcurl.so}}} in the same directory where {{{libtwitcurl.so.1.0}}} is copied. If library directory is not present in {{{LD_LIBRARY_PATH}}}, then add it using command:
-{{{export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib}}}
+  * Copy {{{libtwitcurl.so.1.0}}} to a suitable directory like {{{/usr/local/lib/}}} or {{{/usr/lib}}}. Also, create a symlink with names {{{libtwitcurl.so.1}}} and {{{libtwitcurl.so}}} in the same directory where {{{libtwitcurl.so.1.0}}} is copied.
 
   * Link your application with twitcurl library (*{{{-ltwitcurl}}}*). For example:
 {{{g++ -ltwitcurl yourapp.cpp}}}
+
+ * To run your application, make sure that {{{LD_LIBRARY_PATH}}} environment variable contains the directory path where {{{libtwitcurl.so.1}}} is present.  If directory path is not present in {{{LD_LIBRARY_PATH}}}, then add it using command {{{export}}} command. For example:
+{{{export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib}}}
+
 
 
 =Windows:=
