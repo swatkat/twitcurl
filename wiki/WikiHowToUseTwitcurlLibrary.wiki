@@ -31,7 +31,9 @@ A separate branch (libtwitcurl) of twitCurl library exists for UNIX/Linux distri
 
   * Copy {{{twitcurl.h}}} and {{{oauthlib.h}}} to either your application's directory or to a common directory like {{{/usr/local/include/}}} or {{{/usr/include/}}}.
 
-  * Copy {{{libtwitcurl.so.1.0}}} to a suitable directory like {{{/usr/local/lib/}}} or {{{/usr/lib}}}. Also, create a symlink with names {{{libtwitcurl.so.1}}} and {{{libtwitcurl.so}}} in the same directory where {{{libtwitcurl.so.1.0}}} is copied.
+  * Copy {{{libtwitcurl.so.1.0}}} to a suitable directory like {{{/usr/local/lib/}}} or {{{/usr/lib}}}. Also, create a symlink with names {{{libtwitcurl.so.1}}} and {{{libtwitcurl.so}}} in the same directory where {{{libtwitcurl.so.1.0}}} is copied. Example:
+{{{ln -sf /usr/local/lib/libtwitcurl.so.1.0 /usr/local/lib/libtwitcurl.so.1}}}<br>
+{{{ln -sf /usr/local/lib/libtwitcurl.so.1.0 /usr/local/lib/libtwitcurl.so}}}
 
   * Link your application with twitcurl library (*{{{-ltwitcurl}}}*). For example:
 {{{g++ -ltwitcurl yourapp.cpp}}}
