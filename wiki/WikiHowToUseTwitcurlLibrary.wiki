@@ -44,7 +44,7 @@ A separate branch (libtwitcurl) of twitCurl library exists for UNIX/Linux distri
 
 
 =Windows:=
-The {{{twitCurl.lib}}} library present in "Download" section is built using Visual C++ 2008 Express Edition. If you are using a different version of Visual C++, then you may encounter linker errors (as mentioned here: http://code.google.com/p/twitcurl/issues/detail?id=4 ) when you try to link your application with this specific {{{twitCurl.lib}}} file. Follow these steps to freshly build twitcurl library in your IDE:
+Follow these steps to build twitcurl library:
   * Download twitCurl source from {{{http://twitcurl.googlecode.com/svn/trunk}}} using SVN clients like TortoiseSVN.
 
   * Open the solution either by opening {{{twitcurl.dsw}}} (for Visual C++ 6.0) or {{{twitcurl.sln}}} (for Visual C++ 2008 and later versions). Build the library {{{twitcurl.lib}}}.
