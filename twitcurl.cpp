@@ -389,7 +389,6 @@ bool twitCurl::statusDestroyById( std::string& statusId )
         buildUrl = twitterDefaults::TWITCURL_STATUDESTROY_URL;
         buildUrl.append( statusId.c_str() );
         buildUrl.append( twitCurlDefaults::TWITCURL_EXTENSIONFORMAT.c_str() );
-
         /* Perform DELETE */
         retVal = performDelete( buildUrl );
     }
@@ -517,6 +516,40 @@ bool twitCurl::timelineUserGet( std::string userInfo, bool isUserId )
     }
     return retVal;
 }
+
+
+/*++
+* ADDED BY ANTIROOT 
+*
+* @method: twitCurl::timelineUserGetTrim
+*
+* @description: method to get mentions
+*
+* @input: userInfo - screen name or user id in string format,
+*         isUserId - true if userInfo contains an id (with user info trimming)
+*
+* @output: true if GET is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::timelineUserGetTrim(bool trim, std::string userInfo, bool isUserId)
+{
+    bool retVal = false;
+    if( isCurlInit() )
+    {
+        /* Prepare URL */
+        std::string buildUrl;
+        utilMakeUrlForUser( buildUrl, twitterDefaults::TWITCURL_USERTIMELINE_URL, userInfo, isUserId );
+
+        /* Perform GET */
+		if(trim){
+			buildUrl.append("?trim_user=1");
+		}
+        retVal = performGet( buildUrl );
+    }
+    return retVal;
+}
+
 
 /*++
 * @method: twitCurl::userGet
@@ -1527,6 +1560,8 @@ bool twitCurl::performGet( const std::string& getUrl )
     curl_easy_setopt( m_curlHandle, CURLOPT_HTTPGET, 1 );
     curl_easy_setopt( m_curlHandle, CURLOPT_URL, getUrl.c_str() );
 
+	printf("TEST: getURL= %s\n",getUrl.c_str());
+
     /* Send http request */
     if( CURLE_OK == curl_easy_perform( m_curlHandle ) )
     {
@@ -1615,6 +1650,10 @@ bool twitCurl::performDelete( const std::string& deleteUrl )
     /* Prepare standard params */
     prepareStandardParams();
 
+	dataStrDummy.clear();
+
+	printf("TEST: DELETEURL=%s\n",deleteUrl.c_str());
+
     /* Set OAuth header */
     m_oAuth.getOAuthHeader( eOAuthHttpDelete, deleteUrl, dataStrDummy, oAuthHttpHeader );
     if( oAuthHttpHeader.length() > 0 )
@@ -1629,6 +1668,7 @@ bool twitCurl::performDelete( const std::string& deleteUrl )
     /* Set http request and url */
     curl_easy_setopt( m_curlHandle, CURLOPT_CUSTOMREQUEST, "DELETE" );
     curl_easy_setopt( m_curlHandle, CURLOPT_URL, deleteUrl.c_str() );
+    curl_easy_setopt( m_curlHandle, CURLOPT_COPYPOSTFIELDS, dataStrDummy.c_str() );
 
     /* Send http request */
     if( CURLE_OK == curl_easy_perform( m_curlHandle ) )
@@ -1873,4 +1913,145 @@ bool twitCurl::oAuthAccessToken()
     return retVal;
 }
 
-// TEST
+/*++ 
+* ADDED BY ANTIROOT 
+*
+* @method: twitCurl::oAuthHandlePIN
+*
+* @description: method to handle user's PIN code from the authentiation URLs 
+*
+* @input: none
+*
+* @output: true if everything went sucessfully, otherwise false
+*
+*--*/
+bool twitCurl::oAuthHandlePIN(std::string& authorizeUrl /* in */ ){
+    std::string dataStr;
+    std::string oAuthHttpHeader;
+	std::string authenticity_token;
+	std::string oauth_token;
+    std::string authorizeUrl2;
+	std::string pin_code;
+	long statLong;
+	size_t nPosStart, nPosEnd;
+    struct curl_slist* pOAuthHeaderList = NULL;
+
+	dataStr.clear();
+
+    /* Prepare standard params */
+    prepareStandardParams();
+
+    /* Set OAuth header */
+    m_oAuth.getOAuthHeader( eOAuthHttpGet, authorizeUrl, dataStr, oAuthHttpHeader );
+    if( oAuthHttpHeader.length() > 0 )
+    {
+        pOAuthHeaderList = curl_slist_append( pOAuthHeaderList, oAuthHttpHeader.c_str() );
+        if( pOAuthHeaderList )
+        {
+            curl_easy_setopt( m_curlHandle, CURLOPT_HTTPHEADER, pOAuthHeaderList );
+        }
+    }
+
+    /* Set http request and url */
+    curl_easy_setopt( m_curlHandle, CURLOPT_HTTPGET, 1 );
+    curl_easy_setopt( m_curlHandle, CURLOPT_URL, authorizeUrl.c_str() );
+
+    /* Send http request */
+    if( CURLE_OK == curl_easy_perform( m_curlHandle ) )
+    {
+        if( pOAuthHeaderList )
+        {
+			curl_easy_getinfo(m_curlHandle, CURLINFO_HTTP_CODE, &statLong);
+			//printf("TEST: Stat Code= %d\n", statLong);
+			//printf("TEST: BODY= %s\n", m_callbackData.c_str());
+
+			// Now, let's find the authenticity_token and oauth_token 
+			nPosStart = m_callbackData.find("authenticity_token\" type=\"hidden\" value=\"");
+			nPosEnd = m_callbackData.substr(nPosStart+41).find("\" />");
+			authenticity_token = m_callbackData.substr(nPosStart+41,nPosEnd);
+			
+			nPosStart = m_callbackData.find("oauth_token\" type=\"hidden\" value=\"");
+			nPosEnd = m_callbackData.substr(nPosStart+34).find("\" />");
+			oauth_token = m_callbackData.substr(nPosStart+34,nPosEnd);
+
+			//printf("TEST: oauth_token=[%s], authenticity_token=[%s]\n", 
+			//	oauth_token.c_str(), authenticity_token.c_str());
+		
+            curl_slist_free_all( pOAuthHeaderList );
+        }
+    } 
+	else if( pOAuthHeaderList )
+    {
+        curl_slist_free_all( pOAuthHeaderList );
+		return false;
+    }
+
+	// Second phase for the authorization 
+
+    pOAuthHeaderList = NULL;
+    oAuthHttpHeader.clear();
+	authorizeUrl2.clear();
+	authorizeUrl2.append("https://twitter.com/oauth/authorize");
+
+    printf("TEST 1: authorizeUrl: %s\n", authorizeUrl2.c_str());
+
+    /* Prepare standard params */
+    prepareStandardParams();
+
+
+	// Now, we need to make a data string for POST operation
+	// which includes oauth_token, authenticity_token, username, password
+	dataStr.clear();
+	dataStr.append("oauth_token=");
+	dataStr.append(oauth_token);
+	dataStr.append("&authenticity_token=");
+	dataStr.append(authenticity_token);
+	dataStr.append("&session[username_or_email]=");
+	dataStr.append(getTwitterUsername());
+	dataStr.append("&session[password]=");
+	dataStr.append(getTwitterPassword());
+
+	//printf("TEST: POST String=%s\n", dataStr.c_str());
+
+    /* Set OAuth header */
+    m_oAuth.getOAuthHeader( eOAuthHttpPost, authorizeUrl2, dataStr, oAuthHttpHeader );
+    if( oAuthHttpHeader.length() > 0 )
+    {
+        pOAuthHeaderList = curl_slist_append( pOAuthHeaderList, oAuthHttpHeader.c_str() );
+        if( pOAuthHeaderList )
+        {
+            curl_easy_setopt( m_curlHandle, CURLOPT_HTTPHEADER, pOAuthHeaderList );
+        }
+    }
+
+    /* Set http request and url */
+    curl_easy_setopt( m_curlHandle, CURLOPT_POST, 1 );
+    curl_easy_setopt( m_curlHandle, CURLOPT_URL, authorizeUrl2.c_str() );
+	curl_easy_setopt( m_curlHandle, CURLOPT_COPYPOSTFIELDS, dataStr.c_str() );
+
+    /* Send http request */
+    if( CURLE_OK == curl_easy_perform( m_curlHandle ) )
+    {
+        if( pOAuthHeaderList )
+        {
+			curl_easy_getinfo(m_curlHandle, CURLINFO_HTTP_CODE, &statLong);
+			//printf("TEST: Stat Code= %ld\n", statLong);
+			//printf("TEST: BODY= %s\n", m_callbackData.c_str());
+
+			// Now, let's find the PIN CODE  
+			nPosStart = m_callbackData.find("code-desc\"><code>");
+			nPosEnd = m_callbackData.substr(nPosStart+17).find("</code>");
+			pin_code = m_callbackData.substr(nPosStart+17,nPosEnd);
+			getOAuth().setOAuthPin(pin_code);
+			//printf("TEST: PIN Code= %s\n", pin_code.c_str());
+			
+            curl_slist_free_all( pOAuthHeaderList );
+			return true;
+        }
+    } 
+	else if( pOAuthHeaderList )
+    {
+        curl_slist_free_all( pOAuthHeaderList );
+    }
+	return false;
+}
