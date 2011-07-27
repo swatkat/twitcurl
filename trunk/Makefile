@@ -49,6 +49,8 @@ install: all
 	$(COPY) lib$(LIBNAME).so.1.0 $(LLIBRARY_DIR)
 	$(COPY) $(LIBNAME).h $(INCLUDE_DIR)/
 	$(COPY) $(LIBNAME).h $(LINCLUDE_DIR)/
+	$(COPY) oauthlib.h $(INCLUDE_DIR)/
+	$(COPY) oauthlib.h $(LINCLUDE_DIR)/
 	ln -sf $(LIBRARY_DIR)/lib$(LIBNAME).so.1.0 $(LIBRARY_DIR)/lib$(LIBNAME).so
 	ln -sf $(LIBRARY_DIR)/lib$(LIBNAME).so.1.0 $(LIBRARY_DIR)/lib$(LIBNAME).so.1
 	ln -sf $(LLIBRARY_DIR)/lib$(LIBNAME).so.1.0 $(LLIBRARY_DIR)/lib$(LIBNAME).so
