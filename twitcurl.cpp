@@ -495,14 +495,15 @@ bool twitCurl::mentionsGet( std::string sinceId )
 *
 * @description: method to get mentions
 *
-* @input: userInfo - screen name or user id in string format,
+* @input: trimUser - Trim user name if true
+*         userInfo - screen name or user id in string format,
 *         isUserId - true if userInfo contains an id
 *
 * @output: true if GET is success, otherwise false. This does not check http
 *          response by twitter. Use getLastWebResponse() for that.
 *
 *--*/
-bool twitCurl::timelineUserGet( std::string userInfo, bool isUserId )
+bool twitCurl::timelineUserGet( bool trimUser, std::string userInfo, bool isUserId )
 {
     bool retVal = false;
     if( isCurlInit() )
@@ -511,45 +512,16 @@ bool twitCurl::timelineUserGet( std::string userInfo, bool isUserId )
         std::string buildUrl;
         utilMakeUrlForUser( buildUrl, twitterDefaults::TWITCURL_USERTIMELINE_URL, userInfo, isUserId );
 
-        /* Perform GET */
-        retVal = performGet( buildUrl );
-    }
-    return retVal;
-}
-
-
-/*++
-* ADDED BY ANTIROOT 
-*
-* @method: twitCurl::timelineUserGetTrim
-*
-* @description: method to get mentions
-*
-* @input: userInfo - screen name or user id in string format,
-*         isUserId - true if userInfo contains an id (with user info trimming)
-*
-* @output: true if GET is success, otherwise false. This does not check http
-*          response by twitter. Use getLastWebResponse() for that.
-*
-*--*/
-bool twitCurl::timelineUserGetTrim(bool trim, std::string userInfo, bool isUserId)
-{
-    bool retVal = false;
-    if( isCurlInit() )
-    {
-        /* Prepare URL */
-        std::string buildUrl;
-        utilMakeUrlForUser( buildUrl, twitterDefaults::TWITCURL_USERTIMELINE_URL, userInfo, isUserId );
-
-        /* Perform GET */
-		if(trim){
-			buildUrl.append("?trim_user=1");
+		if( trimUser )
+		{
+			buildUrl += twitCurlDefaults::TWITCURL_TRIMUSER;
 		}
+
+        /* Perform GET */
         retVal = performGet( buildUrl );
     }
     return retVal;
 }
-
 
 /*++
 * @method: twitCurl::userGet
@@ -1560,8 +1532,6 @@ bool twitCurl::performGet( const std::string& getUrl )
     curl_easy_setopt( m_curlHandle, CURLOPT_HTTPGET, 1 );
     curl_easy_setopt( m_curlHandle, CURLOPT_URL, getUrl.c_str() );
 
-	printf("TEST: getURL= %s\n",getUrl.c_str());
-
     /* Send http request */
     if( CURLE_OK == curl_easy_perform( m_curlHandle ) )
     {
@@ -1649,10 +1619,6 @@ bool twitCurl::performDelete( const std::string& deleteUrl )
 
     /* Prepare standard params */
     prepareStandardParams();
-
-	dataStrDummy.clear();
-
-	printf("TEST: DELETEURL=%s\n",deleteUrl.c_str());
 
     /* Set OAuth header */
     m_oAuth.getOAuthHeader( eOAuthHttpDelete, deleteUrl, dataStrDummy, oAuthHttpHeader );
@@ -1962,8 +1928,6 @@ bool twitCurl::oAuthHandlePIN(std::string& authorizeUrl /* in */ ){
         if( pOAuthHeaderList )
         {
 			curl_easy_getinfo(m_curlHandle, CURLINFO_HTTP_CODE, &statLong);
-			//printf("TEST: Stat Code= %d\n", statLong);
-			//printf("TEST: BODY= %s\n", m_callbackData.c_str());
 
 			// Now, let's find the authenticity_token and oauth_token 
 			nPosStart = m_callbackData.find("authenticity_token\" type=\"hidden\" value=\"");
@@ -1973,10 +1937,7 @@ bool twitCurl::oAuthHandlePIN(std::string& authorizeUrl /* in */ ){
 			nPosStart = m_callbackData.find("oauth_token\" type=\"hidden\" value=\"");
 			nPosEnd = m_callbackData.substr(nPosStart+34).find("\" />");
 			oauth_token = m_callbackData.substr(nPosStart+34,nPosEnd);
-
-			//printf("TEST: oauth_token=[%s], authenticity_token=[%s]\n", 
-			//	oauth_token.c_str(), authenticity_token.c_str());
-		
+	
             curl_slist_free_all( pOAuthHeaderList );
         }
     } 
@@ -1987,13 +1948,10 @@ bool twitCurl::oAuthHandlePIN(std::string& authorizeUrl /* in */ ){
     }
 
 	// Second phase for the authorization 
-
     pOAuthHeaderList = NULL;
     oAuthHttpHeader.clear();
 	authorizeUrl2.clear();
 	authorizeUrl2.append("https://twitter.com/oauth/authorize");
-
-    printf("TEST 1: authorizeUrl: %s\n", authorizeUrl2.c_str());
 
     /* Prepare standard params */
     prepareStandardParams();
@@ -2010,8 +1968,6 @@ bool twitCurl::oAuthHandlePIN(std::string& authorizeUrl /* in */ ){
 	dataStr.append(getTwitterUsername());
 	dataStr.append("&session[password]=");
 	dataStr.append(getTwitterPassword());
-
-	//printf("TEST: POST String=%s\n", dataStr.c_str());
 
     /* Set OAuth header */
     m_oAuth.getOAuthHeader( eOAuthHttpPost, authorizeUrl2, dataStr, oAuthHttpHeader );
@@ -2035,16 +1991,13 @@ bool twitCurl::oAuthHandlePIN(std::string& authorizeUrl /* in */ ){
         if( pOAuthHeaderList )
         {
 			curl_easy_getinfo(m_curlHandle, CURLINFO_HTTP_CODE, &statLong);
-			//printf("TEST: Stat Code= %ld\n", statLong);
-			//printf("TEST: BODY= %s\n", m_callbackData.c_str());
 
 			// Now, let's find the PIN CODE  
 			nPosStart = m_callbackData.find("code-desc\"><code>");
 			nPosEnd = m_callbackData.substr(nPosStart+17).find("</code>");
 			pin_code = m_callbackData.substr(nPosStart+17,nPosEnd);
 			getOAuth().setOAuthPin(pin_code);
-			//printf("TEST: PIN Code= %s\n", pin_code.c_str());
-			
+
             curl_slist_free_all( pOAuthHeaderList );
 			return true;
         }
