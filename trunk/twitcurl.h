@@ -25,6 +25,7 @@ namespace twitCurlDefaults
     const std::string TWITCURL_TARGETSCREENNAME = "?target_screen_name=";
     const std::string TWITCURL_TARGETUSERID = "?target_id=";
     const std::string TWITCURL_SINCEID = "?since_id=";
+	const std::string TWITCURL_TRIMUSER = "?trim_user=1";
 };
 
 /* Default twitter URLs */
@@ -105,10 +106,8 @@ public:
     oAuth& getOAuth();
     bool oAuthRequestToken( std::string& authorizeUrl /* out */ );
     bool oAuthAccessToken();
-
-	/* ADDED BY ANTIROOT */
-    bool oAuthHandlePIN(std::string& authorizeUrl /* in */ );
-    bool timelineUserGetTrim(bool trim /* in */, std::string userInfo = "" /* in */, bool isUserId = false /* in */);
+    bool oAuthHandlePIN( std::string& authorizeUrl /* in */ );
+    
 
     /* Twitter login APIs, set once and forget */
     std::string& getTwitterUsername();
@@ -127,7 +126,7 @@ public:
     /* Twitter timeline APIs */
     bool timelinePublicGet();
     bool timelineFriendsGet();
-    bool timelineUserGet( std::string userInfo = "" /* in */, bool isUserId = false /* in */ );
+    bool timelineUserGet( bool trimUser /* in */, std::string userInfo = "" /* in */, bool isUserId = false /* in */ );
     bool featuredUsersGet();
     bool mentionsGet( std::string sinceId = "" /* in */ );
 
