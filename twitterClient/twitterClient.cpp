@@ -192,7 +192,7 @@ int main( int argc, char* argv[] )
     /* Get user timeline */
     replyMsg = "";
     printf( "\nGetting user timeline\n" );
-    if( twitterObj.timelineUserGet() )
+    if( twitterObj.timelineUserGet( true ) )
     {
         twitterObj.getLastWebResponse( replyMsg );
         printf( "\ntwitterClient:: twitCurl::timelineUserGet web response:\n%s\n", replyMsg.c_str() );

@@ -48,7 +48,7 @@
 				AdditionalIncludeDirectories="./includes"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				StringPooling="true"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=".\Release/twitterClient.pch"
 				AssemblerListingLocation=".\Release/"
@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib twitcurl.lib libcurl.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib twitcurl.lib"
 				OutputFile=".\Release/twitterClient.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
