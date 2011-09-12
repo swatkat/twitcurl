@@ -146,7 +146,7 @@
 				LinkLibraryDependencies="true"
 				AdditionalDependencies="libcurl.lib"
 				OutputFile=".\Release\twitcurl.lib"
-				AdditionalLibraryDirectories=".\lib\"
+				AdditionalLibraryDirectories="./lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
