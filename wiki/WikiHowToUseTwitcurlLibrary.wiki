@@ -17,7 +17,7 @@ http://code.google.com/p/twitcurl/wiki/TwitcurlOAuthFlow
 
 
 =UNIX/Linux:=
-A separate branch (libtwitcurl) of twitCurl library exists for UNIX/Linux distributions. Follow these steps to build library:
+Follow these steps to build library:
   * Make sure you have g++ and dependent packages. If you don't have g++, then install it using package manager. For example, in Ubuntu this is done as follows:
 {{{sudo apt-get install g++}}}
   * Install libcurl development package using package manager. For example, in Ubuntu this is done as follows:
@@ -25,15 +25,10 @@ A separate branch (libtwitcurl) of twitCurl library exists for UNIX/Linux distri
 
   * Install SVN client. Again, in Ubuntu this is done as follows:
 {{{sudo apt-get install subversion}}}
+
   * Check-out libtwitcurl using this command:
-{{{svn co http://twitcurl.googlecode.com/svn/branches/libtwitcurl}}}
+{{{svn co http://twitcurl.googlecode.com/svn/trunk/libtwitcurl}}}
   * Build twitcurl library using the command {{{make}}}.
-
-  * Copy {{{twitcurl.h}}} and {{{oauthlib.h}}} to either your application's directory or to a common directory like {{{/usr/local/include/}}} or {{{/usr/include/}}}.
-
-  * Copy {{{libtwitcurl.so.1.0}}} to a suitable directory like {{{/usr/local/lib/}}} or {{{/usr/lib}}}. Also, create a symlink with names {{{libtwitcurl.so.1}}} and {{{libtwitcurl.so}}} in the same directory where {{{libtwitcurl.so.1.0}}} is copied. Example:
-{{{ln -sf /usr/local/lib/libtwitcurl.so.1.0 /usr/local/lib/libtwitcurl.so.1}}}<br>
-{{{ln -sf /usr/local/lib/libtwitcurl.so.1.0 /usr/local/lib/libtwitcurl.so}}}
 
   * Link your application with twitcurl library (*{{{-ltwitcurl}}}*). For example:
 {{{g++ -ltwitcurl yourapp.cpp}}}
@@ -45,9 +40,9 @@ A separate branch (libtwitcurl) of twitCurl library exists for UNIX/Linux distri
 
 =Windows:=
 Follow these steps to build twitcurl library:
-  * Download twitCurl source from {{{http://twitcurl.googlecode.com/svn/trunk}}} using SVN clients like TortoiseSVN.
+  * Download twitCurl source from {{{http://twitcurl.googlecode.com/svn/trunk/libtwitcurl}}} using SVN clients like TortoiseSVN.
 
-  * Open the solution either by opening {{{twitcurl.dsw}}} (for Visual C++ 6.0) or {{{twitcurl.sln}}} (for Visual C++ 2008 and later versions). Build the library {{{twitcurl.lib}}}.
+  * Open the solution either by opening {{{twitcurl.sln}}} (Visual C++ 2008 and later versions). Build the library {{{twitcurl.lib}}}.
 
   * Once {{{twitcurl.lib}}} is built, you can link this library with your application. Do not forget to include twitCurl and cURL headers in your application, as mentioned in {{{How to use twitcurl library?}}} section above.
 
