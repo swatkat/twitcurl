@@ -143,7 +143,10 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				LinkLibraryDependencies="true"
+				AdditionalDependencies="libcurl.lib"
 				OutputFile=".\Release\twitcurl.lib"
+				AdditionalLibraryDirectories=".\lib\"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
