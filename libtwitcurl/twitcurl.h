@@ -2,6 +2,7 @@
 #define _TWITCURL_H_
 
 #include <string>
+#include <sstream>
 #include <cstring>
 #include "oauthlib.h"
 #include "curl/curl.h"
@@ -13,6 +14,7 @@ namespace twitCurlDefaults
     const int TWITCURL_DEFAULT_BUFFSIZE = 1024;
     const std::string TWITCURL_COLON = ":";
     const char TWITCURL_EOS = '\0';
+	const unsigned int MAX_TIMELINE_TWEET_COUNT = 200;
 
     /* Miscellaneous data used to build twitter URLs*/
     const std::string TWITCURL_STATUSSTRING = "status=";
@@ -26,6 +28,8 @@ namespace twitCurlDefaults
     const std::string TWITCURL_TARGETUSERID = "?target_id=";
     const std::string TWITCURL_SINCEID = "?since_id=";
 	const std::string TWITCURL_TRIMUSER = "?trim_user=1";
+	const std::string TWITCURL_INCRETWEETS = "?include_rts=1";
+	const std::string TWITCURL_TIMELINECOUNT = "?count=";
 };
 
 /* Default twitter URLs */
@@ -126,7 +130,7 @@ public:
     /* Twitter timeline APIs */
     bool timelinePublicGet();
     bool timelineFriendsGet();
-    bool timelineUserGet( bool trimUser /* in */, std::string userInfo = "" /* in */, bool isUserId = false /* in */ );
+    bool timelineUserGet( bool trimUser /* in */, bool includeRetweets /* in */, unsigned int tweetCount /* in */, std::string userInfo = "" /* in */, bool isUserId = false /* in */ );
     bool featuredUsersGet();
     bool mentionsGet( std::string sinceId = "" /* in */ );
 

@@ -496,6 +496,7 @@ bool twitCurl::mentionsGet( std::string sinceId )
 * @description: method to get mentions
 *
 * @input: trimUser - Trim user name if true
+*         tweetCount - Number of tweets to get. Max 200.
 *         userInfo - screen name or user id in string format,
 *         isUserId - true if userInfo contains an id
 *
@@ -503,14 +504,28 @@ bool twitCurl::mentionsGet( std::string sinceId )
 *          response by twitter. Use getLastWebResponse() for that.
 *
 *--*/
-bool twitCurl::timelineUserGet( bool trimUser, std::string userInfo, bool isUserId )
+bool twitCurl::timelineUserGet( bool trimUser, bool includeRetweets, unsigned int tweetCount, std::string userInfo, bool isUserId )
 {
     bool retVal = false;
     if( isCurlInit() )
     {
         /* Prepare URL */
         std::string buildUrl;
+		std::stringstream tmpStrm;
         utilMakeUrlForUser( buildUrl, twitterDefaults::TWITCURL_USERTIMELINE_URL, userInfo, isUserId );
+
+		if( tweetCount > twitCurlDefaults::MAX_TIMELINE_TWEET_COUNT )
+		{
+			tweetCount = twitCurlDefaults::MAX_TIMELINE_TWEET_COUNT;
+		}
+		tmpStrm << twitCurlDefaults::TWITCURL_TIMELINECOUNT << tweetCount;
+		buildUrl += tmpStrm.str();
+		tmpStrm.str().clear();
+
+		if( includeRetweets )
+		{
+			buildUrl += twitCurlDefaults::TWITCURL_INCRETWEETS;
+		}
 
 		if( trimUser )
 		{
