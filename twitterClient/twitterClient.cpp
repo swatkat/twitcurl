@@ -153,7 +153,7 @@ int main( int argc, char* argv[] )
         tmpStr = proxyPassword;
         twitterObj.setProxyPassword( tmpStr );
     }
-#ifdef CMNT
+
     /* Post a new status message */
     char statusMsg[1024];
     memset( statusMsg, 0, 1024 );
@@ -188,7 +188,7 @@ int main( int argc, char* argv[] )
         twitterObj.getLastCurlError( replyMsg );
         printf( "\ntwitterClient:: twitCurl::statusDestroyById error:\n%s\n", replyMsg.c_str() );
     }
-#endif
+
     /* Get user timeline */
     replyMsg = "";
     printf( "\nGetting user timeline\n" );
@@ -203,7 +203,6 @@ int main( int argc, char* argv[] )
         printf( "\ntwitterClient:: twitCurl::timelineUserGet error:\n%s\n", replyMsg.c_str() );
     }
 
-#ifdef COMMENTED
     /* Get public timeline */
     replyMsg = "";
     printf( "\nGetting public timeline\n" );
@@ -244,7 +243,6 @@ int main( int argc, char* argv[] )
         twitterObj.getLastCurlError( replyMsg );
         printf( "\ntwitterClient:: twitCurl::trendsDailyGet error:\n%s\n", replyMsg.c_str() );
     }
-#endif
 
     return 0;
 }

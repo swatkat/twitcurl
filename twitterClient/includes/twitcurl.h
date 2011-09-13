@@ -14,7 +14,7 @@ namespace twitCurlDefaults
     const int TWITCURL_DEFAULT_BUFFSIZE = 1024;
     const std::string TWITCURL_COLON = ":";
     const char TWITCURL_EOS = '\0';
-	const unsigned int MAX_TIMELINE_TWEET_COUNT = 200;
+    const unsigned int MAX_TIMELINE_TWEET_COUNT = 200;
 
     /* Miscellaneous data used to build twitter URLs*/
     const std::string TWITCURL_STATUSSTRING = "status=";
@@ -27,9 +27,9 @@ namespace twitCurlDefaults
     const std::string TWITCURL_TARGETSCREENNAME = "?target_screen_name=";
     const std::string TWITCURL_TARGETUSERID = "?target_id=";
     const std::string TWITCURL_SINCEID = "?since_id=";
-	const std::string TWITCURL_TRIMUSER = "?trim_user=1";
-	const std::string TWITCURL_INCRETWEETS = "?include_rts=1";
-	const std::string TWITCURL_TIMELINECOUNT = "?count=";
+    const std::string TWITCURL_TRIMUSER = "?trim_user=1";
+    const std::string TWITCURL_INCRETWEETS = "?include_rts=1";
+    const std::string TWITCURL_TIMELINECOUNT = "?count=";
 };
 
 /* Default twitter URLs */
