@@ -20,16 +20,20 @@ namespace twitCurlDefaults
     const std::string TWITCURL_STATUSSTRING = "status=";
     const std::string TWITCURL_TEXTSTRING = "text=";
     const std::string TWITCURL_QUERYSTRING = "query=";  
-    const std::string TWITCURL_SEARCHQUERYSTRING = "?q=";      
-    const std::string TWITCURL_SCREENNAME = "?screen_name=";
-    const std::string TWITCURL_USERID = "?user_id=";
+    const std::string TWITCURL_SEARCHQUERYSTRING = "q=";      
+    const std::string TWITCURL_SCREENNAME = "screen_name=";
+    const std::string TWITCURL_USERID = "user_id=";
     const std::string TWITCURL_EXTENSIONFORMAT = ".xml";
-    const std::string TWITCURL_TARGETSCREENNAME = "?target_screen_name=";
-    const std::string TWITCURL_TARGETUSERID = "?target_id=";
-    const std::string TWITCURL_SINCEID = "?since_id=";
-    const std::string TWITCURL_TRIMUSER = "?trim_user=1";
-    const std::string TWITCURL_INCRETWEETS = "?include_rts=1";
-    const std::string TWITCURL_TIMELINECOUNT = "?count=";
+    const std::string TWITCURL_TARGETSCREENNAME = "target_screen_name=";
+    const std::string TWITCURL_TARGETUSERID = "target_id=";
+    const std::string TWITCURL_SINCEID = "since_id=";
+    const std::string TWITCURL_TRIMUSER = "trim_user=1";
+    const std::string TWITCURL_INCRETWEETS = "include_rts=1";
+    const std::string TWITCURL_COUNT = "count=";
+
+	/* URL separators */
+	const std::string TWITCURL_URL_SEP_AMP = "&";
+	const std::string TWITCURL_URL_SEP_QUES = "?";
 };
 
 /* Default twitter URLs */
@@ -120,7 +124,7 @@ public:
     void setTwitterPassword( std::string& passWord /* in */ );
 
     /* Twitter search APIs */
-    bool search( std::string& query /* in */ );
+    bool search( std::string& searchQuery /* in */ );
 
     /* Twitter status APIs */
     bool statusUpdate( std::string& newStatus /* in */ );
