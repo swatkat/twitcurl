@@ -186,7 +186,6 @@ public:
 
     /* Internal cURL related methods */
     int saveLastWebResponse( char*& data, size_t size );
-    static int curlCallback( char* data, size_t size, size_t nmemb, twitCurl* pTwitCurlObj );
 
     /* cURL proxy APIs */
     std::string& getProxyServerIp();
@@ -232,6 +231,9 @@ private:
     bool performGet( const std::string& getUrl, const std::string& oAuthHttpHeader );
     bool performDelete( const std::string& deleteUrl );
     bool performPost( const std::string& postUrl, std::string dataStr = "" );
+
+	/* Internal cURL related methods */
+	static int curlCallback( char* data, size_t size, size_t nmemb, twitCurl* pTwitCurlObj );
 };
 
 
