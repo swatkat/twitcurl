@@ -31,9 +31,9 @@ namespace twitCurlDefaults
     const std::string TWITCURL_INCRETWEETS = "include_rts=1";
     const std::string TWITCURL_COUNT = "count=";
 
-	/* URL separators */
-	const std::string TWITCURL_URL_SEP_AMP = "&";
-	const std::string TWITCURL_URL_SEP_QUES = "?";
+    /* URL separators */
+    const std::string TWITCURL_URL_SEP_AMP = "&";
+    const std::string TWITCURL_URL_SEP_QUES = "?";
 };
 
 /* Default twitter URLs */
@@ -236,8 +236,8 @@ private:
     bool performDelete( const std::string& deleteUrl );
     bool performPost( const std::string& postUrl, std::string dataStr = "" );
 
-	/* Internal cURL related methods */
-	static int curlCallback( char* data, size_t size, size_t nmemb, twitCurl* pTwitCurlObj );
+    /* Internal cURL related methods */
+    static int curlCallback( char* data, size_t size, size_t nmemb, twitCurl* pTwitCurlObj );
 };
 
 
