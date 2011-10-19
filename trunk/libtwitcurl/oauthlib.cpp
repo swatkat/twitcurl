@@ -58,7 +58,7 @@ void oAuth::getConsumerKey( std::string& consumerKey )
 *--*/
 void oAuth::setConsumerKey( const std::string& consumerKey )
 {
-    m_consumerKey.assign( consumerKey.c_str() );
+    m_consumerKey.assign( consumerKey );
 }
 
 /*++
@@ -232,7 +232,7 @@ void oAuth::generateNonceTimeStamp()
     srand( time( NULL ) );
     sprintf( szRand, "%x", rand()%1000 );
     sprintf( szTime, "%ld", time( NULL ) );
-    
+
     m_nonce.assign( szTime );
     m_nonce.append( szRand );
     m_timeStamp.assign( szTime );
@@ -249,6 +249,7 @@ void oAuth::generateNonceTimeStamp()
 *                                   used during exchanging request token with access token.
 *         rawData - url encoded data. this is used during signature generation.
 *         oauthSignature - base64 and url encoded OAuth signature.
+*         generateTimestamp - If true, then generate new timestamp for nonce.
 *
 * @output: keyValueMap - map in which key-value pairs are populated
 *
@@ -258,10 +259,14 @@ void oAuth::generateNonceTimeStamp()
 bool oAuth::buildOAuthTokenKeyValuePairs( const bool includeOAuthVerifierPin,
                                           const std::string& rawData,
                                           const std::string& oauthSignature,
-                                          oAuthKeyValuePairs& keyValueMap )
+                                          oAuthKeyValuePairs& keyValueMap,
+                                          bool generateTimestamp )
 {
     /* Generate nonce and timestamp if required */
-    generateNonceTimeStamp();
+    if( generateTimestamp )
+    {
+        generateNonceTimeStamp();
+    }
 
     /* Consumer key and its value */
     keyValueMap[oAuthLibDefaults::OAUTHLIB_CONSUMERKEY_KEY] = m_consumerKey;
@@ -383,7 +388,7 @@ bool oAuth::getSignature( const eOAuthHttpRequestType eType,
     memset( strDigest, 0, oAuthLibDefaults::OAUTHLIB_BUFFSIZE_LARGE );
 
     /* Signing key is composed of consumer_secret&token_secret */
-    secretSigningKey.assign( m_consumerSecret.c_str() );
+    secretSigningKey.assign( m_consumerSecret );
     secretSigningKey.append( "&" );
     if( m_oAuthTokenSecret.length() > 0 )
     {
@@ -485,20 +490,20 @@ bool oAuth::getOAuthHeader( const eOAuthHttpRequestType eType,
     }
 
     /* Build key-value pairs needed for OAuth request token, without signature */
-    buildOAuthTokenKeyValuePairs( includeOAuthVerifierPin, rawData, std::string( "" ), rawKeyValuePairs );
+    buildOAuthTokenKeyValuePairs( includeOAuthVerifierPin, rawData, std::string( "" ), rawKeyValuePairs, true );
 
     /* Get url encoded base64 signature using request type, url and parameters */
     getSignature( eType, pureUrl, rawKeyValuePairs, oauthSignature );
 
     /* Now, again build key-value pairs with signature this time */
-    buildOAuthTokenKeyValuePairs( includeOAuthVerifierPin, std::string( "" ), oauthSignature, rawKeyValuePairs );
+    buildOAuthTokenKeyValuePairs( includeOAuthVerifierPin, std::string( "" ), oauthSignature, rawKeyValuePairs, false );
 
     /* Get OAuth header in string format */
     paramsSeperator = ",";
     getStringFromOAuthKeyValuePairs( rawKeyValuePairs, rawParams, paramsSeperator );
 
     /* Build authorization header */
-    oAuthHttpHeader.assign( oAuthLibDefaults::OAUTHLIB_AUTHHEADER_STRING.c_str() );
+    oAuthHttpHeader.assign( oAuthLibDefaults::OAUTHLIB_AUTHHEADER_STRING );
     oAuthHttpHeader.append( rawParams.c_str() );
 
     return ( oAuthHttpHeader.length() > 0 ) ? true : false;
