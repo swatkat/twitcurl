@@ -392,7 +392,7 @@ bool oAuth::getSignature( const eOAuthHttpRequestType eType,
     secretSigningKey.append( "&" );
     if( m_oAuthTokenSecret.length() > 0 )
     {
-        secretSigningKey.append( m_oAuthTokenSecret.c_str() );
+        secretSigningKey.append( m_oAuthTokenSecret );
     }
   
     objHMACSHA1.HMAC_SHA1( (unsigned char*)sigBase.c_str(),
@@ -504,7 +504,7 @@ bool oAuth::getOAuthHeader( const eOAuthHttpRequestType eType,
 
     /* Build authorization header */
     oAuthHttpHeader.assign( oAuthLibDefaults::OAUTHLIB_AUTHHEADER_STRING );
-    oAuthHttpHeader.append( rawParams.c_str() );
+    oAuthHttpHeader.append( rawParams );
 
     return ( oAuthHttpHeader.length() > 0 ) ? true : false;
 }
@@ -589,7 +589,7 @@ bool oAuth::extractOAuthTokenKeySecret( const std::string& requestTokenResponse 
         std::string strDummy;
 
         /* Get oauth_token key */
-        nPos = requestTokenResponse.find( oAuthLibDefaults::OAUTHLIB_TOKEN_KEY.c_str() );
+        nPos = requestTokenResponse.find( oAuthLibDefaults::OAUTHLIB_TOKEN_KEY );
         if( std::string::npos != nPos )
         {
             nPos = nPos + oAuthLibDefaults::OAUTHLIB_TOKEN_KEY.length() + strlen( "=" );
@@ -602,7 +602,7 @@ bool oAuth::extractOAuthTokenKeySecret( const std::string& requestTokenResponse 
         }
 
         /* Get oauth_token_secret */
-        nPos = requestTokenResponse.find( oAuthLibDefaults::OAUTHLIB_TOKENSECRET_KEY.c_str() );
+        nPos = requestTokenResponse.find( oAuthLibDefaults::OAUTHLIB_TOKENSECRET_KEY );
         if( std::string::npos != nPos )
         {
             nPos = nPos + oAuthLibDefaults::OAUTHLIB_TOKENSECRET_KEY.length() + strlen( "=" );
@@ -615,7 +615,7 @@ bool oAuth::extractOAuthTokenKeySecret( const std::string& requestTokenResponse 
         }
 
         /* Get screen_name */
-        nPos = requestTokenResponse.find( oAuthLibDefaults::OAUTHLIB_SCREENNAME_KEY.c_str() );
+        nPos = requestTokenResponse.find( oAuthLibDefaults::OAUTHLIB_SCREENNAME_KEY );
         if( std::string::npos != nPos )
         {
             nPos = nPos + oAuthLibDefaults::OAUTHLIB_SCREENNAME_KEY.length() + strlen( "=" );
