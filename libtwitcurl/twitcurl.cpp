@@ -1830,7 +1830,7 @@ bool twitCurl::oAuthRequestToken( std::string& authorizeUrl /* out */ )
                 m_oAuth.getOAuthTokenKey( oAuthTokenKey );
 
                 /* Build authorize url so that user can visit in browser and get PIN */
-                authorizeUrl.assign( oAuthTwitterApiUrls::OAUTHLIB_TWITTER_AUTHORIZE_URL.c_str() );
+                authorizeUrl.assign( oAuthTwitterApiUrls::OAUTHLIB_TWITTER_AUTHORIZE_URL );
                 authorizeUrl.append( oAuthTokenKey.c_str() );
 
                 retVal = true;

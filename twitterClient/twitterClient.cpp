@@ -47,8 +47,8 @@ int main( int argc, char* argv[] )
     char szKey[1024];
     std::string myOAuthAccessTokenKey("");
     std::string myOAuthAccessTokenSecret("");
-	std::ifstream oAuthTokenKeyIn;
-	std::ifstream oAuthTokenSecretIn;
+    std::ifstream oAuthTokenKeyIn;
+    std::ifstream oAuthTokenSecretIn;
 
     oAuthTokenKeyIn.open( "twitterClient_token_key.txt" );
     oAuthTokenSecretIn.open( "twitterClient_token_secret.txt" );
@@ -94,8 +94,8 @@ int main( int argc, char* argv[] )
         twitterObj.getOAuth().getOAuthTokenSecret( myOAuthAccessTokenSecret );
 
         /* Step 6: Save these keys in a file or wherever */
-		std::ofstream oAuthTokenKeyOut;
-		std::ofstream oAuthTokenSecretOut;
+        std::ofstream oAuthTokenKeyOut;
+        std::ofstream oAuthTokenSecretOut;
 
         oAuthTokenKeyOut.open( "twitterClient_token_key.txt" );
         oAuthTokenSecretOut.open( "twitterClient_token_secret.txt" );
@@ -172,6 +172,7 @@ int main( int argc, char* argv[] )
         printf( "\ntwitterClient:: twitCurl::statusUpdate error:\n%s\n", replyMsg.c_str() );
     }
 
+#ifdef _TWITCURL_TEST_
     /* Destroy a status message */
     memset( statusMsg, 0, 1024 );
     printf( "\nEnter status message id to delete: " );
@@ -188,6 +189,7 @@ int main( int argc, char* argv[] )
         twitterObj.getLastCurlError( replyMsg );
         printf( "\ntwitterClient:: twitCurl::statusDestroyById error:\n%s\n", replyMsg.c_str() );
     }
+#endif // _TWITCURL_TEST_
 
     /* Get user timeline */
     replyMsg = "";

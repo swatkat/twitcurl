@@ -3,6 +3,7 @@
 
 #include "time.h"
 #include <cstdlib>
+#include <sstream>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -97,7 +98,8 @@ private:
     bool buildOAuthTokenKeyValuePairs( const bool includeOAuthVerifierPin, /* in */
                                        const std::string& rawData, /* in */
                                        const std::string& oauthSignature, /* in */
-                                       oAuthKeyValuePairs& keyValueMap /* out */ );
+                                       oAuthKeyValuePairs& keyValueMap /* out */,
+                                       bool generateTimestamp /* in */ );
 
     bool getStringFromOAuthKeyValuePairs( const oAuthKeyValuePairs& rawParamMap, /* in */
                                           std::string& rawParams, /* out */
