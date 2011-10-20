@@ -260,7 +260,7 @@ bool oAuth::buildOAuthTokenKeyValuePairs( const bool includeOAuthVerifierPin,
                                           const std::string& rawData,
                                           const std::string& oauthSignature,
                                           oAuthKeyValuePairs& keyValueMap,
-                                          bool generateTimestamp )
+                                          const bool generateTimestamp )
 {
     /* Generate nonce and timestamp if required */
     if( generateTimestamp )
@@ -275,7 +275,7 @@ bool oAuth::buildOAuthTokenKeyValuePairs( const bool includeOAuthVerifierPin,
     keyValueMap[oAuthLibDefaults::OAUTHLIB_NONCE_KEY] = m_nonce;
 
     /* Signature if supplied */
-    if( oauthSignature.length() > 0 )
+    if( oauthSignature.length() )
     {
         keyValueMap[oAuthLibDefaults::OAUTHLIB_SIGNATURE_KEY] = oauthSignature;
     }
@@ -287,13 +287,13 @@ bool oAuth::buildOAuthTokenKeyValuePairs( const bool includeOAuthVerifierPin,
     keyValueMap[oAuthLibDefaults::OAUTHLIB_TIMESTAMP_KEY] = m_timeStamp;
 
     /* Token */
-    if( m_oAuthTokenKey.length() > 0 )
+    if( m_oAuthTokenKey.length() )
     {
         keyValueMap[oAuthLibDefaults::OAUTHLIB_TOKEN_KEY] = m_oAuthTokenKey;
     }
 
     /* Verifier */
-    if( includeOAuthVerifierPin && ( m_oAuthPin.length() > 0 ) )
+    if( includeOAuthVerifierPin && m_oAuthPin.length() )
     {
         keyValueMap[oAuthLibDefaults::OAUTHLIB_VERIFIER_KEY] = m_oAuthPin;
     }
@@ -302,7 +302,7 @@ bool oAuth::buildOAuthTokenKeyValuePairs( const bool includeOAuthVerifierPin,
     keyValueMap[oAuthLibDefaults::OAUTHLIB_VERSION_KEY] = std::string( "1.0" );
 
     /* Data if it's present */
-    if( rawData.length() > 0 )
+    if( rawData.length() )
     {
         /* Data should already be urlencoded once */
         std::string dummyStrKey;
@@ -316,7 +316,7 @@ bool oAuth::buildOAuthTokenKeyValuePairs( const bool includeOAuthVerifierPin,
         }
     }
 
-    return ( keyValueMap.size() > 0 ) ? true : false;
+    return ( keyValueMap.size() ) ? true : false;
 }
 
 /*++
@@ -390,7 +390,7 @@ bool oAuth::getSignature( const eOAuthHttpRequestType eType,
     /* Signing key is composed of consumer_secret&token_secret */
     secretSigningKey.assign( m_consumerSecret );
     secretSigningKey.append( "&" );
-    if( m_oAuthTokenSecret.length() > 0 )
+    if( m_oAuthTokenSecret.length() )
     {
         secretSigningKey.append( m_oAuthTokenSecret );
     }
@@ -407,7 +407,7 @@ bool oAuth::getSignature( const eOAuthHttpRequestType eType,
     /* Do an url encode */
     oAuthSignature = urlencode( base64Str );
 
-    return ( oAuthSignature.length() > 0 ) ? true : false;
+    return ( oAuthSignature.length() ) ? true : false;
 }
 
 /*++
@@ -506,7 +506,7 @@ bool oAuth::getOAuthHeader( const eOAuthHttpRequestType eType,
     oAuthHttpHeader.assign( oAuthLibDefaults::OAUTHLIB_AUTHHEADER_STRING );
     oAuthHttpHeader.append( rawParams );
 
-    return ( oAuthHttpHeader.length() > 0 ) ? true : false;
+    return ( oAuthHttpHeader.length() ) ? true : false;
 }
 
 /*++
@@ -559,7 +559,7 @@ bool oAuth::getStringFromOAuthKeyValuePairs( const oAuthKeyValuePairs& rawParamM
         oAuthKeyValueList::iterator itKeyValue = keyValueList.begin();
         for( ; itKeyValue != keyValueList.end(); itKeyValue++ )
         {
-            if( dummyStr.length() > 0 )
+            if( dummyStr.length() )
             {
                 dummyStr.append( paramsSeperator );
             }
@@ -567,7 +567,7 @@ bool oAuth::getStringFromOAuthKeyValuePairs( const oAuthKeyValuePairs& rawParamM
         }
         rawParams.assign( dummyStr );
     }
-    return ( rawParams.length() > 0 ) ? true : false;
+    return ( rawParams.length() ) ? true : false;
 }
 
 /*++
@@ -583,7 +583,7 @@ bool oAuth::getStringFromOAuthKeyValuePairs( const oAuthKeyValuePairs& rawParamM
 *--*/
 bool oAuth::extractOAuthTokenKeySecret( const std::string& requestTokenResponse )
 {
-    if( requestTokenResponse.length() > 0 )
+    if( requestTokenResponse.length() )
     {
         size_t nPos = std::string::npos;
         std::string strDummy;

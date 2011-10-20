@@ -99,7 +99,7 @@ private:
                                        const std::string& rawData, /* in */
                                        const std::string& oauthSignature, /* in */
                                        oAuthKeyValuePairs& keyValueMap /* out */,
-                                       bool generateTimestamp /* in */ );
+                                       const bool generateTimestamp /* in */ );
 
     bool getStringFromOAuthKeyValuePairs( const oAuthKeyValuePairs& rawParamMap, /* in */
                                           std::string& rawParams, /* out */
