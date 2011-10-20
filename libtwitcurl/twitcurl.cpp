@@ -1514,7 +1514,7 @@ bool twitCurl::performGet( const std::string& getUrl )
 
     /* Set OAuth header */
     m_oAuth.getOAuthHeader( eOAuthHttpGet, getUrl, dataStrDummy, oAuthHttpHeader );
-    if( oAuthHttpHeader.length() > 0 )
+    if( oAuthHttpHeader.length() )
     {
         pOAuthHeaderList = curl_slist_append( pOAuthHeaderList, oAuthHttpHeader.c_str() );
         if( pOAuthHeaderList )
@@ -1568,7 +1568,7 @@ bool twitCurl::performGet( const std::string& getUrl, const std::string& oAuthHt
     curl_easy_setopt( m_curlHandle, CURLOPT_URL, getUrl.c_str() );
 
     /* Set header */
-    if( oAuthHttpHeader.length() > 0 )
+    if( oAuthHttpHeader.length() )
     {
         pOAuthHeaderList = curl_slist_append( pOAuthHeaderList, oAuthHttpHeader.c_str() );
         if( pOAuthHeaderList )
@@ -1617,7 +1617,7 @@ bool twitCurl::performDelete( const std::string& deleteUrl )
 
     /* Set OAuth header */
     m_oAuth.getOAuthHeader( eOAuthHttpDelete, deleteUrl, dataStrDummy, oAuthHttpHeader );
-    if( oAuthHttpHeader.length() > 0 )
+    if( oAuthHttpHeader.length() )
     {
         pOAuthHeaderList = curl_slist_append( pOAuthHeaderList, oAuthHttpHeader.c_str() );
         if( pOAuthHeaderList )
@@ -1689,7 +1689,7 @@ bool twitCurl::performPost( const std::string& postUrl, std::string dataStr )
 
     /* Set OAuth header */
     m_oAuth.getOAuthHeader( eOAuthHttpPost, postUrl, dataStr, oAuthHttpHeader );
-    if( oAuthHttpHeader.length() > 0 )
+    if( oAuthHttpHeader.length() )
     {
         pOAuthHeaderList = curl_slist_append( pOAuthHeaderList, oAuthHttpHeader.c_str() );
         if( pOAuthHeaderList )
@@ -1904,7 +1904,7 @@ bool twitCurl::oAuthHandlePIN(std::string& authorizeUrl /* in */ ){
 
     /* Set OAuth header */
     m_oAuth.getOAuthHeader( eOAuthHttpGet, authorizeUrl, dataStr, oAuthHttpHeader );
-    if( oAuthHttpHeader.length() > 0 )
+    if( oAuthHttpHeader.length() )
     {
         pOAuthHeaderList = curl_slist_append( pOAuthHeaderList, oAuthHttpHeader.c_str() );
         if( pOAuthHeaderList )
@@ -1965,7 +1965,7 @@ bool twitCurl::oAuthHandlePIN(std::string& authorizeUrl /* in */ ){
 
     /* Set OAuth header */
     m_oAuth.getOAuthHeader( eOAuthHttpPost, authorizeUrl2, dataStr, oAuthHttpHeader );
-    if( oAuthHttpHeader.length() > 0 )
+    if( oAuthHttpHeader.length() )
     {
         pOAuthHeaderList = curl_slist_append( pOAuthHeaderList, oAuthHttpHeader.c_str() );
         if( pOAuthHeaderList )
