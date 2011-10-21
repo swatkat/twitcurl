@@ -8,7 +8,9 @@ Step 0: Set consumer key and secret in twitCurl object using `twitCurl::getOAuth
 
 Step 1: Get request token and secret using `twitCurl::oAuthRequestToken()` method.
 
-Step 2: Method `twitCurl::oAuthRequestToken()` gives back a URL, which a user needs to visit and authorize your app. Redirect user to this link (for ex: via web browser) and get the PIN. Set this PIN into `twitCurl` object using `twitCurl::getOAuth()::setOAuthPin()` method.
+Step 2: Method `twitCurl::oAuthRequestToken()` gives back a URL, which a user needs to visit and authorize your app. You now have two options:
+  * Redirect user to this link (for ex: via web browser) and get the PIN. Set this PIN into `twitCurl` object using `twitCurl::getOAuth()::setOAuthPin()` method.
+  * Or, use `twitCurl::oAuthHandlePIN()` and pass the URL obtained earlier to this method. `twitCurl::oAuthHandlePIN()` will query twitter, gets the PIN and authenticates the user. User is not required to visit URL out-of-band.
 
 Step 3: Exchange request token with access token by calling `twitCurl::oAuthAccessToken()` method.
 
