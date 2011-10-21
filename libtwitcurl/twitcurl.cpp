@@ -1886,18 +1886,16 @@ bool twitCurl::oAuthAccessToken()
 * @output: true if everything went sucessfully, otherwise false
 *
 *--*/
-bool twitCurl::oAuthHandlePIN(std::string& authorizeUrl /* in */ ){
+bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
+{
     std::string dataStr;
     std::string oAuthHttpHeader;
-    std::string authenticity_token;
-    std::string oauth_token;
-    std::string authorizeUrl2;
-    std::string pin_code;
-    long statLong;
+    std::string authenticityTokenVal;
+    std::string oauthTokenVal;
+    std::string pinCodeVal;
+    unsigned long httpStatusCode = 0;
     size_t nPosStart, nPosEnd;
     struct curl_slist* pOAuthHeaderList = NULL;
-
-    dataStr.clear();
 
     /* Prepare standard params */
     prepareStandardParams();
@@ -1922,16 +1920,18 @@ bool twitCurl::oAuthHandlePIN(std::string& authorizeUrl /* in */ ){
     {
         if( pOAuthHeaderList )
         {
-            curl_easy_getinfo(m_curlHandle, CURLINFO_HTTP_CODE, &statLong);
+            curl_easy_getinfo( m_curlHandle, CURLINFO_HTTP_CODE, &httpStatusCode );
 
-            // Now, let's find the authenticity_token and oauth_token 
-            nPosStart = m_callbackData.find("authenticity_token\" type=\"hidden\" value=\"");
-            nPosEnd = m_callbackData.substr(nPosStart+41).find("\" />");
-            authenticity_token = m_callbackData.substr(nPosStart+41,nPosEnd);
+            // Now, let's find the authenticity token and oauth token 
+            nPosStart = m_callbackData.find( oAuthLibDefaults::OAUTHLIB_AUTHENTICITY_TOKEN_TWITTER_RESP_KEY );
+            nPosStart += oAuthLibDefaults::OAUTHLIB_AUTHENTICITY_TOKEN_TWITTER_RESP_KEY.length();
+            nPosEnd = m_callbackData.substr( nPosStart ).find( oAuthLibDefaults::OAUTHLIB_TOKEN_END_TAG_TWITTER_RESP );
+            authenticityTokenVal = m_callbackData.substr( nPosStart, nPosEnd );
 
-            nPosStart = m_callbackData.find("oauth_token\" type=\"hidden\" value=\"");
-            nPosEnd = m_callbackData.substr(nPosStart+34).find("\" />");
-            oauth_token = m_callbackData.substr(nPosStart+34,nPosEnd);
+            nPosStart = m_callbackData.find( oAuthLibDefaults::OAUTHLIB_TOKEN_TWITTER_RESP_KEY );
+            nPosStart += oAuthLibDefaults::OAUTHLIB_TOKEN_TWITTER_RESP_KEY.length();
+            nPosEnd = m_callbackData.substr( nPosStart ).find( oAuthLibDefaults::OAUTHLIB_TOKEN_END_TAG_TWITTER_RESP );
+            oauthTokenVal = m_callbackData.substr( nPosStart, nPosEnd );
 
             curl_slist_free_all( pOAuthHeaderList );
         }
@@ -1945,26 +1945,21 @@ bool twitCurl::oAuthHandlePIN(std::string& authorizeUrl /* in */ ){
     // Second phase for the authorization 
     pOAuthHeaderList = NULL;
     oAuthHttpHeader.clear();
-    authorizeUrl2.clear();
-    authorizeUrl2.append("https://twitter.com/oauth/authorize");
 
     /* Prepare standard params */
     prepareStandardParams();
 
-    // Now, we need to make a data string for POST operation
-    // which includes oauth_token, authenticity_token, username, password
-    dataStr.clear();
-    dataStr.append("oauth_token=");
-    dataStr.append(oauth_token);
-    dataStr.append("&authenticity_token=");
-    dataStr.append(authenticity_token);
-    dataStr.append("&session[username_or_email]=");
-    dataStr.append(getTwitterUsername());
-    dataStr.append("&session[password]=");
-    dataStr.append(getTwitterPassword());
+    /*
+    Now, we need to make a data string for POST operation
+    which includes oauth token, authenticity token, username, password.
+    */
+    dataStr = oAuthLibDefaults::OAUTHLIB_TOKEN_KEY + "=" + oauthTokenVal + "&" +                      \
+              oAuthLibDefaults::OAUTHLIB_AUTHENTICITY_TOKEN_KEY + "=" + authenticityTokenVal + "&" +  \
+              oAuthLibDefaults::OAUTHLIB_SESSIONUSERNAME_KEY + "=" + getTwitterUsername() + "&" +     \
+              oAuthLibDefaults::OAUTHLIB_SESSIONPASSWORD_KEY + "=" + getTwitterPassword();
 
     /* Set OAuth header */
-    m_oAuth.getOAuthHeader( eOAuthHttpPost, authorizeUrl2, dataStr, oAuthHttpHeader );
+    m_oAuth.getOAuthHeader( eOAuthHttpPost, authorizeUrl, dataStr, oAuthHttpHeader );
     if( oAuthHttpHeader.length() )
     {
         pOAuthHeaderList = curl_slist_append( pOAuthHeaderList, oAuthHttpHeader.c_str() );
@@ -1976,7 +1971,7 @@ bool twitCurl::oAuthHandlePIN(std::string& authorizeUrl /* in */ ){
 
     /* Set http request and url */
     curl_easy_setopt( m_curlHandle, CURLOPT_POST, 1 );
-    curl_easy_setopt( m_curlHandle, CURLOPT_URL, authorizeUrl2.c_str() );
+    curl_easy_setopt( m_curlHandle, CURLOPT_URL, authorizeUrl.c_str() );
     curl_easy_setopt( m_curlHandle, CURLOPT_COPYPOSTFIELDS, dataStr.c_str() );
 
     /* Send http request */
@@ -1984,13 +1979,14 @@ bool twitCurl::oAuthHandlePIN(std::string& authorizeUrl /* in */ ){
     {
         if( pOAuthHeaderList )
         {
-            curl_easy_getinfo(m_curlHandle, CURLINFO_HTTP_CODE, &statLong);
+            curl_easy_getinfo( m_curlHandle, CURLINFO_HTTP_CODE, &httpStatusCode );
 
             // Now, let's find the PIN CODE  
-            nPosStart = m_callbackData.find("code-desc\"><code>");
-            nPosEnd = m_callbackData.substr(nPosStart+17).find("</code>");
-            pin_code = m_callbackData.substr(nPosStart+17,nPosEnd);
-            getOAuth().setOAuthPin(pin_code);
+            nPosStart = m_callbackData.find( oAuthLibDefaults::OAUTHLIB_PIN_TWITTER_RESP_KEY );
+            nPosStart += oAuthLibDefaults::OAUTHLIB_PIN_TWITTER_RESP_KEY.length();
+            nPosEnd = m_callbackData.substr( nPosStart ).find( oAuthLibDefaults::OAUTHLIB_PIN_END_TAG_TWITTER_RESP );
+            pinCodeVal = m_callbackData.substr( nPosStart, nPosEnd );
+            getOAuth().setOAuthPin( pinCodeVal );
 
             curl_slist_free_all( pOAuthHeaderList );
             return true;
