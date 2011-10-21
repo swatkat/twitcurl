@@ -35,8 +35,14 @@ int main( int argc, char* argv[] )
     }
 
     twitCurl twitterObj;
-    std::string tmpStr( "" );
-    std::string replyMsg( "" );
+    std::string tmpStr;
+    std::string replyMsg;
+    char tmpBuf[1024];
+    int tmpVar = 0;
+
+    /* Set twitter username and password */
+    twitterObj.setTwitterUsername( userName );
+    twitterObj.setTwitterPassword( passWord );
 
     /* OAuth flow begins */
     /* Step 0: Set OAuth related params. These are got by registering your app at twitter.com */
@@ -44,7 +50,6 @@ int main( int argc, char* argv[] )
     twitterObj.getOAuth().setConsumerSecret( std::string( "3w4cIrHyI3IYUZW5O2ppcFXmsACDaENzFdLIKmEU84" ) );
 
     /* Step 1: Check if we alredy have OAuth access token from a previous run */
-    char szKey[1024];
     std::string myOAuthAccessTokenKey("");
     std::string myOAuthAccessTokenSecret("");
     std::ifstream oAuthTokenKeyIn;
@@ -53,13 +58,13 @@ int main( int argc, char* argv[] )
     oAuthTokenKeyIn.open( "twitterClient_token_key.txt" );
     oAuthTokenSecretIn.open( "twitterClient_token_secret.txt" );
 
-    memset( szKey, 0, 1024 );
-    oAuthTokenKeyIn >> szKey;
-    myOAuthAccessTokenKey = szKey;
+    memset( tmpBuf, 0, 1024 );
+    oAuthTokenKeyIn >> tmpBuf;
+    myOAuthAccessTokenKey = tmpBuf;
 
-    memset( szKey, 0, 1024 );
-    oAuthTokenSecretIn >> szKey;
-    myOAuthAccessTokenSecret = szKey;
+    memset( tmpBuf, 0, 1024 );
+    oAuthTokenSecretIn >> tmpBuf;
+    myOAuthAccessTokenSecret = tmpBuf;
 
     oAuthTokenKeyIn.close();
     oAuthTokenSecretIn.close();
@@ -77,14 +82,27 @@ int main( int argc, char* argv[] )
         /* Step 2: Get request token key and secret */
         twitterObj.oAuthRequestToken( tmpStr );
 
-        /* Step 3: Ask user to visit web link and get PIN */
-        char szOAuthVerifierPin[1024];
-        memset( szOAuthVerifierPin, 0, 1024 );
-        printf( "\nPlease visit this link in web browser and authorize this application:\n%s", tmpStr.c_str() );
-        printf( "\nEnter the PIN provided by twitter: " );
-        gets( szOAuthVerifierPin );
-        tmpStr = szOAuthVerifierPin;
-        twitterObj.getOAuth().setOAuthPin( tmpStr );
+        /* Step 3: Get PIN  */
+        memset( tmpBuf, 0, 1024 );
+        printf( "\nDo you want to visit twitter.com for PIN (0 for no; 1 for yes): " );
+        gets( tmpBuf );
+        tmpVar = atoi( tmpBuf );
+
+        if( tmpVar > 0 )
+        {
+            /* Ask user to visit twitter.com page and get PIN */
+            memset( tmpBuf, 0, 1024 );
+            printf( "\nPlease visit this link in web browser and authorize this application:\n%s", tmpStr.c_str() );
+            printf( "\nEnter the PIN provided by twitter: " );
+            gets( tmpBuf );
+            tmpStr = tmpBuf;
+            twitterObj.getOAuth().setOAuthPin( tmpStr );
+        }
+        else
+        {
+            /* Else, get it via twitcurl PIN handling */
+            twitterObj.oAuthHandlePIN( tmpStr );
+        }
 
         /* Step 4: Exchange request token with access token */
         twitterObj.oAuthAccessToken();
@@ -111,19 +129,13 @@ int main( int argc, char* argv[] )
     }
     /* OAuth flow ends */
 
-    /* Set twitter username and password */
-    twitterObj.setTwitterUsername( userName );
-    twitterObj.setTwitterPassword( passWord );
-
     /* Set proxy server usename, password, IP and port (if present) */
-    char proxyPresent[1024];
-    memset( proxyPresent, 0, 1024 );
-
+    memset( tmpBuf, 0, 1024 );
     printf( "\nDo you have a proxy server configured (0 for no; 1 for yes): " );
-    gets( proxyPresent );
-    int isProxy = atoi( proxyPresent );
+    gets( tmpBuf );
+    tmpVar = atoi( tmpBuf );
 
-    if( isProxy > 0 )
+    if( tmpVar > 0 )
     {
         char proxyIp[1024];
         char proxyPort[1024];

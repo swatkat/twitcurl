@@ -114,7 +114,7 @@ public:
     oAuth& getOAuth();
     bool oAuthRequestToken( std::string& authorizeUrl /* out */ );
     bool oAuthAccessToken();
-    bool oAuthHandlePIN( std::string& authorizeUrl /* in */ );
+    bool oAuthHandlePIN( const std::string& authorizeUrl /* in */ );
     
 
     /* Twitter login APIs, set once and forget */
