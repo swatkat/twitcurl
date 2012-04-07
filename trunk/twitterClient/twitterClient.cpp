@@ -167,11 +167,10 @@ int main( int argc, char* argv[] )
     }
 
     /* Post a new status message */
-    char statusMsg[1024];
-    memset( statusMsg, 0, 1024 );
+    memset( tmpBuf, 0, 1024 );
     printf( "\nEnter a new status message: " );
-    gets( statusMsg );
-    tmpStr = statusMsg;
+    gets( tmpBuf );
+    tmpStr = tmpBuf;
     replyMsg = "";
     if( twitterObj.statusUpdate( tmpStr ) )
     {
@@ -182,6 +181,24 @@ int main( int argc, char* argv[] )
     {
         twitterObj.getLastCurlError( replyMsg );
         printf( "\ntwitterClient:: twitCurl::statusUpdate error:\n%s\n", replyMsg.c_str() );
+    }
+
+    /* Search a string */
+    twitterObj.setTwitterApiType( twitCurlTypes::eTwitCurlApiFormatJson );
+    printf( "\nEnter string to search: " );
+    memset( tmpBuf, 0, 1024 );
+    gets( tmpBuf );
+    tmpStr = tmpBuf;
+    replyMsg = "";
+    if( twitterObj.search( tmpStr ) )
+    {
+        twitterObj.getLastWebResponse( replyMsg );
+        printf( "\ntwitterClient:: twitCurl::search web response:\n%s\n", replyMsg.c_str() );
+    }
+    else
+    {
+        twitterObj.getLastCurlError( replyMsg );
+        printf( "\ntwitterClient:: twitCurl::search error:\n%s\n", replyMsg.c_str() );
     }
 
 #ifdef _TWITCURL_TEST_
@@ -201,7 +218,6 @@ int main( int argc, char* argv[] )
         twitterObj.getLastCurlError( replyMsg );
         printf( "\ntwitterClient:: twitCurl::statusDestroyById error:\n%s\n", replyMsg.c_str() );
     }
-#endif // _TWITCURL_TEST_
 
     /* Get user timeline */
     replyMsg = "";
@@ -257,6 +273,7 @@ int main( int argc, char* argv[] )
         twitterObj.getLastCurlError( replyMsg );
         printf( "\ntwitterClient:: twitCurl::trendsDailyGet error:\n%s\n", replyMsg.c_str() );
     }
+#endif // _TWITCURL_TEST_
 
     return 0;
 }
