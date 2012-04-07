@@ -1987,19 +1987,34 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
         if( pOAuthHeaderList )
         {
             curl_easy_getinfo( m_curlHandle, CURLINFO_HTTP_CODE, &httpStatusCode );
+            curl_slist_free_all( pOAuthHeaderList );
 
             // Now, let's find the authenticity token and oauth token 
             nPosStart = m_callbackData.find( oAuthLibDefaults::OAUTHLIB_AUTHENTICITY_TOKEN_TWITTER_RESP_KEY );
+            if( std::string::npos == nPosStart )
+            {
+                return false;
+            }
             nPosStart += oAuthLibDefaults::OAUTHLIB_AUTHENTICITY_TOKEN_TWITTER_RESP_KEY.length();
             nPosEnd = m_callbackData.substr( nPosStart ).find( oAuthLibDefaults::OAUTHLIB_TOKEN_END_TAG_TWITTER_RESP );
+            if( std::string::npos == nPosEnd )
+            {
+                return false;
+            }
             authenticityTokenVal = m_callbackData.substr( nPosStart, nPosEnd );
 
             nPosStart = m_callbackData.find( oAuthLibDefaults::OAUTHLIB_TOKEN_TWITTER_RESP_KEY );
+            if( std::string::npos == nPosStart )
+            {
+                return false;
+            }
             nPosStart += oAuthLibDefaults::OAUTHLIB_TOKEN_TWITTER_RESP_KEY.length();
             nPosEnd = m_callbackData.substr( nPosStart ).find( oAuthLibDefaults::OAUTHLIB_TOKEN_END_TAG_TWITTER_RESP );
+            if( std::string::npos == nPosEnd )
+            {
+                return false;
+            }
             oauthTokenVal = m_callbackData.substr( nPosStart, nPosEnd );
-
-            curl_slist_free_all( pOAuthHeaderList );
         }
     } 
     else if( pOAuthHeaderList )
@@ -2046,15 +2061,22 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
         if( pOAuthHeaderList )
         {
             curl_easy_getinfo( m_curlHandle, CURLINFO_HTTP_CODE, &httpStatusCode );
+            curl_slist_free_all( pOAuthHeaderList );
 
             // Now, let's find the PIN CODE  
             nPosStart = m_callbackData.find( oAuthLibDefaults::OAUTHLIB_PIN_TWITTER_RESP_KEY );
+            if( std::string::npos == nPosStart )
+            {
+                return false;
+            }
             nPosStart += oAuthLibDefaults::OAUTHLIB_PIN_TWITTER_RESP_KEY.length();
             nPosEnd = m_callbackData.substr( nPosStart ).find( oAuthLibDefaults::OAUTHLIB_PIN_END_TAG_TWITTER_RESP );
+            if( std::string::npos == nPosEnd )
+            {
+                return false;
+            }
             pinCodeVal = m_callbackData.substr( nPosStart, nPosEnd );
             getOAuth().setOAuthPin( pinCodeVal );
-
-            curl_slist_free_all( pOAuthHeaderList );
             return true;
         }
     } 
