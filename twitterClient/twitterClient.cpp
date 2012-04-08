@@ -38,11 +38,47 @@ int main( int argc, char* argv[] )
     std::string tmpStr;
     std::string replyMsg;
     char tmpBuf[1024];
-    int tmpVar = 0;
 
     /* Set twitter username and password */
     twitterObj.setTwitterUsername( userName );
     twitterObj.setTwitterPassword( passWord );
+
+    /* Set proxy server usename, password, IP and port (if present) */
+    memset( tmpBuf, 0, 1024 );
+    printf( "\nDo you have a proxy server configured (0 for no; 1 for yes): " );
+    gets( tmpBuf );
+    tmpStr = tmpBuf;
+
+    if( std::string::npos != tmpStr.find( "1" ) )
+    {
+        char proxyIp[1024];
+        char proxyPort[1024];
+        char proxyUsername[1024];
+        char proxyPassword[1024];
+
+        memset( proxyIp, 0, 1024 );
+        memset( proxyPort, 0, 1024 );
+        memset( proxyUsername, 0, 1024 );
+        memset( proxyPassword, 0, 1024 );
+
+        printf( "\nEnter proxy server IP: " );
+        gets( proxyIp );
+        printf( "\nEnter proxy server port: " );
+        gets( proxyPort );
+        printf( "\nEnter proxy server username: " );
+        gets( proxyUsername );
+        printf( "\nEnter proxy server password: " );
+        gets( proxyPassword );
+
+        tmpStr = proxyIp;
+        twitterObj.setProxyServerIp( tmpStr );
+        tmpStr = proxyPort;
+        twitterObj.setProxyServerPort( tmpStr );
+        tmpStr = proxyUsername;
+        twitterObj.setProxyUserName( tmpStr );
+        tmpStr = proxyPassword;
+        twitterObj.setProxyPassword( tmpStr );
+    }
 
     /* OAuth flow begins */
     /* Step 0: Set OAuth related params. These are got by registering your app at twitter.com */
@@ -80,19 +116,19 @@ int main( int argc, char* argv[] )
     else
     {
         /* Step 2: Get request token key and secret */
-        twitterObj.oAuthRequestToken( tmpStr );
+        std::string authUrl;
+        twitterObj.oAuthRequestToken( authUrl );
 
         /* Step 3: Get PIN  */
         memset( tmpBuf, 0, 1024 );
         printf( "\nDo you want to visit twitter.com for PIN (0 for no; 1 for yes): " );
         gets( tmpBuf );
-        tmpVar = atoi( tmpBuf );
-
-        if( tmpVar > 0 )
+        tmpStr = tmpBuf;
+        if( std::string::npos != tmpStr.find( "1" ) )
         {
-            /* Ask user to visit twitter.com page and get PIN */
+            /* Ask user to visit twitter.com auth page and get PIN */
             memset( tmpBuf, 0, 1024 );
-            printf( "\nPlease visit this link in web browser and authorize this application:\n%s", tmpStr.c_str() );
+            printf( "\nPlease visit this link in web browser and authorize this application:\n%s", authUrl.c_str() );
             printf( "\nEnter the PIN provided by twitter: " );
             gets( tmpBuf );
             tmpStr = tmpBuf;
@@ -100,8 +136,8 @@ int main( int argc, char* argv[] )
         }
         else
         {
-            /* Else, get it via twitcurl PIN handling */
-            twitterObj.oAuthHandlePIN( tmpStr );
+            /* Else, pass auth url to twitCurl and get it via twitCurl PIN handling */
+            twitterObj.oAuthHandlePIN( authUrl );
         }
 
         /* Step 4: Exchange request token with access token */
@@ -128,43 +164,6 @@ int main( int argc, char* argv[] )
         oAuthTokenSecretOut.close();
     }
     /* OAuth flow ends */
-
-    /* Set proxy server usename, password, IP and port (if present) */
-    memset( tmpBuf, 0, 1024 );
-    printf( "\nDo you have a proxy server configured (0 for no; 1 for yes): " );
-    gets( tmpBuf );
-    tmpVar = atoi( tmpBuf );
-
-    if( tmpVar > 0 )
-    {
-        char proxyIp[1024];
-        char proxyPort[1024];
-        char proxyUsername[1024];
-        char proxyPassword[1024];
-
-        memset( proxyIp, 0, 1024 );
-        memset( proxyPort, 0, 1024 );
-        memset( proxyUsername, 0, 1024 );
-        memset( proxyPassword, 0, 1024 );
-
-        printf( "\nEnter proxy server IP: " );
-        gets( proxyIp );
-        printf( "\nEnter proxy server port: " );
-        gets( proxyPort );
-        printf( "\nEnter proxy server username: " );
-        gets( proxyUsername );
-        printf( "\nEnter proxy server password: " );
-        gets( proxyPassword );
-
-        tmpStr = proxyIp;
-        twitterObj.setProxyServerIp( tmpStr );
-        tmpStr = proxyPort;
-        twitterObj.setProxyServerPort( tmpStr );
-        tmpStr = proxyUsername;
-        twitterObj.setProxyUserName( tmpStr );
-        tmpStr = proxyPassword;
-        twitterObj.setProxyPassword( tmpStr );
-    }
 
     /* Post a new status message */
     memset( tmpBuf, 0, 1024 );
