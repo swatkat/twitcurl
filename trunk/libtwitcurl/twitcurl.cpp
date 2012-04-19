@@ -506,6 +506,11 @@ bool twitCurl::timelineUserGet( bool trimUser, bool includeRetweets, unsigned in
                         twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType],
                         userInfo, isUserId );
 
+    if( !userInfo.length() )
+    {
+        buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_QUES;
+    }
+
     if( tweetCount )
     {
         if( tweetCount > twitCurlDefaults::MAX_TIMELINE_TWEET_COUNT )
@@ -513,19 +518,19 @@ bool twitCurl::timelineUserGet( bool trimUser, bool includeRetweets, unsigned in
             tweetCount = twitCurlDefaults::MAX_TIMELINE_TWEET_COUNT;
         }
         std::stringstream tmpStrm;
-        tmpStrm << twitCurlDefaults::TWITCURL_URL_SEP_QUES + twitCurlDefaults::TWITCURL_COUNT << tweetCount;
+        tmpStrm << twitCurlDefaults::TWITCURL_URL_SEP_AMP + twitCurlDefaults::TWITCURL_COUNT << tweetCount;
         buildUrl += tmpStrm.str();
         tmpStrm.str().clear();
     }
 
     if( includeRetweets )
     {
-        buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_QUES + twitCurlDefaults::TWITCURL_INCRETWEETS;
+        buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_AMP + twitCurlDefaults::TWITCURL_INCRETWEETS;
     }
 
     if( trimUser )
     {
-        buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_QUES + twitCurlDefaults::TWITCURL_TRIMUSER;
+        buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_AMP + twitCurlDefaults::TWITCURL_TRIMUSER;
     }
 
     /* Perform GET */

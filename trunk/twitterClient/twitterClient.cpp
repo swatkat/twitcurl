@@ -200,6 +200,20 @@ int main( int argc, char* argv[] )
         printf( "\ntwitterClient:: twitCurl::search error:\n%s\n", replyMsg.c_str() );
     }
 
+    /* Get user timeline */
+    replyMsg = "";
+    printf( "\nGetting user timeline\n" );
+    if( twitterObj.timelineUserGet( false, false, 0 ) )
+    {
+        twitterObj.getLastWebResponse( replyMsg );
+        printf( "\ntwitterClient:: twitCurl::timelineUserGet web response:\n%s\n", replyMsg.c_str() );
+    }
+    else
+    {
+        twitterObj.getLastCurlError( replyMsg );
+        printf( "\ntwitterClient:: twitCurl::timelineUserGet error:\n%s\n", replyMsg.c_str() );
+    }
+
 #ifdef _TWITCURL_TEST_
     /* Destroy a status message */
     memset( statusMsg, 0, 1024 );
@@ -216,20 +230,6 @@ int main( int argc, char* argv[] )
     {
         twitterObj.getLastCurlError( replyMsg );
         printf( "\ntwitterClient:: twitCurl::statusDestroyById error:\n%s\n", replyMsg.c_str() );
-    }
-
-    /* Get user timeline */
-    replyMsg = "";
-    printf( "\nGetting user timeline\n" );
-    if( twitterObj.timelineUserGet( true, true, 200 ) )
-    {
-        twitterObj.getLastWebResponse( replyMsg );
-        printf( "\ntwitterClient:: twitCurl::timelineUserGet web response:\n%s\n", replyMsg.c_str() );
-    }
-    else
-    {
-        twitterObj.getLastCurlError( replyMsg );
-        printf( "\ntwitterClient:: twitCurl::timelineUserGet error:\n%s\n", replyMsg.c_str() );
     }
 
     /* Get public timeline */
