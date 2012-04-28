@@ -33,9 +33,9 @@ class CHMAC_SHA1 : public CSHA1
 
 		CHMAC_SHA1()
 			:szReport(new char[HMAC_BUF_LEN]),
+             SHA1_Key(new char[HMAC_BUF_LEN]),
              AppendBuf1(new char[HMAC_BUF_LEN]),
-             AppendBuf2(new char[HMAC_BUF_LEN]),
-             SHA1_Key(new char[HMAC_BUF_LEN])
+             AppendBuf2(new char[HMAC_BUF_LEN])
 		{}
 
         ~CHMAC_SHA1()
