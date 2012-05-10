@@ -1004,7 +1004,7 @@ bool twitCurl::savedSearchGet( )
 /*++
 * @method: twitCurl::savedSearchShow
 *
-* @description: method to retrieve the data for a saved search owned by the authenticating user 
+* @description: method to retrieve the data for a saved search owned by the authenticating user
 *               specified by the given id.
 *
 * @input: searchId - id in string format of the search to be displayed
@@ -1051,7 +1051,7 @@ bool twitCurl::savedSearchCreate( std::string& query )
 /*++
 * @method: twitCurl::savedSearchDestroy
 *
-* @description: method to destroy a saved search for the authenticated user. The search specified 
+* @description: method to destroy a saved search for the authenticated user. The search specified
 *               by id must be owned by the authenticating user.
 *
 * @input: searchId - search id of item to be deleted
@@ -1247,7 +1247,7 @@ int twitCurl::saveLastWebResponse(  char*& data, size_t size )
     {
         /* Append data in our internal buffer */
         m_callbackData.append( data, size );
-        bytesWritten = (int)size; 
+        bytesWritten = (int)size;
     }
     return bytesWritten;
 }
@@ -1805,12 +1805,12 @@ bool twitCurl::oAuthAccessToken()
     return retVal;
 }
 
-/*++ 
-* ADDED BY ANTIROOT 
+/*++
+* ADDED BY ANTIROOT
 *
 * @method: twitCurl::oAuthHandlePIN
 *
-* @description: method to handle user's PIN code from the authentiation URLs 
+* @description: method to handle user's PIN code from the authentiation URLs
 *
 * @input: none
 *
@@ -1860,7 +1860,7 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
             curl_easy_getinfo( m_curlHandle, CURLINFO_HTTP_CODE, &httpStatusCode );
             curl_slist_free_all( pOAuthHeaderList );
 
-            // Now, let's find the authenticity token and oauth token 
+            // Now, let's find the authenticity token and oauth token
             nPosStart = m_callbackData.find( oAuthLibDefaults::OAUTHLIB_AUTHENTICITY_TOKEN_TWITTER_RESP_KEY );
             if( std::string::npos == nPosStart )
             {
@@ -1887,14 +1887,14 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
             }
             oauthTokenVal = m_callbackData.substr( nPosStart, nPosEnd );
         }
-    } 
+    }
     else if( pOAuthHeaderList )
     {
         curl_slist_free_all( pOAuthHeaderList );
         return false;
     }
 
-    // Second phase for the authorization 
+    // Second phase for the authorization
     pOAuthHeaderList = NULL;
     oAuthHttpHeader.clear();
 
@@ -1934,7 +1934,7 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
             curl_easy_getinfo( m_curlHandle, CURLINFO_HTTP_CODE, &httpStatusCode );
             curl_slist_free_all( pOAuthHeaderList );
 
-            // Now, let's find the PIN CODE  
+            // Now, let's find the PIN CODE
             nPosStart = m_callbackData.find( oAuthLibDefaults::OAUTHLIB_PIN_TWITTER_RESP_KEY );
             if( std::string::npos == nPosStart )
             {
@@ -1950,7 +1950,7 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
             getOAuth().setOAuthPin( pinCodeVal );
             return true;
         }
-    } 
+    }
     else if( pOAuthHeaderList )
     {
         curl_slist_free_all( pOAuthHeaderList );
