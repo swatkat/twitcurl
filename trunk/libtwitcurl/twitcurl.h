@@ -29,8 +29,8 @@ namespace twitCurlDefaults
     /* Miscellaneous data used to build twitter URLs*/
     const std::string TWITCURL_STATUSSTRING = "status=";
     const std::string TWITCURL_TEXTSTRING = "text=";
-    const std::string TWITCURL_QUERYSTRING = "query=";  
-    const std::string TWITCURL_SEARCHQUERYSTRING = "q=";      
+    const std::string TWITCURL_QUERYSTRING = "query=";
+    const std::string TWITCURL_SEARCHQUERYSTRING = "q=";
     const std::string TWITCURL_SCREENNAME = "screen_name=";
     const std::string TWITCURL_USERID = "user_id=";
     const std::string TWITCURL_EXTENSIONFORMATS[2] = { ".xml",
@@ -99,7 +99,7 @@ namespace twitterDefaults
     /* Block URLs */
     const std::string TWITCURL_BLOCKSCREATE_URL = "http://api.twitter.com/1/blocks/create/";
     const std::string TWITCURL_BLOCKSDESTROY_URL = "http://api.twitter.com/1/blocks/destroy/";
-    
+
     /* Saved Search URLs */
     const std::string TWITCURL_SAVEDSEARCHGET_URL = "http://api.twitter.com/1/saved_searches";
     const std::string TWITCURL_SAVEDSEARCHSHOW_URL = "http://api.twitter.com/1/saved_searches/show/";
@@ -112,7 +112,7 @@ namespace twitterDefaults
     const std::string TWITCURL_TRENDSCURRENT_URL = "http://api.twitter.com/1/trends/current";
     const std::string TWITCURL_TRENDSWEEKLY_URL = "http://api.twitter.com/1/trends/weekly";
     const std::string TWITCURL_TRENDSAVAILABLE_URL = "http://api.twitter.com/1/trends/available";
-    
+
 };
 
 /* twitCurl class */
@@ -196,7 +196,7 @@ public:
     bool trendsWeeklyGet();
     bool trendsCurrentGet();
     bool trendsAvailableGet();
-    
+
     /* cURL APIs */
     bool isCurlInit();
     void getLastWebResponse( std::string& outWebResp /* out */ );

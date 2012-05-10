@@ -104,7 +104,7 @@ int main( int argc, char* argv[] )
 
     oAuthTokenKeyIn.close();
     oAuthTokenSecretIn.close();
-    
+
     if( myOAuthAccessTokenKey.size() && myOAuthAccessTokenSecret.size() )
     {
         /* If we already have these keys, then no need to go through auth again */
