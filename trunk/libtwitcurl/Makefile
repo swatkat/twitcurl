@@ -35,7 +35,7 @@ all: target
 
 target: $(SRC) $(LIBNAME).h
 	$(CC) -Wall -fPIC -c -I$(INCLUDE_DIR) $(SRC) oauthlib.cpp urlencode.cpp base64.cpp HMAC_SHA1.cpp SHA1.cpp
-	$(CC) -shared -Wl,-soname,lib$(LIBNAME).so.1 $(LDFLAGS) -L$(LIBRARY_DIR) -lcurl -o lib$(LIBNAME).so.1.0 *.o
+	$(CC) -shared -Wl,-soname,lib$(LIBNAME).so.1 $(LDFLAGS) -o lib$(LIBNAME).so.1.0 *.o -L$(LIBRARY_DIR) -lcurl
 
 #clean project.
 clean:
