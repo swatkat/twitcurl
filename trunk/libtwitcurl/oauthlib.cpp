@@ -239,6 +239,69 @@ void oAuth::generateNonceTimeStamp()
 }
 
 /*++
+* @method: oAuth::buildOAuthRawDataKeyValPairs
+*
+* @description: this method prepares key-value pairs from the data part of the URL
+*               or from the URL post fields data, as required by OAuth header
+*               and signature generation.
+*
+* @input: rawData - Raw data either from the URL itself or from post fields.
+*                   Should already be url encoded.
+*
+* @output: rawDataKeyValuePairs - Map in which key-value pairs are populated
+*
+* @remarks: internal method
+*
+*--*/
+void oAuth::buildOAuthRawDataKeyValPairs( const std::string& rawData,
+                                          oAuthKeyValuePairs& rawDataKeyValuePairs )
+{
+    /* Raw data if it's present. Data should already be urlencoded once */
+    if( rawData.length() )
+    {
+        size_t nSep = std::string::npos;
+        size_t nPos = std::string::npos;
+        std::string dataKeyVal;
+        std::string dataKey;
+        std::string dataVal;
+
+        /* This raw data part can contain many key value pairs: key1=value1&key2=value2&key3=value3 */
+        std::string dataPart = rawData;
+        while( std::string::npos != ( nSep = dataPart.find_first_of("&") ) )
+        {
+            /* Extract first key=value pair */
+            dataKeyVal = dataPart.substr( 0, nSep );
+
+            /* Split them */
+            nPos = dataKeyVal.find_first_of( "=" );
+            if( std::string::npos != nPos )
+            {
+                dataKey = dataKeyVal.substr( 0, nPos );
+                dataVal = dataKeyVal.substr( nPos + 1 );
+
+                /* Put this key=value pair in map */
+                rawDataKeyValuePairs[dataKey] = urlencode( dataVal );
+            }
+            dataPart = dataPart.substr( nSep + 1 );
+        }
+
+        /* For the last key=value */
+        dataKeyVal = dataPart.substr( 0, nSep );
+
+        /* Split them */
+        nPos = dataKeyVal.find_first_of( "=" );
+        if( std::string::npos != nPos )
+        {
+            dataKey = dataKeyVal.substr( 0, nPos );
+            dataVal = dataKeyVal.substr( nPos + 1 );
+
+            /* Put this key=value pair in map */
+            rawDataKeyValuePairs[dataKey] = urlencode( dataVal );
+        }
+    }
+}
+
+/*++
 * @method: oAuth::buildOAuthTokenKeyValuePairs
 *
 * @description: this method prepares key-value pairs required for OAuth header
@@ -247,7 +310,6 @@ void oAuth::generateNonceTimeStamp()
 * @input: includeOAuthVerifierPin - flag to indicate whether oauth_verifer key-value
 *                                   pair needs to be included. oauth_verifer is only
 *                                   used during exchanging request token with access token.
-*         rawData - url encoded data. this is used during signature generation.
 *         oauthSignature - base64 and url encoded OAuth signature.
 *         generateTimestamp - If true, then generate new timestamp for nonce.
 *
@@ -257,7 +319,6 @@ void oAuth::generateNonceTimeStamp()
 *
 *--*/
 bool oAuth::buildOAuthTokenKeyValuePairs( const bool includeOAuthVerifierPin,
-                                          const std::string& rawData,
                                           const std::string& oauthSignature,
                                           oAuthKeyValuePairs& keyValueMap,
                                           const bool generateTimestamp )
@@ -300,21 +361,6 @@ bool oAuth::buildOAuthTokenKeyValuePairs( const bool includeOAuthVerifierPin,
 
     /* Version */
     keyValueMap[oAuthLibDefaults::OAUTHLIB_VERSION_KEY] = std::string( "1.0" );
-
-    /* Data if it's present */
-    if( rawData.length() )
-    {
-        /* Data should already be urlencoded once */
-        std::string dummyStrKey;
-        std::string dummyStrValue;
-        size_t nPos = rawData.find_first_of( "=" );
-        if( std::string::npos != nPos )
-        {
-            dummyStrKey = rawData.substr( 0, nPos );
-            dummyStrValue = rawData.substr( nPos + 1 );
-            keyValueMap[dummyStrKey] = dummyStrValue;
-        }
-    }
 
     return ( keyValueMap.size() ) ? true : false;
 }
@@ -417,7 +463,7 @@ bool oAuth::getSignature( const eOAuthHttpRequestType eType,
 *
 * @input: eType - HTTP request type
 *         rawUrl - raw url of the HTTP request
-*         rawData - HTTP data
+*         rawData - HTTP data (post fields)
 *         includeOAuthVerifierPin - flag to indicate whether or not oauth_verifier needs to included
 *                                   in OAuth header
 *
@@ -450,53 +496,24 @@ bool oAuth::getOAuthHeader( const eOAuthHttpRequestType eType,
         /* Get only key=value data part */
         std::string dataPart = rawUrl.substr( nPos + 1 );
 
-        /* This dataPart can contain many key value pairs: key1=value1&key2=value2&key3=value3 */
-        size_t nSep = std::string::npos;
-        size_t nPos2 = std::string::npos;
-        std::string dataKeyVal;
-        std::string dataKey;
-        std::string dataVal;
-        while( std::string::npos != ( nSep = dataPart.find_first_of("&") ) )
-        {
-            /* Extract first key=value pair */
-            dataKeyVal = dataPart.substr( 0, nSep );
-
-            /* Split them */
-            nPos2 = dataKeyVal.find_first_of( "=" );
-            if( std::string::npos != nPos2 )
-            {
-                dataKey = dataKeyVal.substr( 0, nPos2 );
-                dataVal = dataKeyVal.substr( nPos2 + 1 );
-
-                /* Put this key=value pair in map */
-                rawKeyValuePairs[dataKey] = urlencode( dataVal );
-            }
-            dataPart = dataPart.substr( nSep + 1 );
-        }
-
-        /* For the last key=value */
-        dataKeyVal = dataPart.substr( 0, nSep );
-        
-        /* Split them */
-        nPos2 = dataKeyVal.find_first_of( "=" );
-        if( std::string::npos != nPos2 )
-        {
-            dataKey = dataKeyVal.substr( 0, nPos2 );
-            dataVal = dataKeyVal.substr( nPos2 + 1 );
-
-            /* Put this key=value pair in map */
-            rawKeyValuePairs[dataKey] = urlencode( dataVal );
-        }
+        /* Split the data in URL as key=value pairs */
+        buildOAuthRawDataKeyValPairs( dataPart, rawKeyValuePairs );
     }
 
+    /* Split the raw data if it's present, as key=value pairs. Data should already be urlencoded once */
+    buildOAuthRawDataKeyValPairs( rawData, rawKeyValuePairs );
+
     /* Build key-value pairs needed for OAuth request token, without signature */
-    buildOAuthTokenKeyValuePairs( includeOAuthVerifierPin, rawData, std::string( "" ), rawKeyValuePairs, true );
+    buildOAuthTokenKeyValuePairs( includeOAuthVerifierPin, std::string( "" ), rawKeyValuePairs, true );
 
     /* Get url encoded base64 signature using request type, url and parameters */
     getSignature( eType, pureUrl, rawKeyValuePairs, oauthSignature );
 
+    /* Clear map so that the parameters themselves are not sent along with the OAuth values */
+    rawKeyValuePairs.clear();
+
     /* Now, again build key-value pairs with signature this time */
-    buildOAuthTokenKeyValuePairs( includeOAuthVerifierPin, std::string( "" ), oauthSignature, rawKeyValuePairs, false );
+    buildOAuthTokenKeyValuePairs( includeOAuthVerifierPin, oauthSignature, rawKeyValuePairs, false );
 
     /* Get OAuth header in string format */
     paramsSeperator = ",";
