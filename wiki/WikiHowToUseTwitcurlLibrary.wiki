@@ -28,9 +28,15 @@ Follow these steps to build library:
 
   * Check-out libtwitcurl using this command:
 {{{svn co http://twitcurl.googlecode.com/svn/trunk/libtwitcurl}}}
-  * Build twitcurl library using the command {{{make}}}.
+  * Build twitcurl library using the command {{{make}}}. Symlink or copy {{{libtwitcurl.so.1.0}}} as {{{/usr/lib/libtwitcurl.so}}}.
 
-  * Link your application with twitcurl library (*{{{-ltwitcurl}}}*). For example:
+  * Check-out example application twitterClient using the command:
+{{{svn co http://twitcurl.googlecode.com/svn/trunk/twitterClient}}}
+
+  * Build example application using the command:
+{{{g++ -ltwitcurl twitterClient.cpp}}}
+
+ * Similarly, build your applications by linking it with twitcurl library (*{{{-ltwitcurl}}}*). For example:
 {{{g++ -ltwitcurl yourapp.cpp}}}
 
  * To run your application, make sure that {{{LD_LIBRARY_PATH}}} environment variable contains the directory path where {{{libtwitcurl.so.1}}} is present.  If directory path is not present in {{{LD_LIBRARY_PATH}}}, then add it using command {{{export}}} command. For example:
