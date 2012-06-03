@@ -165,6 +165,18 @@ int main( int argc, char* argv[] )
     }
     /* OAuth flow ends */
 
+    /* Account credentials verification */
+    if( twitterObj.accountVerifyCredGet() )
+    {
+        twitterObj.getLastWebResponse( replyMsg );
+        printf( "\ntwitterClient:: twitCurl::accountVerifyCredGet web response:\n%s\n", replyMsg.c_str() );
+    }
+    else
+    {
+        twitterObj.getLastCurlError( replyMsg );
+        printf( "\ntwitterClient:: twitCurl::accountVerifyCredGet error:\n%s\n", replyMsg.c_str() );
+    }
+
     /* Post a new status message */
     memset( tmpBuf, 0, 1024 );
     printf( "\nEnter a new status message: " );
