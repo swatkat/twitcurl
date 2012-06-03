@@ -183,7 +183,7 @@ int main( int argc, char* argv[] )
     }
 
     /* Search a string */
-    twitterObj.setTwitterApiType( twitCurlTypes::eTwitCurlApiFormatJson );
+    twitterObj.setTwitterApiType( twitCurlTypes::eTwitCurlApiFormatXml );
     printf( "\nEnter string to search: " );
     memset( tmpBuf, 0, 1024 );
     gets( tmpBuf );
@@ -214,12 +214,11 @@ int main( int argc, char* argv[] )
         printf( "\ntwitterClient:: twitCurl::timelineUserGet error:\n%s\n", replyMsg.c_str() );
     }
 
-#ifdef _TWITCURL_TEST_
     /* Destroy a status message */
-    memset( statusMsg, 0, 1024 );
+    memset( tmpBuf, 0, 1024 );
     printf( "\nEnter status message id to delete: " );
-    gets( statusMsg );
-    tmpStr = statusMsg;
+    gets( tmpBuf );
+    tmpStr = tmpBuf;
     replyMsg = "";
     if( twitterObj.statusDestroyById( tmpStr ) )
     {
@@ -232,6 +231,7 @@ int main( int argc, char* argv[] )
         printf( "\ntwitterClient:: twitCurl::statusDestroyById error:\n%s\n", replyMsg.c_str() );
     }
 
+#ifdef _TWITCURL_TEST_
     /* Get public timeline */
     replyMsg = "";
     printf( "\nGetting public timeline\n" );
