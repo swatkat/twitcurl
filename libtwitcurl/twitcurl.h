@@ -39,8 +39,8 @@ namespace twitCurlDefaults
     const std::string TWITCURL_TARGETSCREENNAME = "target_screen_name=";
     const std::string TWITCURL_TARGETUSERID = "target_id=";
     const std::string TWITCURL_SINCEID = "since_id=";
-    const std::string TWITCURL_TRIMUSER = "trim_user=1";
-    const std::string TWITCURL_INCRETWEETS = "include_rts=1";
+    const std::string TWITCURL_TRIMUSER = "trim_user=true";
+    const std::string TWITCURL_INCRETWEETS = "include_rts=true";
     const std::string TWITCURL_COUNT = "count=";
 
     /* URL separators */
