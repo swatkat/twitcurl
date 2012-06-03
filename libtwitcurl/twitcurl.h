@@ -100,6 +100,7 @@ namespace twitterDefaults
 
     /* Account URLs */
     const std::string TWITCURL_ACCOUNTRATELIMIT_URL = "api.twitter.com/1/account/rate_limit_status";
+    const std::string TWITCURL_ACCOUNTVERIFYCRED_URL = "api.twitter.com/1/account/verify_credentials";
 
     /* Favorites URLs */
     const std::string TWITCURL_FAVORITESGET_URL = "api.twitter.com/1/favorites";
@@ -185,7 +186,7 @@ public:
 
     /* Twitter account APIs */
     bool accountRateLimitGet();
-
+    bool accountVerifyCredGet();
     /* Twitter favorites APIs */
     bool favoriteGet();
     bool favoriteCreate( std::string& statusId /* in */ );
