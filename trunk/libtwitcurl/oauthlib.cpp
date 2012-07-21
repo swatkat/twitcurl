@@ -247,6 +247,8 @@ void oAuth::generateNonceTimeStamp()
 *
 * @input: rawData - Raw data either from the URL itself or from post fields.
 *                   Should already be url encoded.
+*         urlencodeData - If true, string will be urlencoded before converting
+*                         to key value pairs.
 *
 * @output: rawDataKeyValuePairs - Map in which key-value pairs are populated
 *
@@ -254,6 +256,7 @@ void oAuth::generateNonceTimeStamp()
 *
 *--*/
 void oAuth::buildOAuthRawDataKeyValPairs( const std::string& rawData,
+                                          bool urlencodeData,
                                           oAuthKeyValuePairs& rawDataKeyValuePairs )
 {
     /* Raw data if it's present. Data should already be urlencoded once */
@@ -280,7 +283,7 @@ void oAuth::buildOAuthRawDataKeyValPairs( const std::string& rawData,
                 dataVal = dataKeyVal.substr( nPos + 1 );
 
                 /* Put this key=value pair in map */
-                rawDataKeyValuePairs[dataKey] = urlencode( dataVal );
+                rawDataKeyValuePairs[dataKey] = urlencodeData ? urlencode( dataVal ) : dataVal;
             }
             dataPart = dataPart.substr( nSep + 1 );
         }
@@ -296,7 +299,7 @@ void oAuth::buildOAuthRawDataKeyValPairs( const std::string& rawData,
             dataVal = dataKeyVal.substr( nPos + 1 );
 
             /* Put this key=value pair in map */
-            rawDataKeyValuePairs[dataKey] = urlencode( dataVal );
+            rawDataKeyValuePairs[dataKey] = urlencodeData ? urlencode( dataVal ) : dataVal;
         }
     }
 }
@@ -497,11 +500,11 @@ bool oAuth::getOAuthHeader( const eOAuthHttpRequestType eType,
         std::string dataPart = rawUrl.substr( nPos + 1 );
 
         /* Split the data in URL as key=value pairs */
-        buildOAuthRawDataKeyValPairs( dataPart, rawKeyValuePairs );
+        buildOAuthRawDataKeyValPairs( dataPart, true, rawKeyValuePairs );
     }
 
     /* Split the raw data if it's present, as key=value pairs. Data should already be urlencoded once */
-    buildOAuthRawDataKeyValPairs( rawData, rawKeyValuePairs );
+    buildOAuthRawDataKeyValPairs( rawData, false, rawKeyValuePairs );
 
     /* Build key-value pairs needed for OAuth request token, without signature */
     buildOAuthTokenKeyValuePairs( includeOAuthVerifierPin, std::string( "" ), rawKeyValuePairs, true );

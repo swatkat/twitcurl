@@ -104,7 +104,8 @@ private:
 
     /* OAuth twitter related utility methods */
     void buildOAuthRawDataKeyValPairs( const std::string& rawData, /* in */
-                                      oAuthKeyValuePairs& rawDataKeyValuePairs /* out */ );
+                                       bool urlencodeData, /* in */
+                                       oAuthKeyValuePairs& rawDataKeyValuePairs /* out */ );
 
     bool buildOAuthTokenKeyValuePairs( const bool includeOAuthVerifierPin, /* in */
                                        const std::string& oauthSignature, /* in */
