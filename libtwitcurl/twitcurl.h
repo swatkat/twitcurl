@@ -70,7 +70,7 @@ namespace twitterDefaults
     const std::string TWITCURL_STATUSUPDATE_URL = "api.twitter.com/1/statuses/update";
     const std::string TWITCURL_STATUSSHOW_URL = "api.twitter.com/1/statuses/show/";
     const std::string TWITCURL_STATUDESTROY_URL = "api.twitter.com/1/statuses/destroy/";
-	const std::string TWITCURL_RETWEET_URL = "api.twitter.com/1/statuses/retweet/";
+    const std::string TWITCURL_RETWEET_URL = "api.twitter.com/1/statuses/retweet/";
 
     /* Timeline URLs */
     const std::string TWITCURL_HOME_TIMELINE_URL = "api.twitter.com/1/statuses/home_timeline";
@@ -81,7 +81,7 @@ namespace twitterDefaults
     const std::string TWITCURL_USERTIMELINE_URL = "api.twitter.com/1/statuses/user_timeline";
 
     /* Users URLs */
-	const std::string TWITCURL_LOOKUPUSERS_URL = "api.twitter.com/1/users/lookup";
+    const std::string TWITCURL_LOOKUPUSERS_URL = "api.twitter.com/1/users/lookup";
     const std::string TWITCURL_SHOWUSERS_URL = "api.twitter.com/1/users/show";
     const std::string TWITCURL_SHOWFRIENDS_URL = "api.twitter.com/1/statuses/friends";
     const std::string TWITCURL_SHOWFOLLOWERS_URL = "api.twitter.com/1/statuses/followers";
@@ -170,7 +170,7 @@ public:
     bool mentionsGet( std::string sinceId = "" /* in */ );
 
     /* Twitter user APIs */
-	bool userLookup( std::vector<std::string> &userInfo /* in */,  bool isUserId = false /* in */ );
+    bool userLookup( std::vector<std::string> &userInfo /* in */,  bool isUserId = false /* in */ );
     bool userGet( std::string& userInfo /* in */, bool isUserId = false /* in */ );
     bool friendsGet( std::string userInfo = "" /* in */, bool isUserId = false /* in */ );
     bool followersGet( std::string userInfo = "" /* in */, bool isUserId = false /* in */ );
@@ -232,8 +232,9 @@ public:
     void setProxyServerPort( std::string& proxyServerPort /* in */ );
     void setProxyUserName( std::string& proxyUserName /* in */ );
     void setProxyPassword( std::string& proxyPassword /* in */ );
-
-	twitCurl* clone();
+    
+    /* Clones this object */
+    twitCurl* clone();
 
 private:
     /* cURL data */
