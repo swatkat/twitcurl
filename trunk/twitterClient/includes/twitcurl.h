@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <cstring>
+#include <vector>
 #include "oauthlib.h"
 #include "curl/curl.h"
 
@@ -69,6 +70,7 @@ namespace twitterDefaults
     const std::string TWITCURL_STATUSUPDATE_URL = "api.twitter.com/1/statuses/update";
     const std::string TWITCURL_STATUSSHOW_URL = "api.twitter.com/1/statuses/show/";
     const std::string TWITCURL_STATUDESTROY_URL = "api.twitter.com/1/statuses/destroy/";
+	const std::string TWITCURL_RETWEET_URL = "api.twitter.com/1/statuses/retweet/";
 
     /* Timeline URLs */
     const std::string TWITCURL_HOME_TIMELINE_URL = "api.twitter.com/1/statuses/home_timeline";
@@ -79,6 +81,7 @@ namespace twitterDefaults
     const std::string TWITCURL_USERTIMELINE_URL = "api.twitter.com/1/statuses/user_timeline";
 
     /* Users URLs */
+	const std::string TWITCURL_LOOKUPUSERS_URL = "api.twitter.com/1/users/lookup";
     const std::string TWITCURL_SHOWUSERS_URL = "api.twitter.com/1/users/show";
     const std::string TWITCURL_SHOWFRIENDS_URL = "api.twitter.com/1/statuses/friends";
     const std::string TWITCURL_SHOWFOLLOWERS_URL = "api.twitter.com/1/statuses/followers";
@@ -156,8 +159,10 @@ public:
     bool statusUpdate( std::string& newStatus /* in */ );
     bool statusShowById( std::string& statusId /* in */ );
     bool statusDestroyById( std::string& statusId /* in */ );
+    bool retweetById( std::string& statusId /* in */ );
 
     /* Twitter timeline APIs */
+    bool timelineHomeGet( std::string sinceId = ""  /* in */ );
     bool timelinePublicGet();
     bool timelineFriendsGet();
     bool timelineUserGet( bool trimUser /* in */, bool includeRetweets /* in */, unsigned int tweetCount /* in */, std::string userInfo = "" /* in */, bool isUserId = false /* in */ );
@@ -165,12 +170,13 @@ public:
     bool mentionsGet( std::string sinceId = "" /* in */ );
 
     /* Twitter user APIs */
+	bool userLookup( std::vector<std::string> &userInfo /* in */,  bool isUserId = false /* in */ );
     bool userGet( std::string& userInfo /* in */, bool isUserId = false /* in */ );
     bool friendsGet( std::string userInfo = "" /* in */, bool isUserId = false /* in */ );
     bool followersGet( std::string userInfo = "" /* in */, bool isUserId = false /* in */ );
 
     /* Twitter direct message APIs */
-    bool directMessageGet();
+    bool directMessageGet( std::string sinceId = "" /* in */ );
     bool directMessageSend( std::string& userInfo /* in */, std::string& dMsg /* in */, bool isUserId = false /* in */ );
     bool directMessageGetSent();
     bool directMessageDestroyById( std::string& dMsgId /* in */ );
@@ -226,6 +232,8 @@ public:
     void setProxyServerPort( std::string& proxyServerPort /* in */ );
     void setProxyUserName( std::string& proxyUserName /* in */ );
     void setProxyPassword( std::string& proxyPassword /* in */ );
+
+	twitCurl* clone();
 
 private:
     /* cURL data */

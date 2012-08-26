@@ -53,6 +53,39 @@ twitCurl::~twitCurl()
 }
 
 /*++
+* @method: twitCurl::clone
+*
+* @description: creates a clone of twitcurl object
+*
+* @input: none
+*
+* @output: cloned object
+*
+*--*/
+twitCurl* twitCurl::clone()
+{
+	twitCurl *cloneObj = new twitCurl();
+
+	/* cURL proxy data */
+	cloneObj->setProxyServerIp(m_proxyServerIp);
+	cloneObj->setProxyServerPort(m_proxyServerPort);
+	cloneObj->setProxyUserName(m_proxyUserName);
+	cloneObj->setProxyPassword(m_proxyPassword);
+
+	/* Twitter data */
+	cloneObj->setTwitterUsername(m_twitterUsername);
+	cloneObj->setTwitterPassword(m_twitterPassword);
+
+	/* Twitter API type */
+	cloneObj->setTwitterApiType(m_eApiFormatType);
+
+	/* OAuth data */
+	cloneObj->m_oAuth = m_oAuth.clone();
+
+	return cloneObj;
+}
+
+/*++
 * @method: twitCurl::setTwitterApiType
 *
 * @description: method to set API type
@@ -428,6 +461,61 @@ bool twitCurl::statusDestroyById( std::string& statusId )
 }
 
 /*++
+* @method: twitCurl::retweetById
+*
+* @description: method to RETWEET a status message by its id
+*
+* @input: statusId - a number in std::string format
+*
+* @output: true if RETWEET is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::retweetById( std::string& statusId )
+{
+	bool retVal = false;
+	if( statusId.length() )
+	{
+		/* Prepare URL */
+		std::string buildUrl = twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
+								twitterDefaults::TWITCURL_RETWEET_URL + statusId +
+								twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType];
+
+		/* Send some dummy data in POST */
+		std::string dummyData = twitCurlDefaults::TWITCURL_TEXTSTRING +
+				                urlencode( std::string( "dummy" ) );
+
+		/* Perform Retweet */
+		retVal = performPost( buildUrl, dummyData );
+	}
+	return retVal;
+}
+
+/*++
+* @method: twitCurl::timelineHomeGet
+*
+* @description: method to get home timeline
+*
+* @input: none
+*
+* @output: true if GET is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::timelineHomeGet( std::string sinceId )
+{
+    std::string buildUrl = twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
+							twitterDefaults::TWITCURL_HOME_TIMELINE_URL +
+							twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType];
+    if( sinceId.length() )
+    {
+        buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_QUES + twitCurlDefaults::TWITCURL_SINCEID + sinceId;
+    }
+    /* Perform GET */
+    return performGet( buildUrl );
+}
+
+/*++
 * @method: twitCurl::timelinePublicGet
 *
 * @description: method to get public timeline
@@ -522,7 +610,8 @@ bool twitCurl::mentionsGet( std::string sinceId )
 *          response by twitter. Use getLastWebResponse() for that.
 *
 *--*/
-bool twitCurl::timelineUserGet( bool trimUser, bool includeRetweets, unsigned int tweetCount, std::string userInfo, bool isUserId )
+bool twitCurl::timelineUserGet( bool trimUser, bool includeRetweets, unsigned int tweetCount,
+                                std::string userInfo, bool isUserId )
 {
     /* Prepare URL */
     std::string buildUrl;
@@ -561,6 +650,45 @@ bool twitCurl::timelineUserGet( bool trimUser, bool includeRetweets, unsigned in
 
     /* Perform GET */
     return performGet( buildUrl );
+}
+
+/*++
+* @method: twitCurl::userLookup
+*
+* @description: method to get a number of user's profiles
+*
+* @input: userInfo - vector of screen names or user ids
+*         isUserId - true if userInfo contains an id
+*
+* @output: true if POST is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::userLookup( std::vector<std::string> &userInfo, bool isUserId )
+{
+    bool retVal = false;
+    
+    if( userInfo.size() )
+    {
+		std::string userIds = "";
+		std::string sep = "";
+        for( unsigned int i = 0 ; i < min(100U, userInfo.size()); i++, sep = "," )
+        {
+			userIds += sep + userInfo[i];
+        }
+
+		userIds = ( isUserId ? twitCurlDefaults::TWITCURL_USERID : twitCurlDefaults::TWITCURL_SCREENNAME ) +
+                  urlencode( userIds );
+
+		std::string buildUrl = twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] + 
+								twitterDefaults::TWITCURL_LOOKUPUSERS_URL + 
+								twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType];
+        
+		/* Perform POST */
+        retVal = performPost( buildUrl, userIds);
+    }
+
+    return retVal;
 }
 
 /*++
@@ -648,18 +776,25 @@ bool twitCurl::followersGet( std::string userInfo, bool isUserId )
 *
 * @description: method to get direct messages
 *
-* @input: none
+* @input: since id
 *
 * @output: true if GET is success, otherwise false. This does not check http
 *          response by twitter. Use getLastWebResponse() for that.
 *
 *--*/
-bool twitCurl::directMessageGet()
+bool twitCurl::directMessageGet( std::string sinceId )
 {
+	std::string buildUrl = twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] + 
+							twitterDefaults::TWITCURL_DIRECTMESSAGES_URL + 
+							twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType];
+	
+	if( sinceId.length() )
+	{
+      	buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_QUES + twitCurlDefaults::TWITCURL_SINCEID + sinceId;
+	}
+
     /* Perform GET */
-    return performGet( twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
-                       twitterDefaults::TWITCURL_DIRECTMESSAGES_URL +
-                       twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType] );
+    return performGet( buildUrl );
 }
 
 /*++
@@ -1469,6 +1604,9 @@ void twitCurl::prepareStandardParams()
 {
     /* Restore any custom request we may have */
     curl_easy_setopt( m_curlHandle, CURLOPT_CUSTOMREQUEST, NULL );
+
+	/* All supported encodings */
+	curl_easy_setopt( m_curlHandle, CURLOPT_ENCODING, "" );
 
     /* Clear callback and error buffers */
     clearCurlCallbackBuffers();
