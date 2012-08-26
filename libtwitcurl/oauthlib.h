@@ -90,6 +90,8 @@ public:
 
     bool extractOAuthTokenKeySecret( const std::string& requestTokenResponse /* in */ );
 
+    oAuth clone();
+
 private:
 
     /* OAuth data */
