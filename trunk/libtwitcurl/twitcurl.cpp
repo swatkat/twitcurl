@@ -673,7 +673,7 @@ bool twitCurl::userLookup( std::vector<std::string> &userInfo, bool isUserId )
     {
         std::string userIds = "";
         std::string sep = "";
-        for( unsigned int i = 0 ; i < std::min(100U, userInfo.size()); i++, sep = "," )
+        for( unsigned int i = 0 ; i < std::min((size_t)100, userInfo.size()); i++, sep = "," )
         {
             userIds += sep + userInfo[i];
         }
