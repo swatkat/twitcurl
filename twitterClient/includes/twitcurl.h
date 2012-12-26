@@ -53,6 +53,7 @@ namespace twitCurlDefaults
     const std::string TWITCURL_TRIMUSER = "trim_user=true";
     const std::string TWITCURL_INCRETWEETS = "include_rts=true";
     const std::string TWITCURL_COUNT = "count=";
+    const std::string TWITCURL_NEXT_CURSOR = "cursor=";
 
     /* URL separators */
     const std::string TWITCURL_URL_SEP_AMP = "&";
@@ -187,8 +188,10 @@ public:
     bool friendshipShow( std::string& userInfo /* in */, bool isUserId = false /* in */ );
 
     /* Twitter social graphs APIs */
-    bool friendsIdsGet( std::string& userInfo /* in */, bool isUserId = false /* in */ );
-    bool followersIdsGet( std::string& userInfo /* in */, bool isUserId = false /* in */ );
+    bool friendsIdsGet( std::string& nextCursor /* in */,
+                        std::string& userInfo /* in */, bool isUserId = false /* in */ );
+    bool followersIdsGet( std::string& nextCursor /* in */,
+                          std::string& userInfo /* in */, bool isUserId = false /* in */ );
 
     /* Twitter account APIs */
     bool accountRateLimitGet();

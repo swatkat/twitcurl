@@ -986,12 +986,14 @@ bool twitCurl::friendshipShow( std::string& userInfo, bool isUserId )
 *
 * @input: userInfo - user id or screen name of a user
 *         isUserId - true if userInfo contains a user id instead of screen name
+*         nextCursor - next cursor string returned from a previous call
+*                      to this API, otherwise an empty string
 *
 * @output: true if GET is success, otherwise false. This does not check http
 *          response by twitter. Use getLastWebResponse() for that.
 *
 *--*/
-bool twitCurl::friendsIdsGet( std::string& userInfo, bool isUserId )
+bool twitCurl::friendsIdsGet( std::string& nextCursor, std::string& userInfo, bool isUserId )
 {
     /* Prepare URL */
     std::string buildUrl;
@@ -999,6 +1001,13 @@ bool twitCurl::friendsIdsGet( std::string& userInfo, bool isUserId )
                         twitterDefaults::TWITCURL_FRIENDSIDS_URL +
                         twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType],
                         userInfo, isUserId );
+
+    if( buildUrl.length() && nextCursor.length() )
+    {
+        buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_AMP +
+                    twitCurlDefaults::TWITCURL_NEXT_CURSOR +
+                    nextCursor;
+    }
 
     /* Perform GET */
     return performGet( buildUrl );
@@ -1011,12 +1020,14 @@ bool twitCurl::friendsIdsGet( std::string& userInfo, bool isUserId )
 *
 * @input: userInfo - user id or screen name of a user
 *         isUserId - true if userInfo contains a user id instead of screen name
+*         nextCursor - next cursor string returned from a previous call
+*                      to this API, otherwise an empty string
 *
 * @output: true if GET is success, otherwise false. This does not check http
 *          response by twitter. Use getLastWebResponse() for that.
 *
 *--*/
-bool twitCurl::followersIdsGet( std::string& userInfo, bool isUserId )
+bool twitCurl::followersIdsGet( std::string& nextCursor, std::string& userInfo, bool isUserId )
 {
     /* Prepare URL */
     std::string buildUrl;
@@ -1024,6 +1035,13 @@ bool twitCurl::followersIdsGet( std::string& userInfo, bool isUserId )
                         twitterDefaults::TWITCURL_FOLLOWERSIDS_URL +
                         twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType],
                         userInfo, isUserId );
+
+    if( buildUrl.length() && nextCursor.length() )
+    {
+        buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_AMP +
+                    twitCurlDefaults::TWITCURL_NEXT_CURSOR +
+                    nextCursor;
+    }
 
     /* Perform GET */
     return performGet( buildUrl );

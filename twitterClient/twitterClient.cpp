@@ -177,6 +177,34 @@ int main( int argc, char* argv[] )
         printf( "\ntwitterClient:: twitCurl::accountVerifyCredGet error:\n%s\n", replyMsg.c_str() );
     }
 
+    /* Get followers' ids */
+    std::string nextCursor("");
+    do
+    {
+        if( twitterObj.followersIdsGet( nextCursor, std::string("nextbigwhat") ) )
+        {
+            twitterObj.getLastWebResponse( replyMsg );
+            printf( "\ntwitterClient:: twitCurl::followersIdsGet for user [nextbigwhat] web response:\n%s\n",
+                    replyMsg.c_str() );
+            // JSON: "next_cursor":1422208797779779359,
+            // XML: <next_cursor>1422209158195750268</next_cursor>
+            size_t nNextCursorStart = replyMsg.find("<next_cursor>");
+            size_t nNextCursorEnd = replyMsg.find("</next_cursor>");
+            if( (std::string::npos != nNextCursorStart) &&
+                (std::string::npos != nNextCursorEnd) )
+            {
+                nNextCursorStart += strlen("<next_cursor>");
+                nextCursor = replyMsg.substr(nNextCursorStart, (nNextCursorEnd - nNextCursorStart));
+            }
+        }
+        else
+        {
+            twitterObj.getLastCurlError( replyMsg );
+            printf( "\ntwitterClient:: twitCurl::followersIdsGet error:\n%s\n", replyMsg.c_str() );
+            break;
+        }
+    } while( nextCursor.compare("0") || nextCursor.empty() );
+
     /* Post a new status message */
     memset( tmpBuf, 0, 1024 );
     printf( "\nEnter a new status message: " );
@@ -194,6 +222,7 @@ int main( int argc, char* argv[] )
         printf( "\ntwitterClient:: twitCurl::statusUpdate error:\n%s\n", replyMsg.c_str() );
     }
 
+#ifdef _TWITCURL_TEST_
     /* Search a string */
     twitterObj.setTwitterApiType( twitCurlTypes::eTwitCurlApiFormatXml );
     printf( "\nEnter string to search: " );
@@ -243,7 +272,6 @@ int main( int argc, char* argv[] )
         printf( "\ntwitterClient:: twitCurl::statusDestroyById error:\n%s\n", replyMsg.c_str() );
     }
 
-#ifdef _TWITCURL_TEST_
     /* Get public timeline */
     replyMsg = "";
     printf( "\nGetting public timeline\n" );
