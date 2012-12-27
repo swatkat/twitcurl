@@ -91,7 +91,7 @@ twitCurl* twitCurl::clone()
 *
 * @description: method to set API type
 *
-* @input: none
+* @input: API type
 *
 * @output: none
 *
@@ -103,11 +103,26 @@ void twitCurl::setTwitterApiType( twitCurlTypes::eTwitCurlApiFormatType eType )
 }
 
 /*++
-* @method: twitCurl::setTwitterProcotolType
+* @method: twitCurl::getTwitterApiType
 *
-* @description: method to set protocol
+* @description: method to get currently set API type
 *
 * @input: none
+*
+* @output: API type
+*
+*--*/
+twitCurlTypes::eTwitCurlApiFormatType twitCurl::getTwitterApiType()
+{
+    return m_eApiFormatType;
+}
+
+/*++
+* @method: twitCurl::setTwitterProcotolType
+*
+* @description: method to set protocol type
+*
+* @input: protocol type
 *
 * @output: none
 *
@@ -116,6 +131,21 @@ void twitCurl::setTwitterProcotolType( twitCurlTypes::eTwitCurlProtocolType eTyp
 {
     m_eProtocolType = ( eType < twitCurlTypes::eTwitCurlProtocolMax ) ?
                         eType : twitCurlTypes::eTwitCurlProtocolHttp;
+}
+
+/*++
+* @method: twitCurl::getTwitterProcotolType
+*
+* @description: method to get currently set protocol type
+*
+* @input: none
+*
+* @output: protocol type
+*
+*--*/
+twitCurlTypes::eTwitCurlProtocolType twitCurl::getTwitterProcotolType()
+{
+    return m_eProtocolType;
 }
 
 /*++
@@ -1157,7 +1187,7 @@ bool twitCurl::favoriteDestroy( std::string& statusId )
 *
 * @description: method to block a user
 *
-* @input: userInfo - user id or screen name
+* @input: userInfo - user id or screen name who needs to be blocked
 *
 * @output: true if POST is success, otherwise false. This does not check http
 *          response by twitter. Use getLastWebResponse() for that.
@@ -1183,7 +1213,7 @@ bool twitCurl::blockCreate( std::string& userInfo )
 *
 * @description: method to unblock a user
 *
-* @input: userInfo - user id or screen name
+* @input: userInfo - user id or screen name who need to unblocked
 *
 * @output: true if DELETE is success, otherwise false. This does not check http
 *          response by twitter. Use getLastWebResponse() for that.
@@ -1198,6 +1228,102 @@ bool twitCurl::blockDestroy( std::string& userInfo )
 
     /* Perform DELETE */
     return performDelete( buildUrl );
+}
+
+/*++
+* @method: twitCurl::blockListGet
+*
+* @description: method to get list of users blocked by authenticated user
+*
+* @input: includeEntities - indicates whether or not to include 'entities' node
+*         skipStatus - indicates whether or not to include status for returned users
+*         nextCursor - next cursor string returned from a previous call
+*                      to this API, otherwise an empty string
+*
+* @output: true if GET is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::blockListGet( std::string& nextCursor, bool includeEntities, bool skipStatus )
+{
+    /* Prepare URL */
+    std::string buildUrl, urlParams;
+
+    buildUrl = twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
+               twitterDefaults::TWITCURL_BLOCKSLIST_URL +
+               twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType];
+    if( includeEntities )
+    {
+        urlParams += twitCurlDefaults::TWITCURL_INCLUDE_ENTITIES + std::string("true");
+    }
+    if( skipStatus )
+    {
+        if( urlParams.length() )
+        {
+            urlParams += twitCurlDefaults::TWITCURL_URL_SEP_AMP;
+        }
+        urlParams += twitCurlDefaults::TWITCURL_SKIP_STATUS + std::string("true");
+    }
+    if( nextCursor.length() )
+    {
+        if( urlParams.length() )
+        {
+            urlParams += twitCurlDefaults::TWITCURL_URL_SEP_AMP;
+        }
+        urlParams += twitCurlDefaults::TWITCURL_NEXT_CURSOR + nextCursor;
+    }
+    if( urlParams.length() )
+    {
+        buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_QUES + urlParams;
+    }
+    printf("\nblockListGet: [%s]", buildUrl.c_str());
+
+    /* Perform GET */
+    return performGet( buildUrl );
+}
+
+/*++
+* @method: twitCurl::blockIdsGet
+*
+* @description: method to get list of IDs blocked by authenticated user
+*
+* @input: stringifyIds - indicates whether or not returned ids should
+*                        be in string format
+*         nextCursor - next cursor string returned from a previous call
+*                      to this API, otherwise an empty string
+*
+* @output: true if GET is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
+bool twitCurl::blockIdsGet( std::string& nextCursor, bool stringifyIds )
+{
+    /* Prepare URL */
+    std::string buildUrl, urlParams;
+
+    buildUrl = twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
+               twitterDefaults::TWITCURL_BLOCKSIDS_URL +
+               twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType];
+    if( stringifyIds )
+    {
+        urlParams += twitCurlDefaults::TWITCURL_STRINGIFY_IDS + std::string("true");
+    }
+    if( nextCursor.length() )
+    {
+        if( urlParams.length() )
+        {
+            urlParams += twitCurlDefaults::TWITCURL_URL_SEP_AMP;
+        }
+        urlParams += twitCurlDefaults::TWITCURL_NEXT_CURSOR + nextCursor;
+    }
+    if( urlParams.length() )
+    {
+        buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_QUES + urlParams;
+    }
+    printf("\nblockListGet: [%s]", buildUrl.c_str());
+
+    /* Perform GET */
+    return performGet( buildUrl );
 }
 
 /*++
@@ -1700,7 +1826,7 @@ bool twitCurl::performGet( const std::string& getUrl )
 }
 
 /*++
-* @method: twitCurl::performGet
+* @method: twitCurl::performGetInternal
 *
 * @description: method to send http GET request. this is an internal method.
 *               twitcurl users should not use this method.
@@ -1712,7 +1838,8 @@ bool twitCurl::performGet( const std::string& getUrl )
 * @remarks: internal method
 *
 *--*/
-bool twitCurl::performGet( const std::string& getUrl, const std::string& oAuthHttpHeader )
+bool twitCurl::performGetInternal( const std::string& getUrl,
+                                   const std::string& oAuthHttpHeader )
 {
     /* Return if cURL is not initialized */
     if( !isCurlInit() )
@@ -1982,8 +2109,9 @@ bool twitCurl::oAuthRequestToken( std::string& authorizeUrl /* out */ )
                                 std::string( "" ),
                                 oAuthHeader ) )
     {
-        if( performGet( twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
-                        oAuthTwitterApiUrls::OAUTHLIB_TWITTER_REQUEST_TOKEN_URL, oAuthHeader ) )
+        if( performGetInternal( twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
+                                oAuthTwitterApiUrls::OAUTHLIB_TWITTER_REQUEST_TOKEN_URL,
+                                oAuthHeader ) )
         {
             /* Tell OAuth object to save access token and secret from web response */
             std::string twitterResp;
@@ -2031,8 +2159,9 @@ bool twitCurl::oAuthAccessToken()
                                 std::string( "" ),
                                 oAuthHeader, true ) )
     {
-        if( performGet( twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
-                        oAuthTwitterApiUrls::OAUTHLIB_TWITTER_ACCESS_TOKEN_URL, oAuthHeader ) )
+        if( performGetInternal( twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
+                                oAuthTwitterApiUrls::OAUTHLIB_TWITTER_ACCESS_TOKEN_URL,
+                                oAuthHeader ) )
         {
             /* Tell OAuth object to save access token and secret from web response */
             std::string twitterResp;
