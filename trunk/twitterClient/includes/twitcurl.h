@@ -54,6 +54,9 @@ namespace twitCurlDefaults
     const std::string TWITCURL_INCRETWEETS = "include_rts=true";
     const std::string TWITCURL_COUNT = "count=";
     const std::string TWITCURL_NEXT_CURSOR = "cursor=";
+    const std::string TWITCURL_SKIP_STATUS = "skip_status=";
+    const std::string TWITCURL_INCLUDE_ENTITIES = "include_entities=";
+    const std::string TWITCURL_STRINGIFY_IDS = "stringify_ids=";
 
     /* URL separators */
     const std::string TWITCURL_URL_SEP_AMP = "&";
@@ -114,6 +117,8 @@ namespace twitterDefaults
     /* Block URLs */
     const std::string TWITCURL_BLOCKSCREATE_URL = "api.twitter.com/1/blocks/create/";
     const std::string TWITCURL_BLOCKSDESTROY_URL = "api.twitter.com/1/blocks/destroy/";
+    const std::string TWITCURL_BLOCKSLIST_URL = "api.twitter.com/1.1/blocks/list";
+    const std::string TWITCURL_BLOCKSIDS_URL = "api.twitter.com/1.1/blocks/ids";
 
     /* Saved Search URLs */
     const std::string TWITCURL_SAVEDSEARCHGET_URL = "api.twitter.com/1/saved_searches";
@@ -151,7 +156,11 @@ public:
 
     /* Twitter API type */
     void setTwitterApiType( twitCurlTypes::eTwitCurlApiFormatType eType );
+    twitCurlTypes::eTwitCurlApiFormatType getTwitterApiType();
+
+    /* Twitter protocol type */
     void setTwitterProcotolType( twitCurlTypes::eTwitCurlProtocolType eType );
+    twitCurlTypes::eTwitCurlProtocolType getTwitterProcotolType();
 
     /* Twitter search APIs */
     bool search( std::string& searchQuery /* in */ );
@@ -196,6 +205,7 @@ public:
     /* Twitter account APIs */
     bool accountRateLimitGet();
     bool accountVerifyCredGet();
+
     /* Twitter favorites APIs */
     bool favoriteGet();
     bool favoriteCreate( std::string& statusId /* in */ );
@@ -204,6 +214,9 @@ public:
     /* Twitter block APIs */
     bool blockCreate( std::string& userInfo /* in */ );
     bool blockDestroy( std::string& userInfo /* in */ );
+    bool blockListGet( std::string& nextCursor /* in */,
+                        bool includeEntities /* in */, bool skipStatus /* in */ );
+    bool blockIdsGet( std::string& nextCursor /* in */, bool stringifyIds /* in */ );
 
     /* Twitter search APIs */
     bool savedSearchGet();
@@ -274,7 +287,8 @@ private:
     void prepareCurlUserPass();
     void prepareStandardParams();
     bool performGet( const std::string& getUrl );
-    bool performGet( const std::string& getUrl, const std::string& oAuthHttpHeader );
+    bool performGetInternal( const std::string& getUrl,
+                             const std::string& oAuthHttpHeader );
     bool performDelete( const std::string& deleteUrl );
     bool performPost( const std::string& postUrl, std::string dataStr = "" );
 

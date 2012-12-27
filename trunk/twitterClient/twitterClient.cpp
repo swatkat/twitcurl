@@ -203,7 +203,33 @@ int main( int argc, char* argv[] )
             printf( "\ntwitterClient:: twitCurl::followersIdsGet error:\n%s\n", replyMsg.c_str() );
             break;
         }
-    } while( nextCursor.compare("0") || nextCursor.empty() );
+    } while( nextCursor.compare("0") && !nextCursor.empty() );
+
+    /* Get block list */
+    nextCursor = "";
+    if( twitterObj.blockListGet( nextCursor, false, false ) )
+    {
+        twitterObj.getLastWebResponse( replyMsg );
+        printf( "\ntwitterClient:: twitCurl::blockListGet web response:\n%s\n", replyMsg.c_str() );
+    }
+    else
+    {
+        twitterObj.getLastCurlError( replyMsg );
+        printf( "\ntwitterClient:: twitCurl::blockListGet error:\n%s\n", replyMsg.c_str() );
+    }
+
+    /* Get blocked ids */
+    nextCursor = "";
+    if( twitterObj.blockIdsGet( nextCursor, true ) )
+    {
+        twitterObj.getLastWebResponse( replyMsg );
+        printf( "\ntwitterClient:: twitCurl::blockIdsGet web response:\n%s\n", replyMsg.c_str() );
+    }
+    else
+    {
+        twitterObj.getLastCurlError( replyMsg );
+        printf( "\ntwitterClient:: twitCurl::blockIdsGet error:\n%s\n", replyMsg.c_str() );
+    }
 
     /* Post a new status message */
     memset( tmpBuf, 0, 1024 );

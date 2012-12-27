@@ -254,7 +254,7 @@ void oAuth::generateNonceTimeStamp()
     char szRand[oAuthLibDefaults::OAUTHLIB_BUFFSIZE];
     memset( szTime, 0, oAuthLibDefaults::OAUTHLIB_BUFFSIZE );
     memset( szRand, 0, oAuthLibDefaults::OAUTHLIB_BUFFSIZE );
-    srand( time( NULL ) );
+    srand( (unsigned int)time( NULL ) );
     sprintf( szRand, "%x", rand()%1000 );
     sprintf( szTime, "%ld", time( NULL ) );
 
