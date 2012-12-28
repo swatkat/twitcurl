@@ -1276,7 +1276,6 @@ bool twitCurl::blockListGet( std::string& nextCursor, bool includeEntities, bool
     {
         buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_QUES + urlParams;
     }
-    printf("\nblockListGet: [%s]", buildUrl.c_str());
 
     /* Perform GET */
     return performGet( buildUrl );
@@ -1320,7 +1319,6 @@ bool twitCurl::blockIdsGet( std::string& nextCursor, bool stringifyIds )
     {
         buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_QUES + urlParams;
     }
-    printf("\nblockListGet: [%s]", buildUrl.c_str());
 
     /* Perform GET */
     return performGet( buildUrl );
