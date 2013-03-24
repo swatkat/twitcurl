@@ -179,9 +179,10 @@ int main( int argc, char* argv[] )
 
     /* Get followers' ids */
     std::string nextCursor("");
+    std::string searchUser("nextbigwhat");
     do
     {
-        if( twitterObj.followersIdsGet( nextCursor, std::string("nextbigwhat") ) )
+        if( twitterObj.followersIdsGet( nextCursor, searchUser ) )
         {
             twitterObj.getLastWebResponse( replyMsg );
             printf( "\ntwitterClient:: twitCurl::followersIdsGet for user [nextbigwhat] web response:\n%s\n",
