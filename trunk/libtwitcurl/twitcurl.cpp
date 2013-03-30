@@ -414,19 +414,28 @@ bool twitCurl::search( std::string& searchQuery )
 *
 * @description: method to update new status message in twitter profile
 *
-* @input: newStatus
+* @input: newStatus - status message text
+*         inReplyToStatusId - optional status id to we're replying to
 *
 * @output: true if POST is success, otherwise false. This does not check http
 *          response by twitter. Use getLastWebResponse() for that.
 *
 *--*/
-bool twitCurl::statusUpdate( std::string& newStatus )
+bool twitCurl::statusUpdate( std::string& newStatus, std::string inReplyToStatusId )
 {
     bool retVal = false;
     if( newStatus.length() )
     {
         /* Prepare new status message */
         std::string newStatusMsg = twitCurlDefaults::TWITCURL_STATUSSTRING + urlencode( newStatus );
+
+        /* Append status id to which we're replying to */
+        if (inReplyToStatusId.size())
+        {
+            newStatusMsg += twitCurlDefaults::TWITCURL_URL_SEP_AMP +
+                            twitCurlDefaults::TWITCURL_INREPLYTOSTATUSID +
+                            urlencode( inReplyToStatusId );
+        }
 
         /* Perform POST */
         retVal = performPost( twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
