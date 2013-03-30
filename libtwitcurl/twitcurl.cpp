@@ -389,6 +389,7 @@ void twitCurl::setProxyPassword( std::string& proxyPassword )
 * @description: method to return tweets that match a specified query.
 *
 * @input: searchQuery - search query in string format
+*         resultCount - optional search result count
 *
 * @output: true if GET is success, otherwise false. This does not check http
 *          response by twitter. Use getLastWebResponse() for that.
@@ -396,7 +397,7 @@ void twitCurl::setProxyPassword( std::string& proxyPassword )
 * @note: Only ATOM and JSON format supported.
 *
 *--*/
-bool twitCurl::search( std::string& searchQuery )
+bool twitCurl::search( std::string& searchQuery, std::string resultCount )
 {
     /* Prepare URL */
     std::string buildUrl = twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
@@ -404,6 +405,13 @@ bool twitCurl::search( std::string& searchQuery )
                            twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[twitCurlTypes::eTwitCurlApiFormatJson] +
                            twitCurlDefaults::TWITCURL_URL_SEP_QUES + twitCurlDefaults::TWITCURL_SEARCHQUERYSTRING +
                            searchQuery;
+
+    /* Add number of results count if provided */
+    if ( resultCount.size() )
+    {
+        buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_AMP +
+                    twitCurlDefaults::TWITCURL_COUNT + urlencode( resultCount );
+    }
 
     /* Perform GET */
     return performGet( buildUrl );
@@ -430,7 +438,7 @@ bool twitCurl::statusUpdate( std::string& newStatus, std::string inReplyToStatus
         std::string newStatusMsg = twitCurlDefaults::TWITCURL_STATUSSTRING + urlencode( newStatus );
 
         /* Append status id to which we're replying to */
-        if (inReplyToStatusId.size())
+        if ( inReplyToStatusId.size() )
         {
             newStatusMsg += twitCurlDefaults::TWITCURL_URL_SEP_AMP +
                             twitCurlDefaults::TWITCURL_INREPLYTOSTATUSID +
