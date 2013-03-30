@@ -35,7 +35,7 @@ int main( int argc, char* argv[] )
     }
 
     twitCurl twitterObj;
-    std::string tmpStr;
+    std::string tmpStr, tmpStr2;
     std::string replyMsg;
     char tmpBuf[1024];
 
@@ -248,6 +248,28 @@ int main( int argc, char* argv[] )
         twitterObj.getLastCurlError( replyMsg );
         printf( "\ntwitterClient:: twitCurl::statusUpdate error:\n%s\n", replyMsg.c_str() );
     }
+
+    /* Post a new reply */
+    memset( tmpBuf, 0, 1024 );
+    printf( "\nEnter message id to reply to : " );
+    gets( tmpBuf );
+    tmpStr2 = tmpBuf;
+    memset( tmpBuf, 0, 1024 );
+    printf( "\nEnter a reply message: " );
+    gets( tmpBuf );
+    tmpStr = tmpBuf;
+    replyMsg = "";
+    if( twitterObj.statusUpdate( tmpStr, tmpStr2 ) )
+    {
+        twitterObj.getLastWebResponse( replyMsg );
+        printf( "\ntwitterClient:: twitCurl::statusUpdate web response:\n%s\n", replyMsg.c_str() );
+    }
+    else
+    {
+        twitterObj.getLastCurlError( replyMsg );
+        printf( "\ntwitterClient:: twitCurl::statusUpdate error:\n%s\n", replyMsg.c_str() );
+    }
+
 
 #ifdef _TWITCURL_TEST_
     /* Search a string */
