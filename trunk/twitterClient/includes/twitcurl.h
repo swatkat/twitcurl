@@ -57,6 +57,7 @@ namespace twitCurlDefaults
     const std::string TWITCURL_SKIP_STATUS = "skip_status=";
     const std::string TWITCURL_INCLUDE_ENTITIES = "include_entities=";
     const std::string TWITCURL_STRINGIFY_IDS = "stringify_ids=";
+    const std::string TWITCURL_INREPLYTOSTATUSID = "in_reply_to_status_id=";
 
     /* URL separators */
     const std::string TWITCURL_URL_SEP_AMP = "&";
@@ -166,7 +167,7 @@ public:
     bool search( std::string& searchQuery /* in */ );
 
     /* Twitter status APIs */
-    bool statusUpdate( std::string& newStatus /* in */ );
+    bool statusUpdate( std::string& newStatus /* in */, std::string inReplyToStatusId = "" /* in */ );
     bool statusShowById( std::string& statusId /* in */ );
     bool statusDestroyById( std::string& statusId /* in */ );
     bool retweetById( std::string& statusId /* in */ );
@@ -175,7 +176,10 @@ public:
     bool timelineHomeGet( std::string sinceId = ""  /* in */ );
     bool timelinePublicGet();
     bool timelineFriendsGet();
-    bool timelineUserGet( bool trimUser /* in */, bool includeRetweets /* in */, unsigned int tweetCount /* in */, std::string userInfo = "" /* in */, bool isUserId = false /* in */ );
+    bool timelineUserGet( bool trimUser /* in */, bool includeRetweets /* in */,
+                          unsigned int tweetCount /* in */,
+                          std::string userInfo = "" /* in */,
+                          bool isUserId = false /* in */ );
     bool featuredUsersGet();
     bool mentionsGet( std::string sinceId = "" /* in */ );
 
