@@ -271,15 +271,18 @@ int main( int argc, char* argv[] )
     }
 
 
-#ifdef _TWITCURL_TEST_
     /* Search a string */
     twitterObj.setTwitterApiType( twitCurlTypes::eTwitCurlApiFormatXml );
     printf( "\nEnter string to search: " );
     memset( tmpBuf, 0, 1024 );
     gets( tmpBuf );
     tmpStr = tmpBuf;
+    printf( "\nLimit search results to: " );
+    memset( tmpBuf, 0, 1024 );
+    gets( tmpBuf );
+    tmpStr2 = tmpBuf;
     replyMsg = "";
-    if( twitterObj.search( tmpStr ) )
+    if( twitterObj.search( tmpStr, tmpStr2 ) )
     {
         twitterObj.getLastWebResponse( replyMsg );
         printf( "\ntwitterClient:: twitCurl::search web response:\n%s\n", replyMsg.c_str() );
@@ -290,6 +293,7 @@ int main( int argc, char* argv[] )
         printf( "\ntwitterClient:: twitCurl::search error:\n%s\n", replyMsg.c_str() );
     }
 
+#ifdef _TWITCURL_TEST_
     /* Get user timeline */
     replyMsg = "";
     printf( "\nGetting user timeline\n" );

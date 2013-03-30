@@ -69,7 +69,7 @@ namespace twitterDefaults
 {
 
     /* Search URLs */
-    const std::string TWITCURL_SEARCH_URL = "search.twitter.com/search";
+    const std::string TWITCURL_SEARCH_URL = "api.twitter.com/1.1/search/tweets";
 
     /* Status URLs */
     const std::string TWITCURL_STATUSUPDATE_URL = "api.twitter.com/1/statuses/update";
@@ -164,7 +164,7 @@ public:
     twitCurlTypes::eTwitCurlProtocolType getTwitterProcotolType();
 
     /* Twitter search APIs */
-    bool search( std::string& searchQuery /* in */ );
+    bool search( std::string& searchQuery /* in */, std::string resultCount = "" /* in */ );
 
     /* Twitter status APIs */
     bool statusUpdate( std::string& newStatus /* in */, std::string inReplyToStatusId = "" /* in */ );
