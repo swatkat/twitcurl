@@ -1,5 +1,6 @@
 #define NOMINMAX
 #include <memory.h>
+#include "twitcurlurls.h"
 #include "twitcurl.h"
 #include "urlencode.h"
 
@@ -18,9 +19,12 @@ m_curlHandle( NULL ),
 m_curlProxyParamsSet( false ),
 m_curlLoginParamsSet( false ),
 m_curlCallbackParamsSet( false ),
-m_eApiFormatType( twitCurlTypes::eTwitCurlApiFormatXml ),
+m_eApiFormatType( twitCurlTypes::eTwitCurlApiFormatJson ),
 m_eProtocolType( twitCurlTypes::eTwitCurlProtocolHttp )
 {
+    /* Alloc memory for cURL error responses */
+    m_errorBuffer = (char*)malloc( twitCurlDefaults::TWITCURL_DEFAULT_BUFFSIZE );
+
     /* Clear callback buffers */
     clearCurlCallbackBuffers();
 
@@ -51,6 +55,11 @@ twitCurl::~twitCurl()
         curl_easy_cleanup( m_curlHandle );
         m_curlHandle = NULL;
     }
+    if( m_errorBuffer )
+    {
+        free( m_errorBuffer );
+        m_errorBuffer = NULL;
+    }
 }
 
 /*++
@@ -77,44 +86,10 @@ twitCurl* twitCurl::clone()
     cloneObj->setTwitterUsername(m_twitterUsername);
     cloneObj->setTwitterPassword(m_twitterPassword);
 
-    /* Twitter API type */
-    cloneObj->setTwitterApiType(m_eApiFormatType);
-
     /* OAuth data */
     cloneObj->m_oAuth = m_oAuth.clone();
 
     return cloneObj;
-}
-
-/*++
-* @method: twitCurl::setTwitterApiType
-*
-* @description: method to set API type
-*
-* @input: API type
-*
-* @output: none
-*
-*--*/
-void twitCurl::setTwitterApiType( twitCurlTypes::eTwitCurlApiFormatType eType )
-{
-    m_eApiFormatType = ( eType < twitCurlTypes::eTwitCurlApiFormatMax ) ?
-                        eType : twitCurlTypes::eTwitCurlApiFormatXml;
-}
-
-/*++
-* @method: twitCurl::getTwitterApiType
-*
-* @description: method to get currently set API type
-*
-* @input: none
-*
-* @output: API type
-*
-*--*/
-twitCurlTypes::eTwitCurlApiFormatType twitCurl::getTwitterApiType()
-{
-    return m_eApiFormatType;
 }
 
 /*++
