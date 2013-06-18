@@ -20,7 +20,7 @@ m_curlProxyParamsSet( false ),
 m_curlLoginParamsSet( false ),
 m_curlCallbackParamsSet( false ),
 m_eApiFormatType( twitCurlTypes::eTwitCurlApiFormatJson ),
-m_eProtocolType( twitCurlTypes::eTwitCurlProtocolHttp )
+m_eProtocolType( twitCurlTypes::eTwitCurlProtocolHttps )
 {
     /* Alloc memory for cURL error responses */
     m_errorBuffer = (char*)malloc( twitCurlDefaults::TWITCURL_DEFAULT_BUFFSIZE );
@@ -90,37 +90,6 @@ twitCurl* twitCurl::clone()
     cloneObj->m_oAuth = m_oAuth.clone();
 
     return cloneObj;
-}
-
-/*++
-* @method: twitCurl::setTwitterProcotolType
-*
-* @description: method to set protocol type
-*
-* @input: protocol type
-*
-* @output: none
-*
-*--*/
-void twitCurl::setTwitterProcotolType( twitCurlTypes::eTwitCurlProtocolType eType )
-{
-    m_eProtocolType = ( eType < twitCurlTypes::eTwitCurlProtocolMax ) ?
-                        eType : twitCurlTypes::eTwitCurlProtocolHttp;
-}
-
-/*++
-* @method: twitCurl::getTwitterProcotolType
-*
-* @description: method to get currently set protocol type
-*
-* @input: none
-*
-* @output: protocol type
-*
-*--*/
-twitCurlTypes::eTwitCurlProtocolType twitCurl::getTwitterProcotolType()
-{
-    return m_eProtocolType;
 }
 
 /*++

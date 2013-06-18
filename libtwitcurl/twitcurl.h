@@ -20,8 +20,8 @@ namespace twitCurlTypes
 
     typedef enum _eTwitCurlProtocolType
     {
-        eTwitCurlProtocolHttp = 0,
-        eTwitCurlProtocolHttps,
+        eTwitCurlProtocolHttps = 0,
+        eTwitCurlProtocolHttp,
         eTwitCurlProtocolMax
     } eTwitCurlProtocolType;
 };
@@ -44,10 +44,6 @@ public:
     std::string& getTwitterPassword();
     void setTwitterUsername( std::string& userName /* in */ );
     void setTwitterPassword( std::string& passWord /* in */ );
-
-    /* Twitter protocol type */
-    void setTwitterProcotolType( twitCurlTypes::eTwitCurlProtocolType eType );
-    twitCurlTypes::eTwitCurlProtocolType getTwitterProcotolType();
 
     /* Twitter search APIs */
     bool search( std::string& searchQuery /* in */, std::string resultCount = "" /* in */ );

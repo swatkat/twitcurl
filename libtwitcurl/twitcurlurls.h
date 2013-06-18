@@ -20,11 +20,11 @@ namespace twitCurlDefaults
     const std::string TWITCURL_SEARCHQUERYSTRING = "q=";
     const std::string TWITCURL_SCREENNAME = "screen_name=";
     const std::string TWITCURL_USERID = "user_id=";
-    const std::string TWITCURL_EXTENSIONFORMATS[2] = { ".xml",
-                                                       ".json"
+    const std::string TWITCURL_EXTENSIONFORMATS[2] = { ".json",
+                                                       ".xml"
                                                      };
-    const std::string TWITCURL_PROTOCOLS[2] =        { "http://",
-                                                       "https://"
+    const std::string TWITCURL_PROTOCOLS[2] =        { "https://",
+                                                       "http://"
                                                      };
     const std::string TWITCURL_TARGETSCREENNAME = "target_screen_name=";
     const std::string TWITCURL_TARGETUSERID = "target_id=";
