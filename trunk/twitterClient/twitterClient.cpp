@@ -7,6 +7,7 @@ void printUsage()
 
 int main( int argc, char* argv[] )
 {
+    /* Get username and password from command line args */
     std::string userName( "" );
     std::string passWord( "" );
     if( argc > 4 )
@@ -48,35 +49,30 @@ int main( int argc, char* argv[] )
     printf( "\nDo you have a proxy server configured (0 for no; 1 for yes): " );
     gets( tmpBuf );
     tmpStr = tmpBuf;
-
     if( std::string::npos != tmpStr.find( "1" ) )
     {
-        char proxyIp[1024];
-        char proxyPort[1024];
-        char proxyUsername[1024];
-        char proxyPassword[1024];
-
-        memset( proxyIp, 0, 1024 );
-        memset( proxyPort, 0, 1024 );
-        memset( proxyUsername, 0, 1024 );
-        memset( proxyPassword, 0, 1024 );
-
+        memset( tmpBuf, 0, 1024 );
         printf( "\nEnter proxy server IP: " );
-        gets( proxyIp );
-        printf( "\nEnter proxy server port: " );
-        gets( proxyPort );
-        printf( "\nEnter proxy server username: " );
-        gets( proxyUsername );
-        printf( "\nEnter proxy server password: " );
-        gets( proxyPassword );
-
-        tmpStr = proxyIp;
+        gets( tmpBuf );
+        tmpStr = tmpBuf;
         twitterObj.setProxyServerIp( tmpStr );
-        tmpStr = proxyPort;
+
+        memset( tmpBuf, 0, 1024 );
+        printf( "\nEnter proxy server port: " );
+        gets( tmpBuf );
+        tmpStr = tmpBuf;
         twitterObj.setProxyServerPort( tmpStr );
-        tmpStr = proxyUsername;
+
+        memset( tmpBuf, 0, 1024 );
+        printf( "\nEnter proxy server username: " );
+        gets( tmpBuf );
+        tmpStr = tmpBuf;
         twitterObj.setProxyUserName( tmpStr );
-        tmpStr = proxyPassword;
+
+        memset( tmpBuf, 0, 1024 );
+        printf( "\nEnter proxy server password: " );
+        gets( tmpBuf );
+        tmpStr = tmpBuf;
         twitterObj.setProxyPassword( tmpStr );
     }
 
@@ -185,26 +181,29 @@ int main( int argc, char* argv[] )
         if( twitterObj.followersIdsGet( nextCursor, searchUser ) )
         {
             twitterObj.getLastWebResponse( replyMsg );
-            printf( "\ntwitterClient:: twitCurl::followersIdsGet for user [nextbigwhat] web response:\n%s\n",
-                    replyMsg.c_str() );
+            printf( "\ntwitterClient:: twitCurl::followersIdsGet for user [%s] web response:\n%s\n",
+                    searchUser.c_str(), replyMsg.c_str() );
+
             // JSON: "next_cursor":1422208797779779359,
-            // XML: <next_cursor>1422209158195750268</next_cursor>
-            size_t nNextCursorStart = replyMsg.find("<next_cursor>");
-            size_t nNextCursorEnd = replyMsg.find("</next_cursor>");
-            if( (std::string::npos != nNextCursorStart) &&
-                (std::string::npos != nNextCursorEnd) )
+            nextCursor = "";
+            size_t nNextCursorStart = replyMsg.find("next_cursor");
+            if( std::string::npos == nNextCursorStart )
             {
-                nNextCursorStart += strlen("<next_cursor>");
-                nextCursor = replyMsg.substr(nNextCursorStart, (nNextCursorEnd - nNextCursorStart));
+                nNextCursorStart += strlen("next_cursor:\"");
+                size_t nNextCursorEnd = replyMsg.substr(nNextCursorStart).find(",");
+                if( std::string::npos != nNextCursorEnd )
+                {
+                    nextCursor = replyMsg.substr(nNextCursorStart, (nNextCursorEnd - nNextCursorStart));
+                    printf("\nNEXT CURSOR: %s\n\n\n\n\n", nextCursor.c_str());
+                }
             }
         }
-        else
-        {
+        else {
             twitterObj.getLastCurlError( replyMsg );
             printf( "\ntwitterClient:: twitCurl::followersIdsGet error:\n%s\n", replyMsg.c_str() );
             break;
         }
-    } while( nextCursor.compare("0") && !nextCursor.empty() );
+    } while( !nextCursor.empty() && nextCursor.compare("0") );
 
     /* Get block list */
     nextCursor = "";
