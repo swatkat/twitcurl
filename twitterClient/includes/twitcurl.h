@@ -8,132 +8,22 @@
 #include "oauthlib.h"
 #include "curl/curl.h"
 
+/* Few common types used by twitCurl */
 namespace twitCurlTypes
 {
     typedef enum _eTwitCurlApiFormatType
     {
-        eTwitCurlApiFormatXml = 0,
-        eTwitCurlApiFormatJson,
+        eTwitCurlApiFormatJson = 0,
+        eTwitCurlApiFormatXml,
         eTwitCurlApiFormatMax
     } eTwitCurlApiFormatType;
 
     typedef enum _eTwitCurlProtocolType
     {
-        eTwitCurlProtocolHttp = 0,
-        eTwitCurlProtocolHttps,
+        eTwitCurlProtocolHttps = 0,
+        eTwitCurlProtocolHttp,
         eTwitCurlProtocolMax
     } eTwitCurlProtocolType;
-};
-
-/* Default values used in twitcurl */
-namespace twitCurlDefaults
-{
-    /* Constants */
-    const int TWITCURL_DEFAULT_BUFFSIZE = 1024;
-    const std::string TWITCURL_COLON = ":";
-    const char TWITCURL_EOS = '\0';
-    const unsigned int MAX_TIMELINE_TWEET_COUNT = 200;
-
-    /* Miscellaneous data used to build twitter URLs*/
-    const std::string TWITCURL_STATUSSTRING = "status=";
-    const std::string TWITCURL_TEXTSTRING = "text=";
-    const std::string TWITCURL_QUERYSTRING = "query=";
-    const std::string TWITCURL_SEARCHQUERYSTRING = "q=";
-    const std::string TWITCURL_SCREENNAME = "screen_name=";
-    const std::string TWITCURL_USERID = "user_id=";
-    const std::string TWITCURL_EXTENSIONFORMATS[2] = { ".xml",
-                                                       ".json"
-                                                     };
-    const std::string TWITCURL_PROTOCOLS[2] =        { "http://",
-                                                       "https://"
-                                                     };
-    const std::string TWITCURL_TARGETSCREENNAME = "target_screen_name=";
-    const std::string TWITCURL_TARGETUSERID = "target_id=";
-    const std::string TWITCURL_SINCEID = "since_id=";
-    const std::string TWITCURL_TRIMUSER = "trim_user=true";
-    const std::string TWITCURL_INCRETWEETS = "include_rts=true";
-    const std::string TWITCURL_COUNT = "count=";
-    const std::string TWITCURL_NEXT_CURSOR = "cursor=";
-    const std::string TWITCURL_SKIP_STATUS = "skip_status=";
-    const std::string TWITCURL_INCLUDE_ENTITIES = "include_entities=";
-    const std::string TWITCURL_STRINGIFY_IDS = "stringify_ids=";
-    const std::string TWITCURL_INREPLYTOSTATUSID = "in_reply_to_status_id=";
-
-    /* URL separators */
-    const std::string TWITCURL_URL_SEP_AMP = "&";
-    const std::string TWITCURL_URL_SEP_QUES = "?";
-};
-
-/* Default twitter URLs */
-namespace twitterDefaults
-{
-
-    /* Search URLs */
-    const std::string TWITCURL_SEARCH_URL = "api.twitter.com/1.1/search/tweets";
-
-    /* Status URLs */
-    const std::string TWITCURL_STATUSUPDATE_URL = "api.twitter.com/1/statuses/update";
-    const std::string TWITCURL_STATUSSHOW_URL = "api.twitter.com/1/statuses/show/";
-    const std::string TWITCURL_STATUDESTROY_URL = "api.twitter.com/1/statuses/destroy/";
-    const std::string TWITCURL_RETWEET_URL = "api.twitter.com/1/statuses/retweet/";
-
-    /* Timeline URLs */
-    const std::string TWITCURL_HOME_TIMELINE_URL = "api.twitter.com/1/statuses/home_timeline";
-    const std::string TWITCURL_PUBLIC_TIMELINE_URL = "api.twitter.com/1/statuses/public_timeline";
-    const std::string TWITCURL_FEATURED_USERS_URL = "api.twitter.com/1/statuses/featured";
-    const std::string TWITCURL_FRIENDS_TIMELINE_URL = "api.twitter.com/1/statuses/friends_timeline";
-    const std::string TWITCURL_MENTIONS_URL = "api.twitter.com/1/statuses/mentions";
-    const std::string TWITCURL_USERTIMELINE_URL = "api.twitter.com/1/statuses/user_timeline";
-
-    /* Users URLs */
-    const std::string TWITCURL_LOOKUPUSERS_URL = "api.twitter.com/1/users/lookup";
-    const std::string TWITCURL_SHOWUSERS_URL = "api.twitter.com/1/users/show";
-    const std::string TWITCURL_SHOWFRIENDS_URL = "api.twitter.com/1/statuses/friends";
-    const std::string TWITCURL_SHOWFOLLOWERS_URL = "api.twitter.com/1/statuses/followers";
-
-    /* Direct messages URLs */
-    const std::string TWITCURL_DIRECTMESSAGES_URL = "api.twitter.com/1/direct_messages";
-    const std::string TWITCURL_DIRECTMESSAGENEW_URL = "api.twitter.com/1/direct_messages/new";
-    const std::string TWITCURL_DIRECTMESSAGESSENT_URL = "api.twitter.com/1/direct_messages/sent";
-    const std::string TWITCURL_DIRECTMESSAGEDESTROY_URL = "api.twitter.com/1/direct_messages/destroy/";
-
-    /* Friendships URLs */
-    const std::string TWITCURL_FRIENDSHIPSCREATE_URL = "api.twitter.com/1/friendships/create";
-    const std::string TWITCURL_FRIENDSHIPSDESTROY_URL = "api.twitter.com/1/friendships/destroy";
-    const std::string TWITCURL_FRIENDSHIPSSHOW_URL = "api.twitter.com/1/friendships/show";
-
-    /* Social graphs URLs */
-    const std::string TWITCURL_FRIENDSIDS_URL = "api.twitter.com/1/friends/ids";
-    const std::string TWITCURL_FOLLOWERSIDS_URL = "api.twitter.com/1/followers/ids";
-
-    /* Account URLs */
-    const std::string TWITCURL_ACCOUNTRATELIMIT_URL = "api.twitter.com/1/account/rate_limit_status";
-    const std::string TWITCURL_ACCOUNTVERIFYCRED_URL = "api.twitter.com/1/account/verify_credentials";
-
-    /* Favorites URLs */
-    const std::string TWITCURL_FAVORITESGET_URL = "api.twitter.com/1/favorites";
-    const std::string TWITCURL_FAVORITECREATE_URL = "api.twitter.com/1/favorites/create/";
-    const std::string TWITCURL_FAVORITEDESTROY_URL = "api.twitter.com/1/favorites/destroy/";
-
-    /* Block URLs */
-    const std::string TWITCURL_BLOCKSCREATE_URL = "api.twitter.com/1/blocks/create/";
-    const std::string TWITCURL_BLOCKSDESTROY_URL = "api.twitter.com/1/blocks/destroy/";
-    const std::string TWITCURL_BLOCKSLIST_URL = "api.twitter.com/1.1/blocks/list";
-    const std::string TWITCURL_BLOCKSIDS_URL = "api.twitter.com/1.1/blocks/ids";
-
-    /* Saved Search URLs */
-    const std::string TWITCURL_SAVEDSEARCHGET_URL = "api.twitter.com/1/saved_searches";
-    const std::string TWITCURL_SAVEDSEARCHSHOW_URL = "api.twitter.com/1/saved_searches/show/";
-    const std::string TWITCURL_SAVEDSEARCHCREATE_URL = "api.twitter.com/1/saved_searches/create";
-    const std::string TWITCURL_SAVEDSEARCHDESTROY_URL = "api.twitter.com/1/saved_searches/destroy/";
-
-    /* Trends URLs */
-    const std::string TWITCURL_TRENDS_URL = "api.twitter.com/1/trends";
-    const std::string TWITCURL_TRENDSDAILY_URL = "api.twitter.com/1/trends/daily";
-    const std::string TWITCURL_TRENDSCURRENT_URL = "api.twitter.com/1/trends/current";
-    const std::string TWITCURL_TRENDSWEEKLY_URL = "api.twitter.com/1/trends/weekly";
-    const std::string TWITCURL_TRENDSAVAILABLE_URL = "api.twitter.com/1/trends/available";
-
 };
 
 /* twitCurl class */
@@ -154,14 +44,6 @@ public:
     std::string& getTwitterPassword();
     void setTwitterUsername( std::string& userName /* in */ );
     void setTwitterPassword( std::string& passWord /* in */ );
-
-    /* Twitter API type */
-    void setTwitterApiType( twitCurlTypes::eTwitCurlApiFormatType eType );
-    twitCurlTypes::eTwitCurlApiFormatType getTwitterApiType();
-
-    /* Twitter protocol type */
-    void setTwitterProcotolType( twitCurlTypes::eTwitCurlProtocolType eType );
-    twitCurlTypes::eTwitCurlProtocolType getTwitterProcotolType();
 
     /* Twitter search APIs */
     bool search( std::string& searchQuery /* in */, std::string resultCount = "" /* in */ );
@@ -259,7 +141,7 @@ public:
 private:
     /* cURL data */
     CURL* m_curlHandle;
-    char m_errorBuffer[twitCurlDefaults::TWITCURL_DEFAULT_BUFFSIZE];
+    char* m_errorBuffer;
     std::string m_callbackData;
 
     /* cURL flags */

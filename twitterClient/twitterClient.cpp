@@ -272,7 +272,6 @@ int main( int argc, char* argv[] )
 
 
     /* Search a string */
-    twitterObj.setTwitterApiType( twitCurlTypes::eTwitCurlApiFormatXml );
     printf( "\nEnter string to search: " );
     memset( tmpBuf, 0, 1024 );
     gets( tmpBuf );
