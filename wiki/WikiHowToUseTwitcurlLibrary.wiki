@@ -52,11 +52,15 @@ Follow these steps to build library:
 
 =Windows:=
 Follow these steps to build twitcurl library:
-  * Download twitCurl source from {{{http://twitcurl.googlecode.com/svn/trunk/libtwitcurl}}} using SVN clients like TortoiseSVN.
+  * Download twitcurl source from {{{http://twitcurl.googlecode.com/svn/trunk/libtwitcurl}}} using SVN clients like TortoiseSVN.
 
-  * Open the solution either by opening {{{twitcurl.sln}}} (Visual C++ 2008 and later versions). Build the library {{{twitcurl.lib}}}.
+  * Open {{{twitcurl.sln}}} solution using Visual C++ 2008 (or later). Build the library {{{twitcurl.lib}}}.
 
-  * Once {{{twitcurl.lib}}} is built, you can link this library with your application. Do not forget to include twitCurl and cURL headers in your application, as mentioned in {{{How to use twitcurl library?}}} section above.
+  * Statically link {{{twitcurl.lib}}} in your application. Do not forget to include {{{twitcurl.h}}}, {{{oauthlib.h}}} and cURL headers in your application, as mentioned in {{{How to use twitcurl library?}}} section above.
+
+   * Build your application.
+
+   * Since cURL depends on OpenSSL, you need to have *libeay32.dll* and *ssleay32.dll* DLL files in the same directory where your application executable is located. These two DLLs can be copied from {{{twitterClient\Release}}} directory, or downloaded from http://curl.haxx.se/latest.cgi?curl=win32-ssl-devel-msvc page.
 
    * Check example client application {{{twitterClient}}}'s source to know more about using twitcurl library.
 
