@@ -1,3 +1,4 @@
+#include "twitcurlurls.h"
 #include "oauthlib.h"
 #include "HMAC_SHA1.h"
 #include "base64.h"
