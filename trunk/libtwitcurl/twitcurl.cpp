@@ -35,7 +35,7 @@ m_eProtocolType( twitCurlTypes::eTwitCurlProtocolHttps )
         std::string dummyStr;
         getLastCurlError( dummyStr );
     }
-    curl_easy_setopt(m_curlHandle, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_easy_setopt(m_curlHandle, CURLOPT_SSL_VERIFYPEER, 0);
 }
 
 /*++
