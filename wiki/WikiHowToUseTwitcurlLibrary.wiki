@@ -2,8 +2,8 @@
 #labels Featured,Phase-Implementation
 
 = How to use twitcurl library? =
-twitcurl is an open-source pure C++ library for twitter REST APIs. Currently, it has support for most of the twitter APIs and it will be updated to support all the APIs. twitcurl uses cURL library for handling HTTP requests and responses. Building applications using twitcurl is quite easy:
-  * Download twitcurl library source. Build library by using Visual C++ workspace or Makefile depending on your platform.
+twitcurl is an open-source pure C++ library for twitter REST APIs. Currently, it has support for most of the twitter v1.1 APIs and it will be updated to support all the APIs. twitcurl uses cURL library for handling HTTP requests and responses. Building applications using twitcurl is quite easy:
+  * Download twitcurl library source. Build library by using Visual C++ workspace file or Makefile depending on your platform.
 
   * Include *twitcurl.h* and cURL headers present in _/include/curl/_ sub-directory in cURL source in your twitter client application and link to *twitcurl.lib* and *libcurl.lib*.
     Note: Windows based twitter client applications need *libeay32.dll* and *ssleay32.dll* as well.
@@ -52,5 +52,7 @@ Follow these steps to build twitcurl library:
   * Open the solution either by opening {{{twitcurl.sln}}} (Visual C++ 2008 and later versions). Build the library {{{twitcurl.lib}}}.
 
   * Once {{{twitcurl.lib}}} is built, you can link this library with your application. Do not forget to include twitCurl and cURL headers in your application, as mentioned in {{{How to use twitcurl library?}}} section above.
+
+   * Check example client application {{{twitterClient}}}'s source to know more about using twitcurl library.
 
 Note: Currently Microsoft Visual C++ 6.0 workspace ({{{twitcurl.dsw}}}) and Visual C++ 2008 solution ({{{twitcurl.sln}}}) files are provided with the twitcurl source. These workspace files can be used to compile and build twitcurl on Windows using Visual C++ (6.0 or later). If you are using any other Windows based C++ IDE, then you can create new "workspace" or "project" in your IDE and just add twitCurl source files to this new "project".
