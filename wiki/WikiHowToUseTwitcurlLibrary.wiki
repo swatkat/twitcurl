@@ -60,7 +60,9 @@ Follow these steps to build twitcurl library:
 
    * Build your application.
 
-   * Since cURL depends on OpenSSL, you need to have *libeay32.dll* and *ssleay32.dll* DLL files in the same directory where your application executable is located. These two DLLs can be copied from {{{twitterClient\Release}}} directory, or downloaded from http://curl.haxx.se/latest.cgi?curl=win32-ssl-devel-msvc page.
+   * Since cURL depends on OpenSSL, you need to copy *libeay32.dll* and *ssleay32.dll* files to the same directory where your application executable is located.
+
+     Note: *libeay32.dll* and *ssleay32.dll* can be copied from {{{twitterClient\Release}}} directory, or downloaded from http://curl.haxx.se/latest.cgi?curl=win32-ssl-devel-msvc page.
 
    * Check example client application {{{twitterClient}}}'s source to know more about using twitcurl library.
 
