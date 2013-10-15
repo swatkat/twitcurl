@@ -42,7 +42,13 @@ Follow these steps to build library:
 
 {{{svn co http://twitcurl.googlecode.com/svn/trunk/libtwitcurl}}}
 
-5) Build twitcurl library using the command *{{{make}}}*. Symlink or copy {{{libtwitcurl.so.1.0}}} as *{{{/usr/lib/libtwitcurl.so.1}}}*.
+5) Build twitcurl library using the command *{{{make}}}*. This will generate twitcurl shared library *{{{libtwitcurl.so.1.0}}}*. On UNIX/Linux systems, this file needs to be copied (or symlinked) to *{{{/usr/lib/}}}* directory as *{{{libtwitcurl.so.1}}}* (Note: trailing _.0_ is removed).
+
+{{{cp libtwitcurl.so.1.0 /usr/lib/libtwitcurl.so.1}}}
+
+or
+
+{{{ln -sf /path/of/libtwitcurl.so.1.0 /usr/lib/libtwitcurl.so.1}}}
 
 6) Check-out example application twitterClient using the command:
 
