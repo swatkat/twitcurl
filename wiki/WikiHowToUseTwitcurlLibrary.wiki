@@ -18,6 +18,8 @@ Note: Windows based twitter client applications need *libeay32.dll* and *ssleay3
 
 5) twitcurl works on all OS (Windows, Linux, Mac etc.) as it is written completely in C++ and the only dependency is cURL (which works on all OSes mentioned earlier).
 
+Scroll down for more detailed instructions on building libtwitcurl on Linux, Mac OSX and Windows.
+
 =OAuth Flow:=
 Refer this wiki page for OAuth flow:
 http://code.google.com/p/twitcurl/wiki/TwitcurlOAuthFlow
