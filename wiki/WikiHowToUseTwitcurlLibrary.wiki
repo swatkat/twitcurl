@@ -65,7 +65,7 @@ or
 
 {{{g++ yourapp.cpp -ltwitcurl}}}
 
-Note: If you get {{{ld: cannot find -ltwitcurl}}} linker error, then try copying (or symlinking) *{{{libtwitcurl.so.1.0}}}* as *{{{libtwitcurl.so}}}* into {{{/usr/lib/}}}* directory.
+Note: If you get {{{ld: cannot find -ltwitcurl}}} linker error, then try copying (or symlinking) *{{{libtwitcurl.so.1.0}}}* as *{{{libtwitcurl.so}}}* into *{{{/usr/lib/}}}* directory.
 
 9) To run your application, make sure that {{{LD_LIBRARY_PATH}}} environment variable contains the directory path where {{{libtwitcurl.so.1}}} is present.  If directory path is not present in {{{LD_LIBRARY_PATH}}}, then add it using command {{{export}}} command. For example:
 {{{export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib}}}
