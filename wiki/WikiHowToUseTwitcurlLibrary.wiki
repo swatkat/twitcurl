@@ -23,6 +23,7 @@ Refer this wiki page for OAuth flow:
 http://code.google.com/p/twitcurl/wiki/TwitcurlOAuthFlow
 
 
+
 =UNIX/Linux:=
 Follow these steps to build library:
 
@@ -65,6 +66,14 @@ or
 9) To run your application, make sure that {{{LD_LIBRARY_PATH}}} environment variable contains the directory path where {{{libtwitcurl.so.1}}} is present.  If directory path is not present in {{{LD_LIBRARY_PATH}}}, then add it using command {{{export}}} command. For example:
 {{{export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib}}}
 
+=Mac/OSX:=
+1) You may need to install GCC command line tools for XCode if you don't already have it, as mentioned here: http://stackoverflow.com/a/11494872
+
+2) Once GCC tools are installed, steps to build libtwitcurl and linking it to your app is almost identical to that of UNIX/Linux.
+
+3) If you get libcurl related linker errors (example: ld: library not found for -lcurl), then you need to download and build libcurl as well. Follow steps given in "Getting started with libcurl on OSX" section, in this page: http://dahu.co.uk/blog/?p=77
+
+Note: Once libtwitcurl dynamic library is built, it should be copied to {{{/usr/local/lib/}}} directory so that your app can link to it.
 
 =Windows:=
 Follow these steps to build twitcurl library:
