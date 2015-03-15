@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{85f7c81e-15ee-4c28-816f-86c1247580bc}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{6b9f8315-9aab-4085-b3da-8502b92aab47}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="base64.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HMAC_SHA1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="oauthlib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SHA1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="twitcurl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="urlencode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="base64.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HMAC_SHA1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="oauthlib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SHA1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="twitcurl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="twitcurlurls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="urlencode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
