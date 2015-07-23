@@ -248,7 +248,7 @@ std::string& twitCurl::getProxyPassword()
 *--*/
 std::string& twitCurl::getInterface()
 {
-    return m_proxyInterface;
+    return m_Interface;
 }
 
 
@@ -354,7 +354,7 @@ void twitCurl::setProxyPassword( const std::string& proxyPassword )
 * @output: none
 *
 *--*/
-void twitCurl::seInterface( const std::string& Interface )
+void twitCurl::setInterface( const std::string& Interface )
 {
     if( Interface.length() )
     {
@@ -1687,7 +1687,7 @@ void twitCurl::prepareCurlProxy()
 *--*/
 void twitCurl::prepareCurlInterface()
 {
-    if( m_curlInterfaceParamsSet )
+    if( m_curlInterfaseParamSet )
     {
         return;
     }
