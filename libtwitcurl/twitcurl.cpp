@@ -358,7 +358,7 @@ void twitCurl::setInterface( const std::string& Interface )
 {
     if( Interface.length() )
     {
-        m_proxyInterface = Interface;
+        m_Interface = Interface;
         /*
          * Reset the flag so that next cURL http request
          * would set proxy details again into cURL.
