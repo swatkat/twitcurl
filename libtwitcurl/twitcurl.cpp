@@ -237,6 +237,22 @@ std::string& twitCurl::getProxyPassword()
 }
 
 /*++
+* @method: twitCurl::getInterface
+*
+* @description: method to get proxy server password
+*
+* @input: none
+*
+* @output: proxy server password
+*
+*--*/
+std::string& twitCurl::getInterface()
+{
+    return m_Interface;
+}
+
+
+/*++
 * @method: twitCurl::setProxyServerIp
 *
 * @description: method to set proxy server IP address
@@ -328,6 +344,28 @@ void twitCurl::setProxyPassword( const std::string& proxyPassword )
     }
 }
 
+/*++
+* @method: twitCurl::setInterface
+*
+* @description: method to set proxy server IP address
+*
+* @input: Interface
+*
+* @output: none
+*
+*--*/
+void twitCurl::setInterface( const std::string& Interface )
+{
+    if( Interface.length() )
+    {
+        m_Interface = Interface;
+        /*
+         * Reset the flag so that next cURL http request
+         * would set proxy details again into cURL.
+         */
+        m_curlProxyParamsSet = false;
+    }
+}
 /*++
 * @method: twitCurl::search
 *
@@ -1634,6 +1672,37 @@ void twitCurl::prepareCurlProxy()
 }
 
 /*++
+* @method: twitCurl::prepareCurlProxy
+*
+* @description: method to set proxy details into cURL. this is an internal method.
+*               twitcurl users should not use this method, instead use setProxyXxx
+*               methods to set proxy server information.
+*
+* @input: none
+*
+* @output: none
+*
+* @remarks: internal method
+*
+*--*/
+void twitCurl::prepareCurlInterface()
+{
+    if( m_curlInterfaseParamSet )
+    {
+        return;
+    }
+
+    /* Reset existing interface details in cURL */
+    curl_easy_setopt( m_curlHandle, CURLOPT_INTERFACE, NULL );
+    
+    /* Set interface details in cURL */
+    curl_easy_setopt( m_curlHandle, CURLOPT_INTERFACE, m_Interface.c_str() );
+
+    /* Set the flag to true indicating that proxy info is set in cURL */
+    m_curlInterfaseParamSet = true;
+}
+
+/*++
 * @method: twitCurl::prepareCurlCallback
 *
 * @description: method to set callback details into cURL. this is an internal method.
@@ -1725,6 +1794,9 @@ void twitCurl::prepareStandardParams()
 
     /* Clear callback and error buffers */
     clearCurlCallbackBuffers();
+
+    /* Prepare interface */
+    prepareCurlInterface();
 
     /* Prepare proxy */
     prepareCurlProxy();
