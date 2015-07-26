@@ -39,8 +39,9 @@ target: $(SRC) $(LIBNAME).h
 
 #clean project.
 clean:
-	$(REMOVE) $(LIBNAME)*.so.1.0
+	$(REMOVE) lib$(LIBNAME)*.so.1.0
 	$(REMOVE) $(LIBNAME).o
+	$(REMOVE) *.o
 	$(REMOVE) $(LIBRARY_DIR)/lib$(LIBNAME).so*
 	
 # Install library to local openwrt library directory
