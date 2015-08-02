@@ -19,6 +19,7 @@ m_curlHandle( NULL ),
 m_curlProxyParamsSet( false ),
 m_curlLoginParamsSet( false ),
 m_curlCallbackParamsSet( false ),
+m_curlInterfaseParamSet ( false ),
 m_eApiFormatType( twitCurlTypes::eTwitCurlApiFormatJson ),
 m_eProtocolType( twitCurlTypes::eTwitCurlProtocolHttps )
 {
