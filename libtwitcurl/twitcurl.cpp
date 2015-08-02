@@ -1695,9 +1695,12 @@ void twitCurl::prepareCurlInterface()
     /* Reset existing interface details in cURL */
     curl_easy_setopt( m_curlHandle, CURLOPT_INTERFACE, NULL );
     
-    /* Set interface details in cURL */
-    curl_easy_setopt( m_curlHandle, CURLOPT_INTERFACE, m_Interface.c_str() );
-
+    if( m_Interface.length() )
+    {
+    	/* Set interface details in cURL */
+    	curl_easy_setopt( m_curlHandle, CURLOPT_INTERFACE, m_Interface.c_str() );
+    }
+    
     /* Set the flag to true indicating that proxy info is set in cURL */
     m_curlInterfaseParamSet = true;
 }
