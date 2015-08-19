@@ -22,4 +22,3 @@ clean :
 		cd ../libtwitcurl && sudo make clean
 		cd ../twitterClient
 
-# g++ -L/usr/local/lib -I./include/ -o test twitterClient.cpp -ltwitcurl
