@@ -88,6 +88,7 @@ See wiki section for more info on building and using twitcurl library.<br>
 
 <h3>Example:</h3>
 An example twitter client program using twitcurl as a static library is available in the "Downloads" section.<br>
+The Makefile in twitterClient is supposed to run under sudo, and the file is tested under Ubuntu 12.04.<br>
 <br>
 <br>
 <h3>Info:</h3>
