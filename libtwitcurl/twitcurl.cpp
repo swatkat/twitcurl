@@ -19,6 +19,7 @@ m_curlHandle( NULL ),
 m_curlProxyParamsSet( false ),
 m_curlLoginParamsSet( false ),
 m_curlCallbackParamsSet( false ),
+m_curlInterfaseParamSet ( false ),
 m_eApiFormatType( twitCurlTypes::eTwitCurlApiFormatJson ),
 m_eProtocolType( twitCurlTypes::eTwitCurlProtocolHttps )
 {
@@ -2243,6 +2244,7 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
     unsigned long httpStatusCode = 0;
     size_t nPosStart, nPosEnd;
     struct curl_slist* pOAuthHeaderList = NULL;
+    struct curl_slist* pCookieList = NULL;
 
     /* Prepare standard params */
     prepareStandardParams();
@@ -2261,6 +2263,7 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
     /* Set http request and url */
     curl_easy_setopt( m_curlHandle, CURLOPT_HTTPGET, 1 );
     curl_easy_setopt( m_curlHandle, CURLOPT_URL, authorizeUrl.c_str() );
+    curl_easy_setopt( m_curlHandle, CURLOPT_COOKIELIST, &pCookieList);
 
     /* Send http request */
     if( CURLE_OK == curl_easy_perform( m_curlHandle ) )
@@ -2296,6 +2299,7 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
                 return false;
             }
             oauthTokenVal = m_callbackData.substr( nPosStart, nPosEnd );
+            curl_easy_getinfo( m_curlHandle, CURLINFO_COOKIELIST, &pCookieList );
         }
     }
     else if( pOAuthHeaderList )
@@ -2335,6 +2339,7 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
     curl_easy_setopt( m_curlHandle, CURLOPT_POST, 1 );
     curl_easy_setopt( m_curlHandle, CURLOPT_URL, authorizeUrl.c_str() );
     curl_easy_setopt( m_curlHandle, CURLOPT_COPYPOSTFIELDS, dataStr.c_str() );
+    curl_easy_setopt( m_curlHandle, CURLOPT_COOKIELIST, &pCookieList);
 
     /* Send http request */
     if( CURLE_OK == curl_easy_perform( m_curlHandle ) )
@@ -2364,6 +2369,10 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
     else if( pOAuthHeaderList )
     {
         curl_slist_free_all( pOAuthHeaderList );
+    }
+    if( pCookieList )
+    {
+        curl_slist_free_all( pCookieList );
     }
     return false;
 }
