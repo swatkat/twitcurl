@@ -185,6 +185,7 @@ private:
     void prepareCurlUserPass();
     void prepareStandardParams();
     bool performGet( const std::string& getUrl );
+    bool performGet( const std::string& getUrl, const httpParams& params );
     bool performGetInternal( const std::string& getUrl,
                              const std::string& oAuthHttpHeader );
     bool performDelete( const std::string& deleteUrl );
