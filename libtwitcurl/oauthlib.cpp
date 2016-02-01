@@ -291,7 +291,7 @@ void oAuth::buildOAuthHttpParameterKeyValPairs(const httpParams& params,
     std::string dataKey;
     std::string dataVal;
 
-    for ( int i = 0; i < params.size(); i++ ) {
+    for ( unsigned int i = 0; i < params.size(); i++ ) {
         dataKey = params.at(i).key;
         dataVal = params.at(i).value;
 

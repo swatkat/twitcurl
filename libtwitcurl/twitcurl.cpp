@@ -375,6 +375,16 @@ void twitCurl::setInterface( const std::string& Interface )
 *
 * @input: searchQuery - search query in string format
 *         resultCount - optional search result count
+*         resultCount - optional language: restricts tweets to the given language, given by an ISO 639-1 code
+*         resultCount - optional locale: specify the language of the query you are sending (only ja is currently effective). This is intended for language-specific clients and the default should work in the majority of cases.
+*         resultCount - optional maxId: returns tweets with status ids less than the given id.
+*         resultCount - optional since: returns tweets with since the given date.  Date should be formatted as YYYY-MM-DD
+*         resultCount - optional sinceId: returns tweets with status ids greater than the given id.
+*         resultCount - optional until: if specified, returns tweets with generated before the given date.  Date should be formatted as YYYY-MM-DD
+*         resultCount - optional search result type
+*                          popular: return only the most popular results in the response
+*                          mixed: Include both popular and real time results in the response
+*                          recent: return only the most recent results in the response
 *
 * @output: true if GET is success, otherwise false. This does not check http
 *          response by twitter. Use getLastWebResponse() for that.
@@ -382,7 +392,15 @@ void twitCurl::setInterface( const std::string& Interface )
 * @note: Only ATOM and JSON format supported.
 *
 *--*/
-bool twitCurl::search( const std::string& searchQuery, const std::string resultCount )
+bool twitCurl::search( const std::string& searchQuery,
+                       const std::string resultCount,
+                       const std::string lang,
+                       const std::string locale,
+                       const std::string maxId,
+                       const std::string since,
+                       const std::string sinceId,
+                       const std::string until,
+                       const std::string resultType)
 {
     httpParams params;
     /* Prepare URL */
@@ -395,6 +413,33 @@ bool twitCurl::search( const std::string& searchQuery, const std::string resultC
     searchQueryParam.value = searchQuery;
     params.push_back( searchQueryParam );
 
+    /* Add language if provided */
+    if( lang.size() )
+    {
+        httpParamPair tweetLangParam;
+        tweetLangParam.key = twitCurlDefaults::TWITCURL_LANG;
+        tweetLangParam.value = lang;
+        params.push_back( tweetLangParam );
+    }
+
+    /* Add locale if provided */
+    if( locale.size() )
+    {
+        httpParamPair tweetLocaleParam;
+        tweetLocaleParam.key = twitCurlDefaults::TWITCURL_LOCALE;
+        tweetLocaleParam.value = locale;
+        params.push_back( tweetLocaleParam );
+    }
+
+    /* Add maxId if provided */
+    if( maxId.size() )
+    {
+        httpParamPair tweetMaxidParam;
+        tweetMaxidParam.key = twitCurlDefaults::TWITCURL_MAXID;
+        tweetMaxidParam.value = maxId;
+        params.push_back( tweetMaxidParam );
+    }
+
     /* Add number of results count if provided */
     if( resultCount.size() )
     {
@@ -402,6 +447,42 @@ bool twitCurl::search( const std::string& searchQuery, const std::string resultC
         tweetCountParam.key = twitCurlDefaults::TWITCURL_COUNT;
         tweetCountParam.value = resultCount;
         params.push_back( tweetCountParam );
+    }
+
+    /* Add since if provided */
+    if( since.size() )
+    {
+        httpParamPair tweetSinceParam;
+        tweetSinceParam.key = twitCurlDefaults::TWITCURL_SINCE;
+        tweetSinceParam.value = since;
+        params.push_back( tweetSinceParam );
+    }
+
+    /* Add sinceId if provided */
+    if( sinceId.size() )
+    {
+        httpParamPair tweetSinceidParam;
+        tweetSinceidParam.key = twitCurlDefaults::TWITCURL_SINCEID;
+        tweetSinceidParam.value = sinceId;
+        params.push_back( tweetSinceidParam );
+    }
+
+    /* Add until if provided */
+    if( until.size() )
+    {
+        httpParamPair tweetUntilParam;
+        tweetUntilParam.key = twitCurlDefaults::TWITCURL_UNTIL;
+        tweetUntilParam.value = until;
+        params.push_back( tweetUntilParam );
+    }
+
+    /* Add resultType if provided */
+    if( resultType.size() )
+    {
+        httpParamPair tweetResulttypeParam;
+        tweetResulttypeParam.key = twitCurlDefaults::TWITCURL_RESULTTYPE;
+        tweetResulttypeParam.value = resultType;
+        params.push_back( tweetResulttypeParam );
     }
 
     /* Perform GET */
@@ -1898,8 +1979,6 @@ bool twitCurl::performGet( const std::string& getUrl, const httpParams& params )
 
     /* Set http request and url */
     curl_easy_setopt( m_curlHandle, CURLOPT_HTTPGET, 1 );
-    curl_easy_setopt( m_curlHandle, CURLOPT_URL, getUrl.c_str() );
-
     if( !params.empty() )
     {
         size_t nPos = getUrl.find_first_of( twitCurlDefaults::TWITCURL_URL_SEP_QUES );

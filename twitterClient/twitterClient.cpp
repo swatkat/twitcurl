@@ -280,7 +280,7 @@ int main( int argc, char* argv[] )
     gets( tmpBuf );
     tmpStr2 = tmpBuf;
     replyMsg = "";
-    if( twitterObj.search( tmpStr, tmpStr2 ) )
+    if( twitterObj.search( tmpStr, tmpStr2, "en", "", "", "", "", "", "" ) )
     {
         twitterObj.getLastWebResponse( replyMsg );
         printf( "\ntwitterClient:: twitCurl::search web response:\n%s\n", replyMsg.c_str() );
