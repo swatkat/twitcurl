@@ -1,5 +1,6 @@
 #define NOMINMAX
 #include <memory.h>
+#include <algorithm>
 #include "twitcurlurls.h"
 #include "twitcurl.h"
 #include "urlencode.h"
@@ -665,7 +666,7 @@ bool twitCurl::timelineUserGet( const bool trimUser,
 
     if( tweetCount )
     {
-		std::stringstream tmpStrm;
+        std::stringstream tmpStrm;
         if( tweetCount < twitCurlDefaults::MAX_TIMELINE_TWEET_COUNT )
         {
             tmpStrm << twitCurlDefaults::TWITCURL_URL_SEP_AMP + twitCurlDefaults::TWITCURL_COUNT << tweetCount;
@@ -721,8 +722,8 @@ bool twitCurl::userLookup( const std::vector<std::string> &userInfo, const bool 
     userIds = ( isUserId ? twitCurlDefaults::TWITCURL_USERID : twitCurlDefaults::TWITCURL_SCREENNAME ) +
               urlencode( userIds );
 
-    std::string buildUrl = twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] + 
-                           twitterDefaults::TWITCURL_LOOKUPUSERS_URL + 
+    std::string buildUrl = twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
+                           twitterDefaults::TWITCURL_LOOKUPUSERS_URL +
                            twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType];
 
     /* Perform POST */
@@ -1695,7 +1696,7 @@ void twitCurl::prepareCurlInterface()
 
     /* Reset existing interface details in cURL */
     curl_easy_setopt( m_curlHandle, CURLOPT_INTERFACE, NULL );
-    
+
     if( m_Interface.length() ){
         /* Set interface details in cURL */
         curl_easy_setopt( m_curlHandle, CURLOPT_INTERFACE, m_Interface.c_str() );
