@@ -1608,6 +1608,32 @@ int twitCurl::saveLastWebResponse(  char*& data, size_t size )
     return 0;
 }
 
+std::string twitCurl::encodeParameters(const std::string &url)
+{
+    std::string request = "";
+    /* Check for parameters */
+    if (url.find('?') != std::string::npos) {
+        std::size_t divide = url.find_first_of('?') + 1;
+        std::string encodedparams("");
+        std::string params = url.substr(divide);
+        const std::vector<std::string> vparams = split(params, '&');
+        for (unsigned int i = 0; i < vparams.size(); i++) {
+            if (i > 0) encodedparams += "&";
+            std::size_t pos = vparams[i].find('=');
+            if (pos != std::string::npos)
+                encodedparams += vparams[i].substr(0, pos + 1) + urlencode(vparams[i].substr(pos + 1));
+            else
+                encodedparams += vparams[i];
+        }
+        request = url.substr(0, divide) + encodedparams;
+    }
+    else {
+        request = url;
+    }
+
+    return request;
+}
+
 /*++
 * @method: twitCurl::clearCurlCallbackBuffers
 *
@@ -1852,7 +1878,7 @@ bool twitCurl::performGet( const std::string& getUrl )
 
     /* Set http request and url */
     curl_easy_setopt( m_curlHandle, CURLOPT_HTTPGET, 1 );
-    curl_easy_setopt( m_curlHandle, CURLOPT_URL, getUrl.c_str() );
+    curl_easy_setopt( m_curlHandle, CURLOPT_URL, encodeParameters(getUrl).c_str() );
 
     /* Send http request */
     if( CURLE_OK == curl_easy_perform( m_curlHandle ) )

@@ -177,6 +177,8 @@ private:
     /* OAuth data */
     oAuth m_oAuth;
 
+    std::string encodeParameters(const std::string &url);
+
     /* Private methods */
     void clearCurlCallbackBuffers();
     void prepareCurlProxy();
