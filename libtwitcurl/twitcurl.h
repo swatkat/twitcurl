@@ -24,6 +24,13 @@ namespace twitCurlTypes
         eTwitCurlProtocolHttp,
         eTwitCurlProtocolMax
     } eTwitCurlProtocolType;
+
+    typedef enum _eTwitCurlResultType
+    {
+        eTwitCurlResultTypeMixed = 0,
+        eTwitCurlResultTypeRecent,
+        eTwitCurlResultTypePopular
+    } eTwitCurlResultType;
 };
 
 /* twitCurl class */
@@ -46,7 +53,7 @@ public:
     void setTwitterPassword( const std::string& passWord /* in */ );
 
     /* Twitter search APIs */
-    bool search( const std::string& searchQuery /* in */, const std::string resultCount = "" /* in */ );
+    bool search( const std::string& searchQuery /* in */, const std::string resultCount = "" /* in */, const twitCurlTypes::eTwitCurlResultType &resultType = twitCurlTypes::eTwitCurlResultTypeMixed /* in */ );
 
     /* Twitter status APIs */
     bool statusUpdate( const std::string& newStatus /* in */, const std::string inReplyToStatusId = "" /* in */ );
@@ -59,7 +66,7 @@ public:
     bool timelinePublicGet();
     bool timelineFriendsGet();
     bool timelineUserGet( const bool trimUser /* in */,
-	                      const bool includeRetweets /* in */,
+                          const bool includeRetweets /* in */,
                           const unsigned int tweetCount /* in */,
                           const std::string userInfo = "" /* in */,
                           const bool isUserId = false /* in */ );
@@ -86,10 +93,10 @@ public:
     /* Twitter social graphs APIs */
     bool friendsIdsGet( const std::string& nextCursor /* in */,
                         const std::string& userInfo /* in */,
-	                    const bool isUserId = false /* in */ );
+                        const bool isUserId = false /* in */ );
     bool followersIdsGet( const std::string& nextCursor /* in */,
                           const std::string& userInfo /* in */,
-	                      const bool isUserId = false /* in */ );
+                          const bool isUserId = false /* in */ );
 
     /* Twitter account APIs */
     bool accountRateLimitGet();
@@ -105,7 +112,7 @@ public:
     bool blockDestroy( const std::string& userInfo /* in */ );
     bool blockListGet( const std::string& nextCursor /* in */,
                        const bool includeEntities /* in */,
-	                   const bool skipStatus /* in */ );
+                       const bool skipStatus /* in */ );
     bool blockIdsGet( const std::string& nextCursor /* in */, const bool stringifyIds /* in */ );
 
     /* Twitter search APIs */
@@ -143,7 +150,7 @@ public:
     std::string& getInterface();
     void setInterface( const std::string& Interface /* in */ );
 
-    
+
     /* Clones this object */
     twitCurl* clone();
 
@@ -165,7 +172,7 @@ private:
     std::string m_proxyUserName;
     std::string m_proxyPassword;
     std::string m_Interface;
-    
+
     /* Twitter data */
     std::string m_twitterUsername;
     std::string m_twitterPassword;
