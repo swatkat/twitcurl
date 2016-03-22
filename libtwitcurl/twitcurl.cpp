@@ -375,13 +375,13 @@ void twitCurl::setInterface( const std::string& Interface )
 *
 * @input: searchQuery - search query in string format
 *         resultCount - optional search result count
-*         resultCount - optional language: restricts tweets to the given language, given by an ISO 639-1 code
-*         resultCount - optional locale: specify the language of the query you are sending (only ja is currently effective). This is intended for language-specific clients and the default should work in the majority of cases.
-*         resultCount - optional maxId: returns tweets with status ids less than the given id.
-*         resultCount - optional since: returns tweets with since the given date.  Date should be formatted as YYYY-MM-DD
-*         resultCount - optional sinceId: returns tweets with status ids greater than the given id.
-*         resultCount - optional until: if specified, returns tweets with generated before the given date.  Date should be formatted as YYYY-MM-DD
-*         resultCount - optional search result type
+*         lang        - optional language: restricts tweets to the given language, given by an ISO 639-1 code
+*         locale      - optional locale: specify the language of the query you are sending (only ja is currently effective). This is intended for language-specific clients and the default should work in the majority of cases.
+*         maxId       - optional maxId: returns tweets with status ids less than the given id.
+*         since       - optional since: returns tweets with since the given date.  Date should be formatted as YYYY-MM-DD
+*         sinceId     - optional sinceId: returns tweets with status ids greater than the given id.
+*         until       - optional until: if specified, returns tweets with generated before the given date.  Date should be formatted as YYYY-MM-DD
+*         resultType  - optional search result type
 *                          popular: return only the most popular results in the response
 *                          mixed: Include both popular and real time results in the response
 *                          recent: return only the most recent results in the response
