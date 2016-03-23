@@ -282,8 +282,9 @@ int main( int argc, char* argv[] )
     replyMsg = "";
     if( twitterObj.search( tmpStr, tmpStr2, "en", "", "", "", "", "", "" ) )
     {
-        twitterObj.getLastWebResponse( replyMsg );
-        printf( "\ntwitterClient:: twitCurl::search web response:\n%s\n", replyMsg.c_str() );
+        long httpCode = 0;
+        twitterObj.getLastWebResponse( httpCode, replyMsg );
+        printf( "\ntwitterClient:: twitCurl::search web response:%ld\n%s\n", httpCode, replyMsg.c_str() );
     }
     else
     {

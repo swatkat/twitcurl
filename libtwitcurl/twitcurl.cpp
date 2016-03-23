@@ -1652,6 +1652,29 @@ bool twitCurl::trendsAvailableGet()
 *               twitcurl users need to call this method and parse the XML
 *               data returned by twitter to see what has happened.
 *
+* @input: outWebRespCode - response code
+*         outWebResp     - string in which twitter's response is supplied back to caller
+*
+* @output: none
+*
+*--*/
+void twitCurl::getLastWebResponse( long& outWebRespCode, std::string& outWebResp )
+{
+    outWebRespCode = m_responseCode;
+    outWebResp = "";
+    if( m_callbackData.length() )
+    {
+        outWebResp = m_callbackData;
+    }
+}
+
+/*++
+* @method: twitCurl::getLastWebResponse
+*
+* @description: method to get http response for the most recent request sent.
+*               twitcurl users need to call this method and parse the XML
+*               data returned by twitter to see what has happened.
+*
 * @input: outWebResp - string in which twitter's response is supplied back to caller
 *
 * @output: none
@@ -1749,6 +1772,7 @@ int twitCurl::saveLastWebResponse(  char*& data, size_t size )
 void twitCurl::clearCurlCallbackBuffers()
 {
     m_callbackData = "";
+    m_responseCode = 0;
     memset( m_errorBuffer, 0, twitCurlDefaults::TWITCURL_DEFAULT_BUFFSIZE );
 }
 
@@ -2001,6 +2025,9 @@ bool twitCurl::performGet( const std::string& getUrl, const httpParams& params )
 
     /* Send http request */
     CURLcode res = curl_easy_perform( m_curlHandle );
+    if( CURLE_OK == res )
+        curl_easy_getinfo( m_curlHandle, CURLINFO_RESPONSE_CODE, &m_responseCode);
+
     if( pOAuthHeaderList )
     {
         curl_slist_free_all( pOAuthHeaderList );
@@ -2071,18 +2098,15 @@ bool twitCurl::performGetInternal( const std::string& getUrl,
     }
 
     /* Send http request */
-    if( CURLE_OK == curl_easy_perform( m_curlHandle ) )
-    {
-        if( pOAuthHeaderList )
-        {
-            curl_slist_free_all( pOAuthHeaderList );
-        }
-        return true;
-    }
+    CURLcode res = curl_easy_perform( m_curlHandle );
+    if( CURLE_OK == res )
+        curl_easy_getinfo( m_curlHandle, CURLINFO_RESPONSE_CODE, &m_responseCode);
     if( pOAuthHeaderList )
     {
         curl_slist_free_all( pOAuthHeaderList );
     }
+    if( CURLE_OK == res )
+        return true;
     return false;
 }
 
@@ -2132,18 +2156,15 @@ bool twitCurl::performDelete( const std::string& deleteUrl )
     curl_easy_setopt( m_curlHandle, CURLOPT_COPYPOSTFIELDS, dataStrDummy.c_str() );
 
     /* Send http request */
-    if( CURLE_OK == curl_easy_perform( m_curlHandle ) )
-    {
-        if( pOAuthHeaderList )
-        {
-            curl_slist_free_all( pOAuthHeaderList );
-        }
-        return true;
-    }
+    CURLcode res = curl_easy_perform( m_curlHandle );
+    if( CURLE_OK == res )
+        curl_easy_getinfo( m_curlHandle, CURLINFO_RESPONSE_CODE, &m_responseCode);
     if( pOAuthHeaderList )
     {
         curl_slist_free_all( pOAuthHeaderList );
     }
+    if( CURLE_OK == res )
+        return true;
     return false;
 }
 
@@ -2198,18 +2219,15 @@ bool twitCurl::performPost( const std::string& postUrl, std::string dataStr )
     }
 
     /* Send http request */
-    if( CURLE_OK == curl_easy_perform( m_curlHandle ) )
-    {
-        if( pOAuthHeaderList )
-        {
-            curl_slist_free_all( pOAuthHeaderList );
-        }
-        return true;
-    }
+    CURLcode res = curl_easy_perform( m_curlHandle );
+    if( CURLE_OK == res )
+        curl_easy_getinfo( m_curlHandle, CURLINFO_RESPONSE_CODE, &m_responseCode);
     if( pOAuthHeaderList )
     {
         curl_slist_free_all( pOAuthHeaderList );
     }
+    if( CURLE_OK == res )
+        return true;
     return false;
 }
 
@@ -2408,7 +2426,6 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
     std::string authenticityTokenVal;
     std::string oauthTokenVal;
     std::string pinCodeVal;
-    unsigned long httpStatusCode = 0;
     size_t nPosStart, nPosEnd;
     struct curl_slist* pOAuthHeaderList = NULL;
     struct curl_slist* pCookieList = NULL;
@@ -2435,9 +2452,9 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
     /* Send http request */
     if( CURLE_OK == curl_easy_perform( m_curlHandle ) )
     {
+        curl_easy_getinfo( m_curlHandle, CURLINFO_RESPONSE_CODE, &m_responseCode);
         if( pOAuthHeaderList )
         {
-            curl_easy_getinfo( m_curlHandle, CURLINFO_HTTP_CODE, &httpStatusCode );
             curl_slist_free_all( pOAuthHeaderList );
 
             // Now, let's find the authenticity token and oauth token
@@ -2511,9 +2528,9 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
     /* Send http request */
     if( CURLE_OK == curl_easy_perform( m_curlHandle ) )
     {
+        curl_easy_getinfo( m_curlHandle, CURLINFO_RESPONSE_CODE, &m_responseCode);
         if( pOAuthHeaderList )
         {
-            curl_easy_getinfo( m_curlHandle, CURLINFO_HTTP_CODE, &httpStatusCode );
             curl_slist_free_all( pOAuthHeaderList );
 
             // Now, let's find the PIN CODE

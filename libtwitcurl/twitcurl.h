@@ -67,7 +67,7 @@ public:
     bool timelinePublicGet();
     bool timelineFriendsGet();
     bool timelineUserGet( const bool trimUser /* in */,
-	                      const bool includeRetweets /* in */,
+                          const bool includeRetweets /* in */,
                           const unsigned int tweetCount /* in */,
                           const std::string userInfo = "" /* in */,
                           const bool isUserId = false /* in */ );
@@ -131,6 +131,7 @@ public:
 
     /* cURL APIs */
     bool isCurlInit();
+    void getLastWebResponse( long& outWebRespCode /*out */, std::string& outWebResp /* out */ );
     void getLastWebResponse( std::string& outWebResp /* out */ );
     void getLastCurlError( std::string& outErrResp /* out */);
 
@@ -160,6 +161,7 @@ private:
     CURL* m_curlHandle;
     char* m_errorBuffer;
     std::string m_callbackData;
+    long m_responseCode;
 
     /* cURL flags */
     bool m_curlProxyParamsSet;
