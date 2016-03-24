@@ -402,6 +402,8 @@ bool twitCurl::search( const std::string& searchQuery,
                        const std::string until,
                        const std::string resultType)
 {
+    clearCurlCallbackBuffers();
+
     httpParams params;
     /* Prepare URL */
     std::string buildUrl = twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
