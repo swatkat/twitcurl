@@ -113,7 +113,7 @@ public:
     bool blockDestroy( const std::string& userInfo /* in */ );
     bool blockListGet( const std::string& nextCursor /* in */,
                        const bool includeEntities /* in */,
-	                   const bool skipStatus /* in */ );
+                       const bool skipStatus /* in */ );
     bool blockIdsGet( const std::string& nextCursor /* in */, const bool stringifyIds /* in */ );
 
     /* Twitter search APIs */
@@ -131,12 +131,17 @@ public:
 
     /* cURL APIs */
     bool isCurlInit();
-    void getLastWebResponse( long& outWebRespCode /*out */, std::string& outWebResp /* out */ );
+    void getLastWebResponse( long& outWebRespCode /* out */, std::string& outWebResp /* out */ );
     void getLastWebResponse( std::string& outWebResp /* out */ );
     void getLastCurlError( std::string& outErrResp /* out */);
+    void getLastRateLimitStatus ( bool& rateLimitStatuSet /* out */,
+                                  int& remainingHits /* out */,
+                                  int& limit /* out */,
+                                  int& resetTimeInSeconds /* out */ );   
 
     /* Internal cURL related methods */
     int saveLastWebResponse( char*& data, size_t size );
+    int parseRateLimit( char*& data, size_t size );
 
     /* cURL proxy APIs */
     std::string& getProxyServerIp();
@@ -162,6 +167,12 @@ private:
     char* m_errorBuffer;
     std::string m_callbackData;
     long m_responseCode;
+    bool m_remainingHitsSet;
+    bool m_limitSet;
+    bool m_resetTimeInSecondsSet;
+    int  m_remainingHits; /* "X-Rate-Limit-Remaining" */
+    int  m_limit; /* "X-Rate-Limit-Limit" */
+    int  m_resetTimeInSeconds; /* "X-Rate-Limit-Reset" */
 
     /* cURL flags */
     bool m_curlProxyParamsSet;
@@ -203,6 +214,7 @@ private:
 
     /* Internal cURL related methods */
     static int curlCallback( char* data, size_t size, size_t nmemb, twitCurl* pTwitCurlObj );
+    static int curlHeaderCallback( char* data, size_t size, size_t nmemb, twitCurl* pTwitCurlObj );
 };
 
 

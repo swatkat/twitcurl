@@ -1652,6 +1652,27 @@ bool twitCurl::trendsAvailableGet()
 *               twitcurl users need to call this method and parse the XML
 *               data returned by twitter to see what has happened.
 *
+* @input: outWebResp - string in which twitter's response is supplied back to caller
+*
+* @output: none
+*
+*--*/
+void twitCurl::getLastWebResponse( std::string& outWebResp )
+{
+    outWebResp = "";
+    if( m_callbackData.length() )
+    {
+        outWebResp = m_callbackData;
+    }
+}
+
+/*++
+* @method: twitCurl::getLastWebResponse
+*
+* @description: method to get http response for the most recent request sent.
+*               twitcurl users need to call this method and parse the XML
+*               data returned by twitter to see what has happened.
+*
 * @input: outWebRespCode - response code
 *         outWebResp     - string in which twitter's response is supplied back to caller
 *
@@ -1669,24 +1690,24 @@ void twitCurl::getLastWebResponse( long& outWebRespCode, std::string& outWebResp
 }
 
 /*++
-* @method: twitCurl::getLastWebResponse
+* @method: twitCurl::getLastRateLimitStatus 
 *
-* @description: method to get http response for the most recent request sent.
-*               twitcurl users need to call this method and parse the XML
-*               data returned by twitter to see what has happened.
-*
-* @input: outWebResp - string in which twitter's response is supplied back to caller
+* @description: method to get rate limit status
+* @input: rateLimitStatuSet - true if remainingHits, limit, and resetTimeInSeconds available
+*         remainingHits -  the number of requests left for the 15 minute window
+*         limit - the rate limit ceiling for that given request
+*         resetTimeInSeconds - the remaining window before the rate limit resets in UTC epoch seconds
 *
 * @output: none
 *
 *--*/
-void twitCurl::getLastWebResponse( std::string& outWebResp )
+void twitCurl::getLastRateLimitStatus( bool& rateLimitStatuSet, int& remainingHits,
+                                       int& limit, int& resetTimeInSeconds)
 {
-    outWebResp = "";
-    if( m_callbackData.length() )
-    {
-        outWebResp = m_callbackData;
-    }
+    rateLimitStatuSet = m_remainingHitsSet && m_limitSet && m_resetTimeInSecondsSet;
+    remainingHits = m_remainingHits;
+    limit = m_limit;
+    resetTimeInSeconds = m_resetTimeInSeconds;
 }
 
 /*++
@@ -1710,7 +1731,7 @@ void twitCurl::getLastCurlError( std::string& outErrResp )
 /*++
 * @method: twitCurl::curlCallback
 *
-* @description: static method to get http response back from cURL.
+* @description: static method to get http response body back from cURL.
 *               this is an internal method, users of twitcurl need not
 *               use this.
 *
@@ -1725,8 +1746,32 @@ int twitCurl::curlCallback( char* data, size_t size, size_t nmemb, twitCurl* pTw
 {
     if( pTwitCurlObj && data )
     {
-        /* Save http response in twitcurl object's buffer */
+        /* Save http response body in twitcurl object's buffer */
         return pTwitCurlObj->saveLastWebResponse( data, ( size*nmemb ) );
+    }
+    return 0;
+}
+
+/*++
+* @method: twitCurl::curlHeaderCallback
+*
+* @description: static method to get http response header back from cURL.
+*               this is an internal method, users of twitcurl need not
+*               use this.
+*
+* @input: as per cURL convention.
+*
+* @output: size of data stored in our buffer
+*
+* @remarks: internal method
+*
+*--*/
+int twitCurl::curlHeaderCallback( char* data, size_t size, size_t nmemb, twitCurl* pTwitCurlObj )
+{
+    if( pTwitCurlObj && data )
+    {
+        /*  parse rate limit in reponse header and save in twitcurl object */
+        return pTwitCurlObj->parseRateLimit( data, ( size*nmemb ) );
     }
     return 0;
 }
@@ -1757,6 +1802,46 @@ int twitCurl::saveLastWebResponse(  char*& data, size_t size )
 }
 
 /*++
+* @method: twitCurl::parseRateLimit
+*
+* @description: method to parse rate limit in http responses header. this is an
+*               internal method and twitcurl users need not use this.
+*
+* @input: data - character buffer from cURL,
+*         size - size of character buffer
+*
+* @output: size of data stored in our buffer
+*
+* @remarks: internal method
+*
+*--*/
+int twitCurl::parseRateLimit(  char*& data, size_t size )
+{
+    if( data && size )
+    {
+        long resetTime;
+        if(sscanf((const char *)data, "x-rate-limit-remaining: %d\n", &m_remainingHits))
+        {
+            m_remainingHitsSet = true;
+        }
+
+        if(sscanf((const char *)data, "x-rate-limit-limit: %d\n", &m_limit))
+        {
+            m_limitSet = true;
+        }
+
+        if(sscanf((const char *)data, "x-rate-limit-reset: %ld\n", &resetTime))
+        {
+            m_resetTimeInSeconds = (int) resetTime;
+            m_resetTimeInSecondsSet = true;
+        }
+
+        return (int)size;
+    }
+    return 0;
+}
+
+/*++
 * @method: twitCurl::clearCurlCallbackBuffers
 *
 * @description: method to clear callback buffers used by cURL. this is an
@@ -1774,6 +1859,12 @@ void twitCurl::clearCurlCallbackBuffers()
     m_callbackData = "";
     m_responseCode = 0;
     memset( m_errorBuffer, 0, twitCurlDefaults::TWITCURL_DEFAULT_BUFFSIZE );
+    m_remainingHitsSet = false;
+    m_limitSet = false;
+    m_resetTimeInSecondsSet = false;
+    m_remainingHits = 0;
+    m_limit = 0;
+    m_resetTimeInSeconds = 0;
 }
 
 /*++
@@ -1880,6 +1971,8 @@ void twitCurl::prepareCurlCallback()
     /* Set callback function to get response */
     curl_easy_setopt( m_curlHandle, CURLOPT_WRITEFUNCTION, curlCallback );
     curl_easy_setopt( m_curlHandle, CURLOPT_WRITEDATA, this );
+    curl_easy_setopt( m_curlHandle, CURLOPT_HEADERFUNCTION, curlHeaderCallback );
+    curl_easy_setopt( m_curlHandle, CURLOPT_HEADERDATA, this );
 
     /* Set the flag to true indicating that callback info is set in cURL */
     m_curlCallbackParamsSet = true;

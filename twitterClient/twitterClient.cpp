@@ -285,6 +285,16 @@ int main( int argc, char* argv[] )
         long httpCode = 0;
         twitterObj.getLastWebResponse( httpCode, replyMsg );
         printf( "\ntwitterClient:: twitCurl::search web response:%ld\n%s\n", httpCode, replyMsg.c_str() );
+        bool rateLimitStatusSet = false;
+        int remainingHits, limit, resetTimeInSeconds;
+        twitterObj.getLastRateLimitStatus( rateLimitStatusSet, remainingHits, limit, resetTimeInSeconds );
+        if( rateLimitStatusSet )
+        {
+            printf( "twitterClient:: twitCurl::search rate limit status:\n" );
+            printf( "  remainingHits:%d\n",remainingHits );
+            printf( "  limit:%d\n",limit );
+            printf( "  resetTimeInSeconds:%d\n",resetTimeInSeconds );
+        }
     }
     else
     {

@@ -134,6 +134,10 @@ public:
     void getLastWebResponse( long& outWebRespCode /*out */, std::string& outWebResp /* out */ );
     void getLastWebResponse( std::string& outWebResp /* out */ );
     void getLastCurlError( std::string& outErrResp /* out */);
+    void getLastRateLimitStatus ( bool& rateLimitStatuSet /* out */,
+                                  int& remainingHits /* out */,
+                                  int& limit /* out */,
+                                  int& resetTimeInSeconds /* out */ );
 
     /* Internal cURL related methods */
     int saveLastWebResponse( char*& data, size_t size );
