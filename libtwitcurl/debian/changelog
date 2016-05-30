@@ -1,0 +1,5 @@
+libtwitcurl (1.0-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Toni Uhlig <matzeton@googlemail.com>  Mon, 30 May 2016 19:34:09 +0200
