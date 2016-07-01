@@ -145,9 +145,9 @@ namespace oAuthLibDefaults
     const std::string OAUTHLIB_SESSIONPASSWORD_KEY = "session[password]";
     const std::string OAUTHLIB_AUTHENTICITY_TOKEN_TWITTER_RESP_KEY = "authenticity_token\" type=\"hidden\" value=\"";
     const std::string OAUTHLIB_TOKEN_TWITTER_RESP_KEY = "oauth_token\" type=\"hidden\" value=\"";
-    const std::string OAUTHLIB_PIN_TWITTER_RESP_KEY = "code-desc\"><code>";
+    const std::string OAUTHLIB_PIN_TWITTER_RESP_KEY = "&oauth_verifier=";
     const std::string OAUTHLIB_TOKEN_END_TAG_TWITTER_RESP = "\">";
-    const std::string OAUTHLIB_PIN_END_TAG_TWITTER_RESP = "</code>";
+    const std::string OAUTHLIB_PIN_END_TAG_TWITTER_RESP = "\">";
 
     const std::string OAUTHLIB_AUTHHEADER_STRING = "Authorization: OAuth ";
 };
