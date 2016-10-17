@@ -438,6 +438,34 @@ bool twitCurl::statusUpdate( const std::string& newStatus, const std::string inR
                          newStatusMsg );
 }
 
+bool twitCurl::statusUpdateWithMedia(const std::string& newStatus, const std::string media[], int count, const std::string inReplyToStatusId) {
+    if( newStatus.empty() )
+    {
+        return false;
+    }
+
+    /* Prepare new status message */
+    std::string newStatusMsg = twitCurlDefaults::TWITCURL_STATUSSTRING + urlencode( newStatus ) + "&media_ids=";
+    for ( int i = 0 ; i < count && i < 4; i++ ) {
+        newStatusMsg += urlencode(media[i]) + std::string(","); // urlencode is probably superflous 
+    }
+
+    /* Append status id to which we're replying to */
+    if( inReplyToStatusId.size() )
+    {
+        newStatusMsg += twitCurlDefaults::TWITCURL_URL_SEP_AMP +
+                        twitCurlDefaults::TWITCURL_INREPLYTOSTATUSID +
+                        urlencode( inReplyToStatusId );
+    }
+
+    /* Perform POST */
+    return  performPost( twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
+                         twitterDefaults::TWITCURL_STATUSUPDATE_URL +
+                         twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType],
+                         newStatusMsg );
+}
+
+
 /*++
 * @method: twitCurl::statusShowById
 *
@@ -2377,3 +2405,44 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
     return false;
 }
 
+std::string twitCurl::uploadMedia(std::string& file) {
+    if (!isCurlInit()) return std::string("");
+
+    std::string oAuthHttpHeader;
+    struct curl_slist* pOAuthHeaderList = NULL;
+    prepareStandardParams();
+    
+    std::string url = twitCurlDefaults::TWITCURL_PROTOCOLS[0] + twitterDefaults::TWITCURL_UPLOADMEDIA_URL + twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[0];
+    printf("url: %s\n", url.c_str());
+    m_oAuth.getOAuthHeader( eOAuthHttpPost, url, "", oAuthHttpHeader );
+    if (oAuthHttpHeader.length()) {
+        pOAuthHeaderList = curl_slist_append(pOAuthHeaderList, oAuthHttpHeader.c_str());
+    }
+
+    pOAuthHeaderList = curl_slist_append(pOAuthHeaderList, "Expect: ");
+    curl_easy_setopt(m_curlHandle, CURLOPT_POST, 1);
+    curl_easy_setopt(m_curlHandle, CURLOPT_HTTPHEADER, pOAuthHeaderList);
+    curl_easy_setopt(m_curlHandle, CURLOPT_USE_SSL, CURLUSESSL_ALL);
+    curl_easy_setopt(m_curlHandle, CURLOPT_SSL_VERIFYPEER, 0L);
+
+    struct curl_httppost* post = NULL;
+    struct curl_httppost* last = NULL;
+    CURLcode hResult;
+
+    curl_formadd(&post, &last, CURLFORM_COPYNAME, "media", CURLFORM_FILE, file.c_str(), CURLFORM_END);
+
+    hResult = curl_easy_setopt(m_curlHandle, CURLOPT_URL, url.c_str());
+    hResult = curl_easy_setopt(m_curlHandle, CURLOPT_HTTPPOST, post);
+    hResult = curl_easy_perform(m_curlHandle);
+
+    if (hResult != CURLE_OK) {
+        printf("Error uploading file %s\n", file.c_str());
+        std::string dummyStr;
+        getLastCurlError( dummyStr );
+        printf("%s\n", dummyStr.c_str());
+    }
+
+    if (pOAuthHeaderList) curl_slist_free_all(pOAuthHeaderList);
+
+    return m_callbackData;
+}

@@ -50,9 +50,14 @@ public:
 
     /* Twitter status APIs */
     bool statusUpdate( const std::string& newStatus /* in */, const std::string inReplyToStatusId = "" /* in */ );
+    bool statusUpdateWithMedia(const std::string& newStatus, const std::string media[], int count, const std::string inReplyToStatusId = "");
     bool statusShowById( const std::string& statusId /* in */ );
     bool statusDestroyById( const std::string& statusId /* in */ );
     bool retweetById( const std::string& statusId /* in */ );
+
+    /* Twitter media APIs */
+    std::string uploadMedia(std::string& file);
+    
 
     /* Twitter timeline APIs */
     bool timelineHomeGet( const std::string sinceId = ""  /* in */ );
@@ -189,6 +194,7 @@ private:
                              const std::string& oAuthHttpHeader );
     bool performDelete( const std::string& deleteUrl );
     bool performPost( const std::string& postUrl, std::string dataStr = "" );
+    bool performPostWithMedia(const std::string& postUrl, std::string dataStr, std::string mediaId);
 
     /* Internal cURL related methods */
     static int curlCallback( char* data, size_t size, size_t nmemb, twitCurl* pTwitCurlObj );
