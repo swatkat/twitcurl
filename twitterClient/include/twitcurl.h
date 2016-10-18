@@ -56,7 +56,7 @@ public:
     bool retweetById( const std::string& statusId /* in */ );
 
     /* Twitter media APIs */
-    std::string uploadMedia(std::string& file);
+    bool uploadMedia(const std::string& file);
     
 
     /* Twitter timeline APIs */
@@ -206,3 +206,4 @@ void utilMakeCurlParams( std::string& outStr, const std::string& inParam1, const
 void utilMakeUrlForUser( std::string& outUrl, const std::string& baseUrl, const std::string& userInfo, const bool isUserId );
 
 #endif // _TWITCURL_H_
+

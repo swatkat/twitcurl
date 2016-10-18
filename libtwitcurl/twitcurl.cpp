@@ -2435,8 +2435,8 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
 *           ex: dataStr = "key=urlencode(value)"
 *
 *--*/
-std::string twitCurl::uploadMedia(std::string& file) {
-    if (!isCurlInit()) return std::string("");
+bool twitCurl::uploadMedia(const std::string& file) {
+    if (!isCurlInit()) return false;
 
     std::string oAuthHttpHeader;
     struct curl_slist* pOAuthHeaderList = NULL;
@@ -2465,18 +2465,19 @@ std::string twitCurl::uploadMedia(std::string& file) {
     hResult = curl_easy_setopt(m_curlHandle, CURLOPT_HTTPPOST, post);
     hResult = curl_easy_perform(m_curlHandle);
 
+    if (pOAuthHeaderList) 
+        curl_slist_free_all(pOAuthHeaderList);
+
     if (hResult != CURLE_OK) 
     {
         printf("Error uploading file %s\n", file.c_str());
         std::string dummyStr;
         getLastCurlError( dummyStr );
         printf("%s\n", dummyStr.c_str());
+        return false;
     }
 
-    if (pOAuthHeaderList) 
-        curl_slist_free_all(pOAuthHeaderList);
-
-    return m_callbackData;
+    return true;
 }
 
 /*++

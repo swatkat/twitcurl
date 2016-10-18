@@ -254,13 +254,15 @@ int main( int argc, char* argv[] )
     gets( tmpBuf );
     tmpStr = tmpBuf;
     std::string file = std::string("sloth.png");
-    std::string response = twitterObj.uploadMedia(file);
-    /* The next two lines will remove whitespace from our response string */
-    response.erase(std::remove(response.begin(),response.end(),' '),response.end());
-    response.erase(std::remove(response.begin(),response.end(),'\n'),response.end());
-    std::string picture_id;
-    if (response != "")
+    bool result = twitterObj.uploadMedia(file);
+    if (result)
     {
+        std::string response = "";
+        twitterObj.getLastWebResponse(response);
+        /* The next two lines will remove whitespace from our response string */
+        response.erase(std::remove(response.begin(),response.end(),' '),response.end());
+        response.erase(std::remove(response.begin(),response.end(),'\n'),response.end());
+        std::string picture_id = "";
         std::string nextCursor = "";
         size_t nNextCursorStart = response.find("media_id_string:\"");
         if( std::string::npos != nNextCursorStart )
@@ -268,13 +270,14 @@ int main( int argc, char* argv[] )
             picture_id = response.substr(nNextCursorStart + strlen("media_id_string:\""));
             nNextCursorStart = response.find("\"");
             picture_id = response.substr(0, nNextCursorStart);
+            std::string* media = new std::string[1] { picture_id };
+            if (!twitterObj.statusUpdateWithMedia(std::string(tmpStr), media, 1))
+            {
+                printf("\nError uploading media..");
+            }
         }
     }
-    std::string* media = new std::string[1] { picture_id };
-    if (!twitterObj.statusUpdateWithMedia(std::string(tmpStr), media, 1))
-    {
-        printf("\nError uploading media..");
-    }
+
 
     /* Post a new reply */
     memset( tmpBuf, 0, 1024 );

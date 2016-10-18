@@ -56,7 +56,7 @@ public:
     bool retweetById( const std::string& statusId /* in */ );
 
     /* Twitter media APIs */
-    std::string uploadMedia(std::string& file);
+    bool uploadMedia(const std::string& file);
     
 
     /* Twitter timeline APIs */
