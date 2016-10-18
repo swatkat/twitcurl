@@ -48,6 +48,7 @@ namespace twitterDefaults
 {
     /* Base URL */
     const std::string TWITCURL_BASE_URL = "api.twitter.com/1.1/";
+    const std::string TWITCURL_UPLOAD_BASE_URL = "upload.twitter.com/1.1/";
 
     /* Search URLs */
     const std::string TWITCURL_SEARCH_URL = TWITCURL_BASE_URL + "search/tweets";
@@ -57,6 +58,9 @@ namespace twitterDefaults
     const std::string TWITCURL_STATUSSHOW_URL = TWITCURL_BASE_URL + "statuses/show/";
     const std::string TWITCURL_STATUDESTROY_URL = TWITCURL_BASE_URL + "statuses/destroy/";
     const std::string TWITCURL_RETWEET_URL = TWITCURL_BASE_URL + "statuses/retweet/";
+    
+    /* Media URLs */
+    const std::string TWITCURL_UPLOADMEDIA_URL = TWITCURL_UPLOAD_BASE_URL + "media/upload";
 
     /* Timeline URLs */
     const std::string TWITCURL_HOME_TIMELINE_URL = TWITCURL_BASE_URL + "statuses/home_timeline";

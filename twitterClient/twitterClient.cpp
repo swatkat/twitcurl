@@ -248,6 +248,33 @@ int main( int argc, char* argv[] )
         printf( "\ntwitterClient:: twitCurl::statusUpdate error:\n%s\n", replyMsg.c_str() );
     }
 
+    /* Post a picture of a sloth */
+    memset( tmpBuf, 0, 1024 );
+    printf( "\nPlease enter a caption for a sloth picture: " );
+    get( tmpBuf );
+    tmpStr = tmpBuf;
+    std::string response = twitterObj.uploadMedia( "sloth.png" );
+    /* The next two lines will remove whitespace from our response string */
+    response.erase(std::remove(response.begin(),response.end(),' '),response.end());
+    response.erase(std::remove(response.begin(),response.end(),'\n'),response.end());
+    std::string picture_id;
+    if (response != "")
+    {
+        std::string nextCursor = "";
+        size_t nNextCursorStart = response.find("media_id_string:\"");
+        if( std::string::npos != nNextCursorStart )
+        {
+            picture_id = response.substr(nNextCursorStart + strlen("media_id_string:\""));
+            nNextCursorStart = response.find("\"");
+            picture_id = response.substr(0, nNextCursorStart);
+        }
+    }
+    std::string* media = new std::string[1] { picture_id };
+    if (!twitterObj.statusUpdateWithMedia(std::string(tmpStr), media, 1))
+    {
+        printf("\nError uploading media..");
+    }
+
     /* Post a new reply */
     memset( tmpBuf, 0, 1024 );
     printf( "\nEnter message id to reply to : " );
