@@ -438,6 +438,20 @@ bool twitCurl::statusUpdate( const std::string& newStatus, const std::string inR
                          newStatusMsg );
 }
 
+/*++
+* @method: twitCurl::statusUpdate
+*
+* @description: method to update new status message in twitter profile
+*
+* @input: newStatus - status message text
+          media   - an array containing media_id's obtained by uploading media (see twitCurl::uploadMedia)
+*         count   - the number of strings contained in media
+*         inReplyToStatusId - optional status id to we're replying to
+*
+* @output: true if POST is success, otherwise false. This does not check http
+*          response by twitter. Use getLastWebResponse() for that.
+*
+*--*/
 bool twitCurl::statusUpdateWithMedia(const std::string& newStatus, const std::string media[], int count, const std::string inReplyToStatusId) {
     if( newStatus.empty() )
     {
@@ -445,10 +459,7 @@ bool twitCurl::statusUpdateWithMedia(const std::string& newStatus, const std::st
     }
 
     /* Prepare new status message */
-    std::string newStatusMsg = twitCurlDefaults::TWITCURL_STATUSSTRING + urlencode( newStatus ) + "&media_ids=";
-    for ( int i = 0 ; i < count && i < 4; i++ ) {
-        newStatusMsg += urlencode(media[i]) + std::string(","); // urlencode is probably superflous 
-    }
+    std::string newStatusMsg = twitCurlDefaults::TWITCURL_STATUSSTRING + urlencode( newStatus );
 
     /* Append status id to which we're replying to */
     if( inReplyToStatusId.size() )
@@ -459,10 +470,12 @@ bool twitCurl::statusUpdateWithMedia(const std::string& newStatus, const std::st
     }
 
     /* Perform POST */
-    return  performPost( twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
-                         twitterDefaults::TWITCURL_STATUSUPDATE_URL +
-                         twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType],
-                         newStatusMsg );
+    return  performPostWithMedia(   twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
+                                    twitterDefaults::TWITCURL_STATUSUPDATE_URL +
+                                    twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType],
+                                    newStatusMsg,
+                                    media,
+                                    count);
 }
 
 
@@ -2405,25 +2418,42 @@ bool twitCurl::oAuthHandlePIN( const std::string& authorizeUrl /* in */ )
     return false;
 }
 
+/*++
+* @method: twitCurl::uploadMedia
+*
+* @description: method to upload an image to twitter, and return the JSON response (to be dealt with by the user)
+*
+* @input: file - name of the file to be uploaded
+*         
+*
+* @output: a string containing the JSON response
+*          the media ID (which is needed for updateWithMedia etc) is contained in the
+*          media_id_string field
+*
+* @remarks: internal method
+*           data value in dataStr must already be url encoded.
+*           ex: dataStr = "key=urlencode(value)"
+*
+*--*/
 std::string twitCurl::uploadMedia(std::string& file) {
     if (!isCurlInit()) return std::string("");
 
     std::string oAuthHttpHeader;
     struct curl_slist* pOAuthHeaderList = NULL;
+
+    /* Set http request, url and data */
     prepareStandardParams();
     
+    /* Create url and getOAuthHeaders */
     std::string url = twitCurlDefaults::TWITCURL_PROTOCOLS[0] + twitterDefaults::TWITCURL_UPLOADMEDIA_URL + twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[0];
-    printf("url: %s\n", url.c_str());
     m_oAuth.getOAuthHeader( eOAuthHttpPost, url, "", oAuthHttpHeader );
-    if (oAuthHttpHeader.length()) {
+
+    if (oAuthHttpHeader.length()) 
         pOAuthHeaderList = curl_slist_append(pOAuthHeaderList, oAuthHttpHeader.c_str());
-    }
 
     pOAuthHeaderList = curl_slist_append(pOAuthHeaderList, "Expect: ");
     curl_easy_setopt(m_curlHandle, CURLOPT_POST, 1);
     curl_easy_setopt(m_curlHandle, CURLOPT_HTTPHEADER, pOAuthHeaderList);
-    curl_easy_setopt(m_curlHandle, CURLOPT_USE_SSL, CURLUSESSL_ALL);
-    curl_easy_setopt(m_curlHandle, CURLOPT_SSL_VERIFYPEER, 0L);
 
     struct curl_httppost* post = NULL;
     struct curl_httppost* last = NULL;
@@ -2435,14 +2465,94 @@ std::string twitCurl::uploadMedia(std::string& file) {
     hResult = curl_easy_setopt(m_curlHandle, CURLOPT_HTTPPOST, post);
     hResult = curl_easy_perform(m_curlHandle);
 
-    if (hResult != CURLE_OK) {
+    if (hResult != CURLE_OK) 
+    {
         printf("Error uploading file %s\n", file.c_str());
         std::string dummyStr;
         getLastCurlError( dummyStr );
         printf("%s\n", dummyStr.c_str());
     }
 
-    if (pOAuthHeaderList) curl_slist_free_all(pOAuthHeaderList);
+    if (pOAuthHeaderList) 
+        curl_slist_free_all(pOAuthHeaderList);
 
     return m_callbackData;
+}
+
+/*++
+* @method: twitCurl::performPostWithMedia
+*
+* @description: method to send http POST request. this is an internal method.
+*               twitcurl users should not use this method.
+*
+* @input: postUrl - url,
+*         dataStr - url encoded data to be posted
+          media   - an array containing media_id's obtained by uploading media (see twitCurl::uploadMedia)
+*         count   - the number of strings contained in media
+* @output: none
+*
+* @remarks: internal method
+*           data value in dataStr must already be url encoded.
+*           ex: dataStr = "key=urlencode(value)"
+*
+*--*/
+bool twitCurl::performPostWithMedia( const std::string& postUrl, std::string dataStr, const std::string media[], int count)
+{
+    /* Return if cURL is not initialized */
+    if( !isCurlInit() )
+    {
+        return false;
+    }
+
+    if ( count > 4 ) 
+    {
+        printf("Only 4 images may be posted per tweet");
+        return false;
+    }
+
+    dataStr += "&media_ids=";
+    for ( int i = 0 ; i < count ; i++ )
+    {
+        if ( i ) dataStr += ",";
+        dataStr += media[i];
+    }
+    std::string oAuthHttpHeader;
+    struct curl_slist* pOAuthHeaderList = NULL;
+
+    /* Prepare standard params */
+    prepareStandardParams();
+
+    /* Set OAuth header */
+    m_oAuth.getOAuthHeader( eOAuthHttpPost, postUrl, dataStr, oAuthHttpHeader );
+    if( oAuthHttpHeader.length() )
+    {
+        pOAuthHeaderList = curl_slist_append( pOAuthHeaderList, oAuthHttpHeader.c_str() );
+        if( pOAuthHeaderList )
+        {
+            curl_easy_setopt( m_curlHandle, CURLOPT_HTTPHEADER, pOAuthHeaderList );
+        }
+    }
+
+    /* Set http request, url and data */
+    curl_easy_setopt( m_curlHandle, CURLOPT_POST, 1 );
+    curl_easy_setopt( m_curlHandle, CURLOPT_URL, postUrl.c_str() );
+    if( dataStr.length() )
+    {
+        curl_easy_setopt( m_curlHandle, CURLOPT_COPYPOSTFIELDS, dataStr.c_str() );
+    }
+
+    /* Send http request */
+    if( CURLE_OK == curl_easy_perform( m_curlHandle ) )
+    {
+        if( pOAuthHeaderList )
+        {
+            curl_slist_free_all( pOAuthHeaderList );
+        }
+        return true;
+    }
+    if( pOAuthHeaderList )
+    {
+        curl_slist_free_all( pOAuthHeaderList );
+    }
+    return false;
 }

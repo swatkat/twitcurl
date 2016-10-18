@@ -194,7 +194,7 @@ private:
                              const std::string& oAuthHttpHeader );
     bool performDelete( const std::string& deleteUrl );
     bool performPost( const std::string& postUrl, std::string dataStr = "" );
-    bool performPostWithMedia(const std::string& postUrl, std::string dataStr, std::string mediaId);
+    bool performPostWithMedia(const std::string& postUrl, std::string dataStr, const std::string media[], int count);
 
     /* Internal cURL related methods */
     static int curlCallback( char* data, size_t size, size_t nmemb, twitCurl* pTwitCurlObj );
