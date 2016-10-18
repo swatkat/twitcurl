@@ -251,9 +251,10 @@ int main( int argc, char* argv[] )
     /* Post a picture of a sloth */
     memset( tmpBuf, 0, 1024 );
     printf( "\nPlease enter a caption for a sloth picture: " );
-    get( tmpBuf );
+    gets( tmpBuf );
     tmpStr = tmpBuf;
-    std::string response = twitterObj.uploadMedia( "sloth.png" );
+    std::string file = std::string("sloth.png");
+    std::string response = twitterObj.uploadMedia(file);
     /* The next two lines will remove whitespace from our response string */
     response.erase(std::remove(response.begin(),response.end(),' '),response.end());
     response.erase(std::remove(response.begin(),response.end(),'\n'),response.end());

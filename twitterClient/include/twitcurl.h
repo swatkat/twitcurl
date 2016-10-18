@@ -50,9 +50,14 @@ public:
 
     /* Twitter status APIs */
     bool statusUpdate( const std::string& newStatus /* in */, const std::string inReplyToStatusId = "" /* in */ );
+    bool statusUpdateWithMedia(const std::string& newStatus, const std::string media[], int count, const std::string inReplyToStatusId = "");
     bool statusShowById( const std::string& statusId /* in */ );
     bool statusDestroyById( const std::string& statusId /* in */ );
     bool retweetById( const std::string& statusId /* in */ );
+
+    /* Twitter media APIs */
+    std::string uploadMedia(std::string& file);
+    
 
     /* Twitter timeline APIs */
     bool timelineHomeGet( const std::string sinceId = ""  /* in */ );
@@ -138,6 +143,11 @@ public:
     void setProxyServerPort( const std::string& proxyServerPort /* in */ );
     void setProxyUserName( const std::string& proxyUserName /* in */ );
     void setProxyPassword( const std::string& proxyPassword /* in */ );
+
+    /* cURL Interface APIs */
+    std::string& getInterface();
+    void setInterface( const std::string& Interface /* in */ );
+
     
     /* Clones this object */
     twitCurl* clone();
@@ -152,13 +162,15 @@ private:
     bool m_curlProxyParamsSet;
     bool m_curlLoginParamsSet;
     bool m_curlCallbackParamsSet;
+    bool m_curlInterfaseParamSet;
 
     /* cURL proxy data */
     std::string m_proxyServerIp;
     std::string m_proxyServerPort;
     std::string m_proxyUserName;
     std::string m_proxyPassword;
-
+    std::string m_Interface;
+    
     /* Twitter data */
     std::string m_twitterUsername;
     std::string m_twitterPassword;
@@ -173,6 +185,7 @@ private:
     /* Private methods */
     void clearCurlCallbackBuffers();
     void prepareCurlProxy();
+    void prepareCurlInterface();
     void prepareCurlCallback();
     void prepareCurlUserPass();
     void prepareStandardParams();
@@ -181,6 +194,7 @@ private:
                              const std::string& oAuthHttpHeader );
     bool performDelete( const std::string& deleteUrl );
     bool performPost( const std::string& postUrl, std::string dataStr = "" );
+    bool performPostWithMedia(const std::string& postUrl, std::string dataStr, const std::string media[], int count);
 
     /* Internal cURL related methods */
     static int curlCallback( char* data, size_t size, size_t nmemb, twitCurl* pTwitCurlObj );
