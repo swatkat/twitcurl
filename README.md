@@ -21,6 +21,9 @@ statuses/show<br>
 statuses/update<br>
 statuses/destroy<br>
 
+<b>Media methods:</b><br>
+media/upload<br>
+
 <b>User methods:</b><br>
 users/show<br>
 statuses/friends<br>
