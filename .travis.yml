@@ -1,0 +1,17 @@
+sudo: required
+before_install:
+  - sudo apt-get install libcurl4-openssl-dev
+  
+# Enable C++ support
+language: cpp
+
+# Compiler selection
+compiler:
+  - gcc
+
+script:
+- cd libtwitcurl
+- make
+- sudo cp libtwitcurl.so.1.0 /usr/lib/
+- cd ../twitterClient
+- make
