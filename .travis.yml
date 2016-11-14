@@ -10,8 +10,14 @@ compiler:
   - gcc
 
 script:
-- cd libtwitcurl
-- make
-- sudo cp libtwitcurl.so.1.0 /usr/lib/
+- mkdir staging && cd staging
+- mkdir include lib
 - cd ../twitterClient
-- make
+- make TWITCURL_STAGING_DIR=$TRAVIS_BUILD_DIR/staging
+
+after_success:
+- cd
+- cd twitterClient
+- make clean TWITCURL_STAGING_DIR=$TRAVIS_BUILD_DIR/staging
+- cd
+- rm -rf staging

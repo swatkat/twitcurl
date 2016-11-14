@@ -5,12 +5,9 @@
 
 LIBNAME = twitcurl
 SRC = $(LIBNAME).cpp
-STAGING_DIR = 
-INCLUDE_DIR = $(STAGING_DIR)/usr/include
-LINCLUDE_DIR = $(STAGING_DIR)/usr/local/include
-LIBRARY_DIR = $(STAGING_DIR)/usr/lib
-LLIBRARY_DIR = $(STAGING_DIR)/usr/local/lib
-LDFLAGS += -Wl,-rpath-link=$(STAGING_DIR)/usr/lib
+INCLUDE_DIR = $(STAGING_DIR)/include
+LIBRARY_DIR = $(STAGING_DIR)/lib
+LDFLAGS += -Wl,-rpath-link=$(STAGING_DIR)/lib
 CC = g++
 REMOVE = rm -f
 COPY = cp
@@ -47,12 +44,7 @@ clean:
 # Install library to local openwrt library directory
 install: all
 	$(COPY) lib$(LIBNAME).so.1.0 $(LIBRARY_DIR)
-	$(COPY) lib$(LIBNAME).so.1.0 $(LLIBRARY_DIR)
 	$(COPY) $(LIBNAME).h $(INCLUDE_DIR)/
-	$(COPY) $(LIBNAME).h $(LINCLUDE_DIR)/
 	$(COPY) oauthlib.h $(INCLUDE_DIR)/
-	$(COPY) oauthlib.h $(LINCLUDE_DIR)/
 	ln -sf $(LIBRARY_DIR)/lib$(LIBNAME).so.1.0 $(LIBRARY_DIR)/lib$(LIBNAME).so
 	ln -sf $(LIBRARY_DIR)/lib$(LIBNAME).so.1.0 $(LIBRARY_DIR)/lib$(LIBNAME).so.1
-	ln -sf $(LLIBRARY_DIR)/lib$(LIBNAME).so.1.0 $(LLIBRARY_DIR)/lib$(LIBNAME).so
-	ln -sf $(LLIBRARY_DIR)/lib$(LIBNAME).so.1.0 $(LLIBRARY_DIR)/lib$(LIBNAME).so.1
