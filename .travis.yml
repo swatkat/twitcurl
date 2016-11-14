@@ -13,11 +13,11 @@ script:
 - mkdir staging && cd staging
 - mkdir include lib
 - cd ../twitterClient
-- make TWITCURL_STAGING_DIR=$TRAVIS_BUILD_DIR/staging
+- make STAGING_DIR=$TRAVIS_BUILD_DIR/staging
 
 after_success:
 - cd
 - cd twitterClient
-- make clean TWITCURL_STAGING_DIR=$TRAVIS_BUILD_DIR/staging
+- make clean STAGING_DIR=$TRAVIS_BUILD_DIR/staging
 - cd
 - rm -rf staging
