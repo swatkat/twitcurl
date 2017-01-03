@@ -47,31 +47,31 @@ int main( int argc, char* argv[] )
     /* Set proxy server usename, password, IP and port (if present) */
     memset( tmpBuf, 0, 1024 );
     printf( "\nDo you have a proxy server configured (0 for no; 1 for yes): " );
-    gets( tmpBuf );
+    fgets( tmpBuf, 1024, stdin );
     tmpStr = tmpBuf;
     if( std::string::npos != tmpStr.find( "1" ) )
     {
         memset( tmpBuf, 0, 1024 );
         printf( "\nEnter proxy server IP: " );
-        gets( tmpBuf );
+        fgets( tmpBuf, 1024, stdin );
         tmpStr = tmpBuf;
         twitterObj.setProxyServerIp( tmpStr );
 
         memset( tmpBuf, 0, 1024 );
         printf( "\nEnter proxy server port: " );
-        gets( tmpBuf );
+        fgets( tmpBuf, 1024, stdin );
         tmpStr = tmpBuf;
         twitterObj.setProxyServerPort( tmpStr );
 
         memset( tmpBuf, 0, 1024 );
         printf( "\nEnter proxy server username: " );
-        gets( tmpBuf );
+        fgets( tmpBuf, 1024, stdin );
         tmpStr = tmpBuf;
         twitterObj.setProxyUserName( tmpStr );
 
         memset( tmpBuf, 0, 1024 );
         printf( "\nEnter proxy server password: " );
-        gets( tmpBuf );
+        fgets( tmpBuf, 1024, stdin );
         tmpStr = tmpBuf;
         twitterObj.setProxyPassword( tmpStr );
     }
@@ -118,7 +118,7 @@ int main( int argc, char* argv[] )
         /* Step 3: Get PIN  */
         memset( tmpBuf, 0, 1024 );
         printf( "\nDo you want to visit twitter.com for PIN (0 for no; 1 for yes): " );
-        gets( tmpBuf );
+        fgets( tmpBuf, 1024, stdin );
         tmpStr = tmpBuf;
         if( std::string::npos != tmpStr.find( "1" ) )
         {
@@ -126,7 +126,7 @@ int main( int argc, char* argv[] )
             memset( tmpBuf, 0, 1024 );
             printf( "\nPlease visit this link in web browser and authorize this application:\n%s", authUrl.c_str() );
             printf( "\nEnter the PIN provided by twitter: " );
-            gets( tmpBuf );
+            fgets( tmpBuf, 1024, stdin );
             tmpStr = tmpBuf;
             twitterObj.getOAuth().setOAuthPin( tmpStr );
         }
@@ -234,7 +234,7 @@ int main( int argc, char* argv[] )
     /* Post a new status message */
     memset( tmpBuf, 0, 1024 );
     printf( "\nEnter a new status message: " );
-    gets( tmpBuf );
+    fgets( tmpBuf, 1024, stdin );
     tmpStr = tmpBuf;
     replyMsg = "";
     if( twitterObj.statusUpdate( tmpStr ) )
@@ -251,11 +251,11 @@ int main( int argc, char* argv[] )
     /* Post a new reply */
     memset( tmpBuf, 0, 1024 );
     printf( "\nEnter message id to reply to : " );
-    gets( tmpBuf );
+    fgets( tmpBuf, 1024, stdin );
     tmpStr2 = tmpBuf;
     memset( tmpBuf, 0, 1024 );
     printf( "\nEnter a reply message: " );
-    gets( tmpBuf );
+    fgets( tmpBuf, 1024, stdin );
     tmpStr = tmpBuf;
     replyMsg = "";
     if( twitterObj.statusUpdate( tmpStr, tmpStr2 ) )
@@ -273,11 +273,11 @@ int main( int argc, char* argv[] )
     /* Search a string */
     printf( "\nEnter string to search: " );
     memset( tmpBuf, 0, 1024 );
-    gets( tmpBuf );
+    fgets( tmpBuf, 1024, stdin );
     tmpStr = tmpBuf;
     printf( "\nLimit search results to: " );
     memset( tmpBuf, 0, 1024 );
-    gets( tmpBuf );
+    fgets( tmpBuf, 1024, stdin );
     tmpStr2 = tmpBuf;
     replyMsg = "";
     if( twitterObj.search( tmpStr, tmpStr2 ) )
