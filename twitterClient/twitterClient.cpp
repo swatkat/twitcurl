@@ -280,10 +280,21 @@ int main( int argc, char* argv[] )
     fgets( tmpBuf, sizeof( tmpBuf ), stdin );
     tmpStr2 = tmpBuf;
     replyMsg = "";
-    if( twitterObj.search( tmpStr, tmpStr2 ) )
+    if( twitterObj.search( tmpStr, tmpStr2, "en", "", "", "", "", "", "" ) )
     {
-        twitterObj.getLastWebResponse( replyMsg );
-        printf( "\ntwitterClient:: twitCurl::search web response:\n%s\n", replyMsg.c_str() );
+        long httpCode = 0;
+        twitterObj.getLastWebResponse( httpCode, replyMsg );
+        printf( "\ntwitterClient:: twitCurl::search web response:%ld\n%s\n", httpCode, replyMsg.c_str() );
+        bool rateLimitStatusSet = false;
+        int remainingHits, limit, resetTimeInSeconds;
+        twitterObj.getLastRateLimitStatus( rateLimitStatusSet, remainingHits, limit, resetTimeInSeconds );
+        if( rateLimitStatusSet )
+        {
+            printf( "twitterClient:: twitCurl::search rate limit status:\n" );
+            printf( "  remainingHits:%d\n",remainingHits );
+            printf( "  limit:%d\n",limit );
+            printf( "  resetTimeInSeconds:%d\n",resetTimeInSeconds );
+        }
     }
     else
     {

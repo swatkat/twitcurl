@@ -46,7 +46,15 @@ public:
     void setTwitterPassword( const std::string& passWord /* in */ );
 
     /* Twitter search APIs */
-    bool search( const std::string& searchQuery /* in */, const std::string resultCount = "" /* in */ );
+    bool search( const std::string& searchQuery /* in */,
+                 const std::string resultCount = "" /* in */,
+                 const std::string lang = "" /* in */,
+                 const std::string locale = "" /* in */,
+                 const std::string maxId = "" /* in */,
+                 const std::string since = "" /* in */,
+                 const std::string sinceId = "" /* in */,
+                 const std::string until = "" /* in */,
+                 const std::string resultType = "" /* in */ );
 
     /* Twitter status APIs */
     bool statusUpdate( const std::string& newStatus /* in */, const std::string inReplyToStatusId = "" /* in */ );
@@ -59,7 +67,7 @@ public:
     bool timelinePublicGet();
     bool timelineFriendsGet();
     bool timelineUserGet( const bool trimUser /* in */,
-	                      const bool includeRetweets /* in */,
+                          const bool includeRetweets /* in */,
                           const unsigned int tweetCount /* in */,
                           const std::string userInfo = "" /* in */,
                           const bool isUserId = false /* in */ );
@@ -105,7 +113,7 @@ public:
     bool blockDestroy( const std::string& userInfo /* in */ );
     bool blockListGet( const std::string& nextCursor /* in */,
                        const bool includeEntities /* in */,
-	                   const bool skipStatus /* in */ );
+                       const bool skipStatus /* in */ );
     bool blockIdsGet( const std::string& nextCursor /* in */, const bool stringifyIds /* in */ );
 
     /* Twitter search APIs */
@@ -123,11 +131,17 @@ public:
 
     /* cURL APIs */
     bool isCurlInit();
+    void getLastWebResponse( long& outWebRespCode /* out */, std::string& outWebResp /* out */ );
     void getLastWebResponse( std::string& outWebResp /* out */ );
     void getLastCurlError( std::string& outErrResp /* out */);
+    void getLastRateLimitStatus ( bool& rateLimitStatuSet /* out */,
+                                  int& remainingHits /* out */,
+                                  int& limit /* out */,
+                                  int& resetTimeInSeconds /* out */ );   
 
     /* Internal cURL related methods */
     int saveLastWebResponse( char*& data, size_t size );
+    int parseRateLimit( char*& data, size_t size );
 
     /* cURL proxy APIs */
     std::string& getProxyServerIp();
@@ -152,6 +166,13 @@ private:
     CURL* m_curlHandle;
     char* m_errorBuffer;
     std::string m_callbackData;
+    long m_responseCode;
+    bool m_remainingHitsSet;
+    bool m_limitSet;
+    bool m_resetTimeInSecondsSet;
+    int  m_remainingHits; /* "X-Rate-Limit-Remaining" */
+    int  m_limit; /* "X-Rate-Limit-Limit" */
+    int  m_resetTimeInSeconds; /* "X-Rate-Limit-Reset" */
 
     /* cURL flags */
     bool m_curlProxyParamsSet;
@@ -185,6 +206,7 @@ private:
     void prepareCurlUserPass();
     void prepareStandardParams();
     bool performGet( const std::string& getUrl );
+    bool performGet( const std::string& getUrl, const httpParams& params );
     bool performGetInternal( const std::string& getUrl,
                              const std::string& oAuthHttpHeader );
     bool performDelete( const std::string& deleteUrl );
@@ -192,6 +214,7 @@ private:
 
     /* Internal cURL related methods */
     static int curlCallback( char* data, size_t size, size_t nmemb, twitCurl* pTwitCurlObj );
+    static int curlHeaderCallback( char* data, size_t size, size_t nmemb, twitCurl* pTwitCurlObj );
 };
 
 

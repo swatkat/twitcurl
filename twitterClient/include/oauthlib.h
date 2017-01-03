@@ -9,6 +9,7 @@
 #include <string>
 #include <list>
 #include <map>
+#include <vector>
 
 namespace oAuthLibDefaults
 {
@@ -57,6 +58,13 @@ typedef enum _eOAuthHttpRequestType
 typedef std::list<std::string> oAuthKeyValueList;
 typedef std::map<std::string, std::string> oAuthKeyValuePairs;
 
+typedef struct
+{
+    std::string key;
+    std::string value;
+} httpParamPair;
+typedef std::vector<httpParamPair> httpParams;
+
 class oAuth
 {
 public:
@@ -84,6 +92,7 @@ public:
 
     bool getOAuthHeader( const eOAuthHttpRequestType eType, /* in */
                          const std::string& rawUrl, /* in */
+                         const httpParams& params, /* in */
                          const std::string& rawData, /* in */
                          std::string& oAuthHttpHeader, /* out */
                          const bool includeOAuthVerifierPin = false /* in */ );
@@ -108,6 +117,10 @@ private:
     void buildOAuthRawDataKeyValPairs( const std::string& rawData, /* in */
                                        bool urlencodeData, /* in */
                                        oAuthKeyValuePairs& rawDataKeyValuePairs /* out */ );
+
+    void buildOAuthHttpParameterKeyValPairs(const httpParams& params, /* in */
+                                            bool urlencodeData, /* in */
+                                            oAuthKeyValuePairs& rawDataKeyValuePairs /* out */);
 
     bool buildOAuthTokenKeyValuePairs( const bool includeOAuthVerifierPin, /* in */
                                        const std::string& oauthSignature, /* in */

@@ -13,7 +13,7 @@ libcurl :
 	
 
 twitterClient : libcurl twitterClient.cpp
-	$(CC) twitterClient.cpp -I./include/ -L /usr/local/lib/ -ltwitcurl -o twitterClient
+	$(CC) twitterClient.cpp -I./include/ -L $(STAGING_DIR)/lib -ltwitcurl -o twitterClient
 
 
 

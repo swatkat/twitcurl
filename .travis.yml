@@ -1,0 +1,23 @@
+sudo: required
+before_install:
+  - sudo apt-get install libcurl4-openssl-dev
+  
+# Enable C++ support
+language: cpp
+
+# Compiler selection
+compiler:
+  - gcc
+
+script:
+- mkdir staging && cd staging
+- mkdir include lib
+- cd ../twitterClient
+- make STAGING_DIR=$TRAVIS_BUILD_DIR/staging
+
+after_success:
+- cd
+- cd twitterClient
+- make clean STAGING_DIR=$TRAVIS_BUILD_DIR/staging
+- cd
+- rm -rf staging

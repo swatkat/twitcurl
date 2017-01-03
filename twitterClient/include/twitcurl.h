@@ -46,7 +46,15 @@ public:
     void setTwitterPassword( const std::string& passWord /* in */ );
 
     /* Twitter search APIs */
-    bool search( const std::string& searchQuery /* in */, const std::string resultCount = "" /* in */ );
+    bool search( const std::string& searchQuery /* in */,
+                 const std::string resultCount = "" /* in */,
+                 const std::string lang = "" /* in */,
+                 const std::string locale = "" /* in */,
+                 const std::string maxId = "" /* in */,
+                 const std::string since = "" /* in */,
+                 const std::string sinceId = "" /* in */,
+                 const std::string until = "" /* in */,
+                 const std::string resultType = "" /* in */ );
 
     /* Twitter status APIs */
     bool statusUpdate( const std::string& newStatus /* in */, const std::string inReplyToStatusId = "" /* in */ );
@@ -123,8 +131,13 @@ public:
 
     /* cURL APIs */
     bool isCurlInit();
+    void getLastWebResponse( long& outWebRespCode /*out */, std::string& outWebResp /* out */ );
     void getLastWebResponse( std::string& outWebResp /* out */ );
     void getLastCurlError( std::string& outErrResp /* out */);
+    void getLastRateLimitStatus ( bool& rateLimitStatuSet /* out */,
+                                  int& remainingHits /* out */,
+                                  int& limit /* out */,
+                                  int& resetTimeInSeconds /* out */ );
 
     /* Internal cURL related methods */
     int saveLastWebResponse( char*& data, size_t size );
@@ -177,6 +190,7 @@ private:
     void prepareCurlUserPass();
     void prepareStandardParams();
     bool performGet( const std::string& getUrl );
+    bool performGet( const std::string& getUrl, const httpParams& params );
     bool performGetInternal( const std::string& getUrl,
                              const std::string& oAuthHttpHeader );
     bool performDelete( const std::string& deleteUrl );
