@@ -1,5 +1,6 @@
 #define NOMINMAX
 #include <memory.h>
+#include <algorithm>
 #include "twitcurlurls.h"
 #include "twitcurl.h"
 #include "urlencode.h"
@@ -381,7 +382,7 @@ void twitCurl::setInterface( const std::string& Interface )
 * @note: Only ATOM and JSON format supported.
 *
 *--*/
-bool twitCurl::search( const std::string& searchQuery, const std::string resultCount )
+bool twitCurl::search(const std::string& searchQuery, const std::string resultCount , const twitCurlTypes::eTwitCurlResultType &resultType)
 {
     /* Prepare URL */
     std::string buildUrl = twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
@@ -396,6 +397,17 @@ bool twitCurl::search( const std::string& searchQuery, const std::string resultC
         buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_AMP +
                     twitCurlDefaults::TWITCURL_COUNT + urlencode( resultCount );
     }
+
+    std::string resultTypeStr = "mixed";
+    if (resultType == twitCurlTypes::eTwitCurlResultTypePopular) {
+        resultTypeStr = "popular";
+    }
+    else if (resultType == twitCurlTypes::eTwitCurlResultTypeRecent) {
+        resultTypeStr = "recent";
+    }
+
+    buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_AMP +
+            twitCurlDefaults::TWITCURL_RESULT_TYPE + urlencode( resultTypeStr );
 
     /* Perform GET */
     return performGet( buildUrl );
@@ -665,7 +677,7 @@ bool twitCurl::timelineUserGet( const bool trimUser,
 
     if( tweetCount )
     {
-		std::stringstream tmpStrm;
+        std::stringstream tmpStrm;
         if( tweetCount < twitCurlDefaults::MAX_TIMELINE_TWEET_COUNT )
         {
             tmpStrm << twitCurlDefaults::TWITCURL_URL_SEP_AMP + twitCurlDefaults::TWITCURL_COUNT << tweetCount;
@@ -721,8 +733,8 @@ bool twitCurl::userLookup( const std::vector<std::string> &userInfo, const bool 
     userIds = ( isUserId ? twitCurlDefaults::TWITCURL_USERID : twitCurlDefaults::TWITCURL_SCREENNAME ) +
               urlencode( userIds );
 
-    std::string buildUrl = twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] + 
-                           twitterDefaults::TWITCURL_LOOKUPUSERS_URL + 
+    std::string buildUrl = twitCurlDefaults::TWITCURL_PROTOCOLS[m_eProtocolType] +
+                           twitterDefaults::TWITCURL_LOOKUPUSERS_URL +
                            twitCurlDefaults::TWITCURL_EXTENSIONFORMATS[m_eApiFormatType];
 
     /* Perform POST */
@@ -1607,6 +1619,32 @@ int twitCurl::saveLastWebResponse(  char*& data, size_t size )
     return 0;
 }
 
+std::string twitCurl::encodeParameters(const std::string &url)
+{
+    std::string request = "";
+    /* Check for parameters */
+    if (url.find('?') != std::string::npos) {
+        std::size_t divide = url.find_first_of('?') + 1;
+        std::string encodedparams("");
+        std::string params = url.substr(divide);
+        const std::vector<std::string> vparams = split(params, '&');
+        for (unsigned int i = 0; i < vparams.size(); i++) {
+            if (i > 0) encodedparams += "&";
+            std::size_t pos = vparams[i].find('=');
+            if (pos != std::string::npos)
+                encodedparams += vparams[i].substr(0, pos + 1) + urlencode(vparams[i].substr(pos + 1));
+            else
+                encodedparams += vparams[i];
+        }
+        request = url.substr(0, divide) + encodedparams;
+    }
+    else {
+        request = url;
+    }
+
+    return request;
+}
+
 /*++
 * @method: twitCurl::clearCurlCallbackBuffers
 *
@@ -1695,7 +1733,7 @@ void twitCurl::prepareCurlInterface()
 
     /* Reset existing interface details in cURL */
     curl_easy_setopt( m_curlHandle, CURLOPT_INTERFACE, NULL );
-    
+
     if( m_Interface.length() ){
         /* Set interface details in cURL */
         curl_easy_setopt( m_curlHandle, CURLOPT_INTERFACE, m_Interface.c_str() );
@@ -1851,7 +1889,7 @@ bool twitCurl::performGet( const std::string& getUrl )
 
     /* Set http request and url */
     curl_easy_setopt( m_curlHandle, CURLOPT_HTTPGET, 1 );
-    curl_easy_setopt( m_curlHandle, CURLOPT_URL, getUrl.c_str() );
+    curl_easy_setopt( m_curlHandle, CURLOPT_URL, encodeParameters(getUrl).c_str() );
 
     /* Send http request */
     if( CURLE_OK == curl_easy_perform( m_curlHandle ) )

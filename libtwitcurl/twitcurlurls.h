@@ -32,6 +32,7 @@ namespace twitCurlDefaults
     const std::string TWITCURL_TRIMUSER = "trim_user=true";
     const std::string TWITCURL_INCRETWEETS = "include_rts=true";
     const std::string TWITCURL_COUNT = "count=";
+    const std::string TWITCURL_RESULT_TYPE = "result_type=";
     const std::string TWITCURL_NEXT_CURSOR = "cursor=";
     const std::string TWITCURL_SKIP_STATUS = "skip_status=";
     const std::string TWITCURL_INCLUDE_ENTITIES = "include_entities=";
