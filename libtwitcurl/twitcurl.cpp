@@ -682,6 +682,10 @@ bool twitCurl::timelineUserGet( const bool trimUser,
     {
         buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_AMP + twitCurlDefaults::TWITCURL_INCRETWEETS;
     }
+    else
+    {
+        buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_AMP + twitCurlDefaults::TWITCURL_DINCRETWEETS;
+    }        
 
     if( trimUser )
     {
