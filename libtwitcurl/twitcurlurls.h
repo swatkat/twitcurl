@@ -31,12 +31,14 @@ namespace twitCurlDefaults
     const std::string TWITCURL_SINCEID = "since_id=";
     const std::string TWITCURL_TRIMUSER = "trim_user=true";
     const std::string TWITCURL_INCRETWEETS = "include_rts=true";
+    const std::string TWITCURL_DINCRETWEETS = "include_rts=false";
     const std::string TWITCURL_COUNT = "count=";
     const std::string TWITCURL_NEXT_CURSOR = "cursor=";
     const std::string TWITCURL_SKIP_STATUS = "skip_status=";
     const std::string TWITCURL_INCLUDE_ENTITIES = "include_entities=";
     const std::string TWITCURL_STRINGIFY_IDS = "stringify_ids=";
     const std::string TWITCURL_INREPLYTOSTATUSID = "in_reply_to_status_id=";
+    const std::string TWITCURL_INCLUDEEXTENDED = "tweet_mode=extended";
 
     /* URL separators */
     const std::string TWITCURL_URL_SEP_AMP = "&";

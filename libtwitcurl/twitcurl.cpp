@@ -639,6 +639,7 @@ bool twitCurl::mentionsGet( const std::string sinceId )
 *         tweetCount - Number of tweets to get. Max 200.
 *         userInfo - screen name or user id in string format,
 *         isUserId - true if userInfo contains an id
+*         includeExtended - set true to get tweets longer than 140 characters
 *
 * @output: true if GET is success, otherwise false. This does not check http
 *          response by twitter. Use getLastWebResponse() for that.
@@ -648,8 +649,10 @@ bool twitCurl::timelineUserGet( const bool trimUser,
                                 const bool includeRetweets,
                                 const unsigned int tweetCount,
                                 const std::string userInfo,
-                                const bool isUserId )
+                                const bool isUserId,
+                                const bool includeExtended )
 {
+  std::cout << "AY" << std::endl;
     /* Prepare URL */
     std::string buildUrl;
 
@@ -682,10 +685,19 @@ bool twitCurl::timelineUserGet( const bool trimUser,
     {
         buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_AMP + twitCurlDefaults::TWITCURL_INCRETWEETS;
     }
+    else
+    {
+        buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_AMP + twitCurlDefaults::TWITCURL_DINCRETWEETS;
+    }        
 
     if( trimUser )
     {
         buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_AMP + twitCurlDefaults::TWITCURL_TRIMUSER;
+    }
+
+    if( includeExtended )
+    {
+        buildUrl += twitCurlDefaults::TWITCURL_URL_SEP_AMP + twitCurlDefaults::TWITCURL_INCLUDEEXTENDED;
     }
 
     /* Perform GET */

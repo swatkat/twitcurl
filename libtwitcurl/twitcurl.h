@@ -62,7 +62,8 @@ public:
 	                      const bool includeRetweets /* in */,
                           const unsigned int tweetCount /* in */,
                           const std::string userInfo = "" /* in */,
-                          const bool isUserId = false /* in */ );
+                          const bool isUserId = false /* in */, 
+                          const bool includeExtended = false /* in */ );
     bool featuredUsersGet();
     bool mentionsGet( const std::string sinceId = "" /* in */ );
 
